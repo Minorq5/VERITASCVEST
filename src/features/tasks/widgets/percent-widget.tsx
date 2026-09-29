@@ -15,15 +15,24 @@ export function PercentWidget({ task, actions, readOnly }: WidgetProps) {
   const t = useTranslations('tasks');
   const stored = Math.round(Math.min(100, Math.max(0, Number(task.progress_current) || 0)));
   const [draft, setDraft] = useState<number | null>(null);
-  const value = draft ?? stored;
+  // The value just committed, shown (and stepped from) until the device copy
+  // catches up, so quick taps on "+25 %" all count.
+  const [committed, setCommitted] = useState<number | null>(null);
+  if (committed !== null && committed === stored) setCommitted(null);
+  const value = draft ?? committed ?? stored;
   const color = value >= 100 ? 'var(--color-success)' : typeMeta.percent.color;
 
   const commit = async (next: number) => {
     const clamped = Math.min(100, Math.max(0, Math.round(next)));
     setDraft(null);
-    if (clamped === stored) return;
+    if (clamped === (committed ?? stored)) return;
+    setCommitted(clamped);
     sound.play('progressStep', { value: clamped / 100 });
-    await actions.update(task.id, { progress_current: clamped } as Partial<TaskRow>);
+    const saved = await actions.update(task.id, { progress_current: clamped } as Partial<TaskRow>);
+    if (!saved) {
+      setCommitted(null);
+      return;
+    }
     if (clamped >= 100 && !task.completed_at) await actions.complete({ ...task, progress_current: clamped }, { auto: true });
   };
 

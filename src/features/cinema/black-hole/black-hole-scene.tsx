@@ -97,15 +97,18 @@ export function BlackHoleScene({
 
   return (
     <div ref={host} aria-hidden className={cn('relative overflow-hidden bg-void', className)}>
-      <Image
-        src={poster.src}
-        alt=""
-        fill
-        sizes={sizes}
-        preload={preload}
-        className="object-cover"
-        style={{ objectPosition: `${px * 100}% ${py * 100}%` }}
-      />
+      {/* Own positioned box: the scene itself may be sticky, which a filled image does not accept as its parent. */}
+      <div className="absolute inset-0">
+        <Image
+          src={poster.src}
+          alt=""
+          fill
+          sizes={sizes}
+          preload={preload}
+          className="object-cover"
+          style={{ objectPosition: `${px * 100}% ${py * 100}%` }}
+        />
+      </div>
     </div>
   );
 }

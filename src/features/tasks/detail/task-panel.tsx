@@ -9,6 +9,7 @@ import { overlayOpen, useKeydown } from '@/lib/hooks/use-hotkeys';
 import { useMediaQuery } from '@/lib/hooks/use-media-query';
 import { spring } from '@/lib/motion/tokens';
 import { useTaskRoute } from '../shared/use-task-route';
+import { loadDescriptionEditor } from './lazy-description-editor';
 import { TaskDetail } from './task-detail';
 
 /**
@@ -30,6 +31,18 @@ export function TaskPanel() {
     event.preventDefault();
     close();
   });
+
+  // Fetch the description editor while the app is idle, so a task opened
+  // later (even without network) has it at once.
+  useEffect(() => {
+    const warm = () => void loadDescriptionEditor().catch(() => undefined);
+    if (typeof window.requestIdleCallback === 'function') {
+      const id = window.requestIdleCallback(warm, { timeout: 5000 });
+      return () => window.cancelIdleCallback(id);
+    }
+    const id = window.setTimeout(warm, 2000);
+    return () => window.clearTimeout(id);
+  }, []);
 
   // Move focus into the panel when a task opens, so keyboard and screen readers follow.
   useEffect(() => {

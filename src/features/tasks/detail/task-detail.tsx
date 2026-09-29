@@ -21,7 +21,6 @@ import {
   Trash2,
   X,
 } from 'lucide-react';
-import dynamic from 'next/dynamic';
 import { useTranslations } from 'next-intl';
 import { useEffect, useRef, useState } from 'react';
 import { Button } from '@/components/ui/button';
@@ -51,15 +50,12 @@ import { TypeWidget } from '../widgets/type-widget';
 import { Attachments } from './attachments';
 import { DateField } from './date-field';
 import { DetailTabs } from './detail-tabs';
+import { LazyDescriptionEditor } from './lazy-description-editor';
 import { ColorPicker, EstimatePicker, PriorityPicker, ProjectPicker, RemindersPicker, StatusPicker, TagsPicker, type Reminder } from './pickers';
 import { PropertyRow } from './property-row';
 import { RecurrenceField } from './recurrence-field';
 import { Subtasks } from './subtasks';
 
-const DescriptionEditor = dynamic(() => import('./description-editor'), {
-  ssr: false,
-  loading: () => <Skeleton className="h-28 rounded-lg" />,
-});
 
 function TitleEditor({ task, readOnly, onSave }: { task: TaskRow; readOnly: boolean; onSave: (title: string) => void }) {
   const t = useTranslations('tasks.detail');
@@ -395,8 +391,9 @@ export function TaskDetail({ id, onClose }: { id: string; onClose: () => void })
           {readOnly ? (
             <p className="text-base whitespace-pre-wrap text-fg-2">{task.description_text || '—'}</p>
           ) : (
-            <DescriptionEditor
+            <LazyDescriptionEditor
               key={task.id}
+              text={task.description_text}
               value={task.description}
               label={t('detail.description')}
               placeholder={t('detail.descriptionPlaceholder')}

@@ -35,6 +35,35 @@ export function useProfile() {
   });
 }
 
+const settingsCacheKey = (userId: string) => `vt:settings:${userId}`;
+
+/** The account settings last seen on this device, so the app opens when the server is out of reach. */
+function cachedSettings(userId: string | undefined): UserSettings | undefined {
+  if (!userId) return undefined;
+  try {
+    const raw = localStorage.getItem(settingsCacheKey(userId));
+    return raw ? (JSON.parse(raw) as UserSettings) : undefined;
+  } catch {
+    return undefined;
+  }
+}
+
+export function rememberSettings(settings: UserSettings) {
+  try {
+    localStorage.setItem(settingsCacheKey(settings.user_id), JSON.stringify(settings));
+  } catch {
+    // Private mode or a full disk: the app just needs the server next time.
+  }
+}
+
+export function forgetSettings(userId: string) {
+  try {
+    localStorage.removeItem(settingsCacheKey(userId));
+  } catch {
+    // Nothing stored.
+  }
+}
+
 export function useSettings() {
   const userId = useSession((s) => s.user?.id);
   return useQuery({
@@ -45,6 +74,9 @@ export function useSettings() {
       if (error) throw error;
       return data;
     },
+    // Start from the device copy (stale at once, so the server is still asked).
+    initialData: () => cachedSettings(userId),
+    initialDataUpdatedAt: 0,
   });
 }
 

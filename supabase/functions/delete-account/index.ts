@@ -2,7 +2,8 @@
 //
 // 1. Identifies the caller by their own access token (asks Auth who it is).
 // 2. Requires the username typed into the confirmation box.
-// 3. Removes their files from Storage (Storage rows cannot be deleted by SQL).
+// 3. Removes their files from Storage (Storage rows cannot be deleted by SQL):
+//    the avatar folder, and every attachment on their tasks or uploaded by them.
 // 4. Deletes the Auth user; every table references auth.users with
 //    ON DELETE CASCADE, so profiles, settings and (later) tasks go with it.
 //
@@ -68,6 +69,46 @@ async function usernameOf(userId: string): Promise<string | null> {
   return rows[0]?.username ?? null;
 }
 
+async function rows<T>(path: string): Promise<T[]> {
+  const out: T[] = [];
+  for (let offset = 0; ; offset += 1000) {
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/${path}&limit=1000&offset=${offset}`, {
+      headers: adminHeaders({ Accept: 'application/json' }),
+    });
+    if (!res.ok) throw new Error(`lookup failed: ${res.status}`);
+    const page = (await res.json()) as T[];
+    out.push(...page);
+    if (page.length < 1000) return out;
+  }
+}
+
+/** Files attached to the person's tasks (whoever uploaded them) and files they attached anywhere. */
+async function attachmentPaths(userId: string): Promise<string[]> {
+  const id = encodeURIComponent(userId);
+  type Row = { storage_path: string | null; thumb_path: string | null };
+  const found = [
+    ...(await rows<Row>(`attachments?select=storage_path,thumb_path,tasks!inner(owner_id)&tasks.owner_id=eq.${id}`)),
+    ...(await rows<Row>(`attachments?select=storage_path,thumb_path&uploader_id=eq.${id}`)),
+  ];
+  const paths = new Set<string>();
+  for (const row of found) {
+    if (row.storage_path) paths.add(row.storage_path);
+    if (row.thumb_path) paths.add(row.thumb_path);
+  }
+  return [...paths];
+}
+
+async function removePaths(bucket: string, paths: string[]): Promise<void> {
+  for (let i = 0; i < paths.length; i += 1000) {
+    const res = await fetch(`${SUPABASE_URL}/storage/v1/object/${bucket}`, {
+      method: 'DELETE',
+      headers: adminHeaders({ 'Content-Type': 'application/json' }),
+      body: JSON.stringify({ prefixes: paths.slice(i, i + 1000) }),
+    });
+    if (!res.ok) throw new Error(`storage delete failed: ${res.status}`);
+  }
+}
+
 async function removeFolder(bucket: string, userId: string): Promise<void> {
   for (;;) {
     const list = await fetch(`${SUPABASE_URL}/storage/v1/object/list/${bucket}`, {
@@ -107,6 +148,7 @@ Deno.serve(async (req) => {
     }
 
     for (const bucket of BUCKETS) await removeFolder(bucket, user.id);
+    await removePaths('attachments', await attachmentPaths(user.id));
 
     const res = await fetch(`${SUPABASE_URL}/auth/v1/admin/users/${user.id}`, {
       method: 'DELETE',

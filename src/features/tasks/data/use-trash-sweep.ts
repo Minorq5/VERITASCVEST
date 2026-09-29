@@ -4,6 +4,7 @@ import { useEffect, useRef } from 'react';
 import { useSync } from '@/features/sync/sync-provider';
 import type { TaskRow } from '@/lib/db/types';
 import { useSyncStatus } from '@/stores/sync-status';
+import { removeAttachmentFiles } from './attachment-files';
 
 const RETENTION_MS = 30 * 86_400_000;
 
@@ -30,6 +31,7 @@ export function useTrashSweep() {
         if (!task.deleted_at || Date.parse(task.deleted_at) > cutoff) continue;
         // Subtasks go together with their parent.
         if (task.parent_id && deleted.has(task.parent_id)) continue;
+        await removeAttachmentFiles(db, [task.id]);
         await repo.remove('tasks', task.id);
       }
     })();

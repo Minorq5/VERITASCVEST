@@ -182,7 +182,10 @@ export function Attachments({ task, attachments, readOnly, actions }: { task: Ta
   const locale = useLocale();
 
   const upload = async (list: FileList | File[]) => {
-    if (readOnly) return;
+    // Copy the list first: the browser empties an input's (or a drop's) file
+    // list as soon as the event is over, and the upload waits for the sync.
+    const files = Array.from(list);
+    if (readOnly || files.length === 0) return;
     if (typeof navigator !== 'undefined' && !navigator.onLine) {
       toast.warning(t('offline'));
       return;
@@ -190,7 +193,7 @@ export function Attachments({ task, attachments, readOnly, actions }: { task: Ta
     // The server must know the task before files can be attached to it.
     await engine.syncNow({ pull: false });
     const supabase = getSupabase();
-    for (const file of Array.from(list)) {
+    for (const file of files) {
       if (file.size > MAX_BYTES) {
         toast.error(t('tooLarge', { name: file.name }));
         continue;

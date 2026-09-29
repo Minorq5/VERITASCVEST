@@ -40,7 +40,13 @@ export function Toaster() {
         'bottom-[calc(env(safe-area-inset-bottom)+5.5rem)] sm:bottom-6 sm:justify-end sm:px-6',
       )}
     >
+      {/* One live region that is always there: new toasts are announced
+          reliably, and modal dialogs (which hide the rest of the page from
+          screen readers) leave it alone. */}
       <ol
+        aria-live="polite"
+        aria-relevant="additions text"
+        aria-atomic="false"
         className="pointer-events-auto relative flex w-full max-w-[420px] flex-col items-stretch"
         onMouseEnter={() => setExpanded(true)}
         onMouseLeave={() => setExpanded(false)}
@@ -99,8 +105,6 @@ function ToastCard({
   return (
     <motion.li
       layout={!reduce}
-      role={item.tone === 'error' ? 'alert' : 'status'}
-      aria-live={item.tone === 'error' ? 'assertive' : 'polite'}
       initial={reduce ? { opacity: 0 } : { opacity: 0, y: 16 }}
       animate={
         reduce

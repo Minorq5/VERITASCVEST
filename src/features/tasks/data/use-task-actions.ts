@@ -24,8 +24,12 @@ import {
   type ActionContext,
   type NewTask,
 } from './actions';
+import { removeAttachmentFiles } from './attachment-files';
 import { usePlannerPrefs } from './hooks';
 import { useLingering } from './lingering';
+
+/** Pending "is the parent done now?" checks, one queue per parent task. */
+const parentChecks = new Map<string, Promise<void>>();
 
 /** Undo the newest action (or a specific one, from its toast). */
 export async function undoAction(repo: Repo, id?: number): Promise<string | null> {
@@ -87,6 +91,27 @@ export function useTaskActions() {
       }
     };
 
+    /**
+     * A "by subtasks" task is done when its last open subtask is done. Checks
+     * for one parent run one after another, so two subtasks ticked at once
+     * complete it once.
+     */
+    const completeParentIfDone = (parentId: string) => {
+      const check = async () => {
+        const parent = (await repo.db.tasks.get(parentId)) as TaskRow | undefined;
+        if (!parent || parent.type !== 'subtasks' || parent.completed_at || parent.deleted_at) return;
+        const children = ((await repo.db.tasks.where('parent_id').equals(parentId).toArray()) as TaskRow[]).filter((c) => !c.deleted_at);
+        if (children.length > 0 && children.every((c) => c.completed_at)) await actions.complete(parent, { auto: true });
+      };
+      const next = (parentChecks.get(parentId) ?? Promise.resolve()).then(check);
+      const settled = next.catch(() => undefined);
+      parentChecks.set(parentId, settled);
+      void settled.then(() => {
+        if (parentChecks.get(parentId) === settled) parentChecks.delete(parentId);
+      });
+      return next;
+    };
+
     const actions = {
       ctx,
 
@@ -118,6 +143,7 @@ export function useTaskActions() {
               ? t('toast.completedNext', { date: options.nextLabel(outcome.nextDue) })
               : t('toast.completed');
           remember(t('toast.completed'), outcome.inverse, title);
+          if (task.parent_id) await completeParentIfDone(task.parent_id);
           return outcome;
         }),
 
@@ -152,6 +178,7 @@ export function useTaskActions() {
       /** Permanent: no undo (the person confirmed it). */
       purge: (ids: readonly string[]) =>
         run(async () => {
+          await removeAttachmentFiles(repo.db, ids);
           for (const id of ids) await purgeTask(ctx, id);
           sound.play('trash');
           toast.success(t('toast.purged'));
@@ -159,6 +186,7 @@ export function useTaskActions() {
 
       emptyTrash: (ids: readonly string[]) =>
         run(async () => {
+          await removeAttachmentFiles(repo.db, ids);
           for (const id of ids) await purgeTask(ctx, id);
           sound.play('trash');
           toast.success(t('toast.trashEmptied'));

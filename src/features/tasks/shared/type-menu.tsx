@@ -22,7 +22,7 @@ export function TypeMenu({
   return (
     <Menu>
       <MenuTrigger asChild>{trigger}</MenuTrigger>
-      <MenuContent align={align} className="max-h-[min(70dvh,560px)] w-80 overflow-y-auto">
+      <MenuContent align={align} className="max-h-[min(var(--radix-dropdown-menu-content-available-height),560px)] w-80">
         <MenuRadioGroup value={value} onValueChange={(v) => onChange(v as TaskType)}>
           {taskTypes.map((type) => {
             const { icon: Icon, color } = typeMeta[type];

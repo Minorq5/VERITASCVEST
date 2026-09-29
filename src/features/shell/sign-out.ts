@@ -1,5 +1,6 @@
 'use client';
 
+import { forgetSettings } from '@/features/account/queries';
 import { closeSync, currentSync } from '@/features/sync/sync-handle';
 import { getSupabase } from '@/lib/supabase/client';
 import { useSession } from '@/stores/session';
@@ -20,7 +21,9 @@ export async function signOut(scope: 'local' | 'global' = 'local') {
 /** Erases this account's data from the device (after sign-out or account deletion). */
 export async function forgetDevice(userId: string | undefined) {
   useUndo.getState().clear();
-  if (userId) await closeSync(userId, { wipe: true }).catch(() => undefined);
+  if (!userId) return;
+  forgetSettings(userId);
+  await closeSync(userId, { wipe: true }).catch(() => undefined);
 }
 
 /** Changes made on this device that have not reached the server yet. */

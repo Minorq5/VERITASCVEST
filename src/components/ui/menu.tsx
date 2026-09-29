@@ -32,6 +32,8 @@ export function MenuContent({
         className={cn(
           panelSurface,
           'overlay-anim z-[var(--z-dropdown)] min-w-56 p-1 outline-none',
+          // Never taller than the room on screen: long menus scroll inside.
+          'max-h-[var(--radix-dropdown-menu-content-available-height)] overflow-y-auto',
           'origin-[var(--radix-dropdown-menu-content-transform-origin)]',
           className,
         )}
@@ -142,6 +144,7 @@ export function MenuSubContent({
         className={cn(
           panelSurface,
           'overlay-anim z-[var(--z-dropdown)] min-w-48 p-1 outline-none',
+          'max-h-[var(--radix-dropdown-menu-content-available-height)] overflow-y-auto',
           className,
         )}
         {...props}

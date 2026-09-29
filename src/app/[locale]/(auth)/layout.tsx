@@ -17,6 +17,7 @@ export default async function AuthLayout({ children, params }: LayoutProps<'/[lo
     <div className="flex min-h-dvh flex-col lg:grid lg:grid-cols-[30rem_1fr]">
       <BlackHoleScene
         scene="auth"
+        preload
         speed={0.2}
         sizes="(min-width: 1024px) 70vw, 100vw"
         className="h-52 shrink-0 sm:h-64 lg:sticky lg:top-0 lg:order-2 lg:h-dvh"

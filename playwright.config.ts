@@ -24,6 +24,8 @@ export default defineConfig({
     { name: 'desktop', use: { ...devices['Desktop Chrome'], viewport: { width: 1440, height: 900 } } },
     {
       name: 'phone',
+      // The sync tests open a phone next to the computer themselves.
+      testIgnore: /sync\.spec\.ts/,
       use: {
         ...devices['Pixel 7'],
         viewport: { width: 393, height: 852 },

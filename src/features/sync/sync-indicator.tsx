@@ -56,17 +56,18 @@ export function SyncIndicator({ className }: { className?: string }) {
   const { status, l, title, detail, extra } = useStatusText();
   const Icon = l.icon;
   return (
-    <div role="status" aria-label={t('label')} className={cn('flex items-center gap-2.5 px-2 text-sm', className)}>
-      <Icon aria-hidden className={cn('size-4 shrink-0', l.tone, l.spin && 'motion-ok:animate-spin')} />
-      <span className="min-w-0 flex-1">
-        <span className="block truncate text-fg-2">{title}</span>
-        {(extra ?? detail) && <span className="block truncate text-xs text-fg-3">{extra ?? detail}</span>}
+    <div role="status" aria-label={t('label')} className={cn('flex items-start gap-2.5 px-2 text-sm', className)}>
+      <Icon aria-hidden className={cn('mt-0.5 size-4 shrink-0', l.tone, l.spin && 'motion-ok:animate-spin')} />
+      {/* The whole message stays readable: it wraps, and "retry" goes under it. */}
+      <span className="flex min-w-0 flex-1 flex-col items-start">
+        <span className="text-fg-2">{title}</span>
+        {(extra ?? detail) && <span className="text-xs text-fg-3">{extra ?? detail}</span>}
+        {(status?.state === 'error' || status?.state === 'offline') && (
+          <Button size="sm" variant="ghost" className="mt-1 -ml-2 h-7 px-2" onClick={() => void engine.syncNow()}>
+            {t('retry')}
+          </Button>
+        )}
       </span>
-      {(status?.state === 'error' || status?.state === 'offline') && (
-        <Button size="sm" variant="ghost" className="h-7 px-2" onClick={() => void engine.syncNow()}>
-          {t('retry')}
-        </Button>
-      )}
     </div>
   );
 }

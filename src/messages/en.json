@@ -971,6 +971,7 @@
       "remindersSoon": "Reminder delivery turns on in one of the next updates.",
       "description": "Description",
       "descriptionPlaceholder": "Add details, links or a checklist…",
+      "descriptionOffline": "The description editor will load once you are back online.",
       "subtasks": "Subtasks",
       "addSubtask": "Add subtask",
       "subtaskPlaceholder": "Subtask title",

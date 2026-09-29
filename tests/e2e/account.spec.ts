@@ -1,5 +1,6 @@
 import { expect, test } from '@playwright/test';
-import { createAccount, leftovers, signIn, uniqueAccount, userExists } from './support/accounts';
+import { createAccount, leftovers, signIn, storageList, uniqueAccount, userExists } from './support/accounts';
+import { addTask, attachFile, card, expectSaved, row, serverTasks } from './support/tasks';
 import { linkFrom, waitForMail } from './support/mailpit';
 
 test('registration: email link → onboarding → planner', async ({ page }) => {
@@ -174,4 +175,26 @@ test('delete account: typed username confirms, the account is gone', async ({ pa
 
   await signIn(page, account.email, account.password);
   await expect(page.getByText('Неверная почта или пароль')).toBeVisible();
+});
+
+test('delete account: files attached to tasks go too', async ({ page }) => {
+  const account = await createAccount();
+  await signIn(page, account.email, account.password);
+  await expect(page).toHaveURL(/\/ru\/today$/);
+  await addTask(page, 'Задача с файлом');
+  await row(page, 'Задача с файлом').click();
+  await attachFile(page, 'karta-neba.txt');
+  await card(page).getByRole('button', { name: 'Закрыть задачу' }).first().click();
+  await expectSaved(page);
+  const [task] = await serverTasks(account.id);
+  expect(await storageList('attachments', `${task!.id}/`)).toHaveLength(1);
+
+  await page.goto('/ru/settings/account');
+  await page.getByRole('button', { name: 'Удалить аккаунт' }).click();
+  const dialog = page.getByRole('dialog');
+  await dialog.getByRole('textbox').fill(account.username);
+  await dialog.getByRole('button', { name: 'Удалить навсегда' }).click();
+  await expect(page).toHaveURL(/\/ru$/);
+  expect(await userExists(account.email)).toBe(false);
+  expect(await storageList('attachments', `${task!.id}/`)).toEqual([]);
 });

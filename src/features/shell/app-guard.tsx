@@ -5,7 +5,7 @@ import { useLocale, useTranslations } from 'next-intl';
 import { useEffect, type ReactNode } from 'react';
 import { Button } from '@/components/ui/button';
 import { EmptyState } from '@/components/ui/empty-state';
-import { useAccountRealtime, useSettings } from '@/features/account/queries';
+import { rememberSettings, useAccountRealtime, useSettings } from '@/features/account/queries';
 import { usePathname, useRouter } from '@/i18n/navigation';
 import { accents, type Accent } from '@/lib/device';
 import { routing, type AppLocale } from '@/i18n/routing';
@@ -48,6 +48,7 @@ export function AppGuard({ children }: { children: ReactNode }) {
   // Account preferences follow the person to every device.
   useEffect(() => {
     if (!data) return;
+    rememberSettings(data);
     if ((accents as readonly string[]).includes(data.accent)) setDevice('accent', data.accent as Accent);
     sound.configure({
       enabled: data.sound_enabled,
@@ -83,7 +84,9 @@ export function AppGuard({ children }: { children: ReactNode }) {
     }
   }, [data, userId, locale, pathname, router]);
 
-  if (settings.isError) {
+  // With settings from an earlier visit the app works from the device copy;
+  // the sync indicator tells that the server is out of reach.
+  if (settings.isError && !data) {
     return (
       <div className="flex min-h-dvh items-center justify-center">
         <EmptyState

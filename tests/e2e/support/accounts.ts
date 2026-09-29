@@ -68,6 +68,24 @@ export async function signIn(page: Page, email: string, password: string, next?:
   await page.getByRole('button', { name: 'Войти', exact: true }).click();
 }
 
+/** Rows as they really are on the server (read with the secret key, bypassing RLS). */
+export async function adminRows<T = Record<string, unknown>>(path: string): Promise<T[]> {
+  const res = await fetch(`${API()}/rest/v1/${path}`, { headers: { apikey: env('SUPABASE_SECRET_KEY') } });
+  if (!res.ok) throw new Error(`adminRows ${path}: ${res.status} ${await res.text()}`);
+  return (await res.json()) as T[];
+}
+
+/** Names under a folder of a storage bucket (read with the secret key). */
+export async function storageList(bucket: string, prefix: string): Promise<string[]> {
+  const res = await fetch(`${API()}/storage/v1/object/list/${bucket}`, {
+    method: 'POST',
+    headers: { apikey: env('SUPABASE_SECRET_KEY'), 'Content-Type': 'application/json' },
+    body: JSON.stringify({ prefix, limit: 100, offset: 0 }),
+  });
+  if (!res.ok) throw new Error(`storageList ${bucket}/${prefix}: ${res.status} ${await res.text()}`);
+  return ((await res.json()) as { name: string }[]).map((f) => f.name);
+}
+
 /** Rows left behind for a user id (checked with the secret key, bypassing RLS). */
 export async function leftovers(userId: string) {
   const headers = { apikey: env('SUPABASE_SECRET_KEY') };
