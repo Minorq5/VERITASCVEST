@@ -278,15 +278,26 @@ export function BlackHoleStill({
   scene,
   className,
   sizes = '320px',
+  eager = false,
 }: {
   scene: SceneName;
   className?: string;
   sizes?: string;
+  /** The page's main image (the 404): load it first. */
+  eager?: boolean;
 }) {
   const poster = scenePosters[scene];
   return (
     <div aria-hidden className={cn('relative overflow-hidden bg-void', className)}>
-      <Image src={poster.src} alt="" fill sizes={sizes} className="object-cover" />
+      <Image
+        src={poster.src}
+        alt=""
+        fill
+        sizes={sizes}
+        loading={eager ? 'eager' : undefined}
+        fetchPriority={eager ? 'high' : undefined}
+        className="object-cover"
+      />
     </div>
   );
 }

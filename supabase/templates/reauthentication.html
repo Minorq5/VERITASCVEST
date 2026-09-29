@@ -1,24 +1,24 @@
 <!doctype html>
 <html>
 <head><meta charset="utf-8"><meta name="viewport" content="width=device-width"><meta name="color-scheme" content="dark"></head>
-<body style="margin:0;padding:0;background:#060912">
-<table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="background:#060912;padding:32px 12px">
+<body style="margin:0;padding:0;background:#050506">
+<table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="background:#050506;padding:32px 12px">
 <tr><td align="center">
 <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="max-width:520px">
 <tr><td style="padding:0 8px 20px"><img src="{{ .SiteURL }}/brand/veritas-email-logo.png" width="180" height="40" alt="Veritas Tasks" style="display:block;border:0"></td></tr>
-<tr><td style="background:#0e1422;border:1px solid #1d2842;border-radius:18px;padding:32px 28px">
-{{ if eq .Data.locale "ru" }}<h1 style="margin:0 0 12px;font:600 24px/1.25 Arial,sans-serif;color:#e8edfa">Код подтверждения</h1>
-<p style="margin:0;font:16px/1.6 Arial,sans-serif;color:#b2bcd3">Введите этот код в приложении, чтобы подтвердить действие:</p>
-<p style="margin:28px 0 8px;font:600 34px/1.2 'JetBrains Mono',ui-monospace,monospace;letter-spacing:.3em;color:#e8edfa">{{ .Token }}</p>
-<p style="margin:24px 0 0;font:13px/1.6 Arial,sans-serif;color:#8791ae">Код действует несколько минут. Никому его не сообщайте — даже нам.</p>{{ else if eq .Data.locale "bg" }}<h1 style="margin:0 0 12px;font:600 24px/1.25 Arial,sans-serif;color:#e8edfa">Код за потвърждение</h1>
-<p style="margin:0;font:16px/1.6 Arial,sans-serif;color:#b2bcd3">Въведете този код в приложението, за да потвърдите действието:</p>
-<p style="margin:28px 0 8px;font:600 34px/1.2 'JetBrains Mono',ui-monospace,monospace;letter-spacing:.3em;color:#e8edfa">{{ .Token }}</p>
-<p style="margin:24px 0 0;font:13px/1.6 Arial,sans-serif;color:#8791ae">Кодът важи няколко минути. Не го споделяйте с никого — дори с нас.</p>{{ else }}<h1 style="margin:0 0 12px;font:600 24px/1.25 Arial,sans-serif;color:#e8edfa">Confirmation code</h1>
-<p style="margin:0;font:16px/1.6 Arial,sans-serif;color:#b2bcd3">Enter this code in the app to confirm the action:</p>
-<p style="margin:28px 0 8px;font:600 34px/1.2 'JetBrains Mono',ui-monospace,monospace;letter-spacing:.3em;color:#e8edfa">{{ .Token }}</p>
-<p style="margin:24px 0 0;font:13px/1.6 Arial,sans-serif;color:#8791ae">The code works for a few minutes. Never share it with anyone — not even us.</p>{{ end }}
+<tr><td style="background:#0b0b0d;border:1px solid #26292f;border-radius:8px;padding:32px 28px">
+{{ if eq .Data.locale "ru" }}<h1 style="margin:0 0 12px;font:500 24px/1.25 Arial,sans-serif;color:#f2ede4">Код подтверждения</h1>
+<p style="margin:0;font:16px/1.6 Arial,sans-serif;color:#bcb5a9">Введите этот код в приложении, чтобы подтвердить действие:</p>
+<p style="margin:28px 0 8px;font:500 34px/1.2 'JetBrains Mono',ui-monospace,Menlo,Consolas,monospace;letter-spacing:.3em;color:#f2ede4">{{ .Token }}</p>
+<p style="margin:24px 0 0;padding-top:16px;border-top:1px solid #1b1c21;font:13px/1.6 Arial,sans-serif;color:#8e887e">Код действует несколько минут. Никому его не сообщайте — даже нам.</p>{{ else if eq .Data.locale "bg" }}<h1 style="margin:0 0 12px;font:500 24px/1.25 Arial,sans-serif;color:#f2ede4">Код за потвърждение</h1>
+<p style="margin:0;font:16px/1.6 Arial,sans-serif;color:#bcb5a9">Въведете този код в приложението, за да потвърдите действието:</p>
+<p style="margin:28px 0 8px;font:500 34px/1.2 'JetBrains Mono',ui-monospace,Menlo,Consolas,monospace;letter-spacing:.3em;color:#f2ede4">{{ .Token }}</p>
+<p style="margin:24px 0 0;padding-top:16px;border-top:1px solid #1b1c21;font:13px/1.6 Arial,sans-serif;color:#8e887e">Кодът важи няколко минути. Не го споделяйте с никого — дори с нас.</p>{{ else }}<h1 style="margin:0 0 12px;font:500 24px/1.25 Arial,sans-serif;color:#f2ede4">Confirmation code</h1>
+<p style="margin:0;font:16px/1.6 Arial,sans-serif;color:#bcb5a9">Enter this code in the app to confirm the action:</p>
+<p style="margin:28px 0 8px;font:500 34px/1.2 'JetBrains Mono',ui-monospace,Menlo,Consolas,monospace;letter-spacing:.3em;color:#f2ede4">{{ .Token }}</p>
+<p style="margin:24px 0 0;padding-top:16px;border-top:1px solid #1b1c21;font:13px/1.6 Arial,sans-serif;color:#8e887e">The code works for a few minutes. Never share it with anyone — not even us.</p>{{ end }}
 </td></tr>
-<tr><td style="padding:20px 8px 0;font:12px/1.6 Arial,sans-serif;color:#5c6788">Veritas Tasks</td></tr>
+<tr><td style="padding:20px 8px 0;font:11px/1.6 'JetBrains Mono',ui-monospace,Menlo,Consolas,monospace;letter-spacing:.08em;text-transform:uppercase;color:#5c5851">Veritas Tasks</td></tr>
 </table>
 </td></tr>
 </table>

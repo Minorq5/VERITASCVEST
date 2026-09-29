@@ -86,9 +86,9 @@
   },
   "errors": {
     "notFoundCode": "404",
-    "notFoundTitle": "You drifted beyond the galaxy",
-    "notFoundText": "This page is not on our star map. The link may be outdated or the address may contain a typo.",
-    "backHome": "Return to orbit",
+    "notFoundTitle": "Beyond the event horizon",
+    "notFoundText": "This page is not here. The link may be outdated or the address may have a typo.",
+    "backHome": "To the home page",
     "errorTitle": "Something went wrong",
     "errorText": "We have logged the error. Please try again — that usually helps.",
     "errorDigest": "Error code: {digest}",
@@ -514,7 +514,7 @@
     "xp": "{xp} XP",
     "toNext": "To the next level: {xp} XP",
     "maxLevel": "Maximum level",
-    "memberSince": "In orbit since {date}",
+    "memberSince": "Account since {date}",
     "publicId": "Your ID",
     "copyId": "Copy ID",
     "idCopied": "ID copied",
@@ -549,7 +549,12 @@
     "copyFailed": "Couldn’t copy — select the ID and copy it by hand",
     "share": "Share",
     "shareText": "Add me as a friend on Veritas Tasks: {id}",
-    "usernameHint": "Latin letters, digits and _. You can change it up to 5 times a day."
+    "usernameHint": "Latin letters, digits and _. You can change it up to 5 times a day.",
+    "readings": {
+      "level": "Level",
+      "xp": "Experience",
+      "rank": "Rank"
+    }
   },
   "settings": {
     "title": "Settings",

@@ -22,19 +22,29 @@ export function LanguageSection() {
 
   return (
     <div className="flex flex-col gap-8">
-      <SettingsGroup title={t('settings.language.language')} description={t('settings.language.languageHint')}>
+      <SettingsGroup
+        title={t('settings.language.language')}
+        description={t('settings.language.languageHint')}
+      >
         <SettingRow>
           <Segmented<AppLocale>
             label={t('settings.language.language')}
             value={locale}
-            options={routing.locales.map((l) => ({ value: l, label: <span lang={l}>{localeNames[l]}</span> }))}
+            options={routing.locales.map((l) => ({
+              value: l,
+              label: <span lang={l}>{localeNames[l]}</span>,
+            }))}
             onValueChange={(next) => void setLocale(next).catch(fail)}
           />
         </SettingRow>
       </SettingsGroup>
 
       <SettingsGroup title={t('settings.language.region')}>
-        <SettingRow stack label={t('settings.language.timezone')} description={t('settings.language.timezoneHint')}>
+        <SettingRow
+          stack
+          label={t('settings.language.timezone')}
+          description={t('settings.language.timezoneHint')}
+        >
           <TimezonePicker
             value={settings.timezone}
             onChange={(timezone) => updateSettings.mutate({ timezone }, { onError: fail })}
@@ -49,7 +59,9 @@ export function LanguageSection() {
               { value: '0', label: t('settings.language.sunday') },
               { value: '6', label: t('settings.language.saturday') },
             ]}
-            onValueChange={(v) => updateSettings.mutate({ week_start: Number(v) }, { onError: fail })}
+            onValueChange={(v) =>
+              updateSettings.mutate({ week_start: Number(v) }, { onError: fail })
+            }
           />
         </SettingRow>
         <SettingRow stack label={t('settings.language.timeFormat')}>

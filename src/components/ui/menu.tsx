@@ -151,7 +151,7 @@ export function MenuSubContent({
 }
 
 export function MenuLabel({ className, ...props }: ComponentPropsWithoutRef<typeof M.Label>) {
-  return <M.Label className={cn('px-2.5 pt-2 pb-1 eyebrow', className)} {...props} />;
+  return <M.Label className={cn('px-2.5 pt-2 pb-1 label-mono', className)} {...props} />;
 }
 
 export function MenuSeparator({

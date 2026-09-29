@@ -25,7 +25,11 @@ export function ChangePasswordDialog({ email, context }: { email: string; contex
   const [confirm, setConfirm] = useState('');
   const [code, setCode] = useState('');
   const [step, setStep] = useState<'password' | 'code'>('password');
-  const [fieldErrors, setFieldErrors] = useState<{ password?: string; confirm?: string; code?: string }>({});
+  const [fieldErrors, setFieldErrors] = useState<{
+    password?: string;
+    confirm?: string;
+    code?: string;
+  }>({});
   const [error, setError] = useState<AuthErrorKey | null>(null);
   const { pending, run } = useGuardedSubmit();
 
@@ -50,7 +54,8 @@ export function ChangePasswordDialog({ email, context }: { email: string; contex
     event.preventDefault();
     if (step === 'password') {
       const errors: typeof fieldErrors = {};
-      if (!passwordSchema.safeParse(password).success) errors.password = t('auth.errors.passwordRules');
+      if (!passwordSchema.safeParse(password).success)
+        errors.password = t('auth.errors.passwordRules');
       if (password !== confirm) errors.confirm = t('auth.reset.mismatch');
       setFieldErrors(errors);
       if (Object.keys(errors).length) return;
@@ -94,7 +99,9 @@ export function ChangePasswordDialog({ email, context }: { email: string; contex
       open={open}
       onOpenChange={reset}
       trigger={<Button size="sm">{t('settings.account.passwordChange')}</Button>}
-      title={step === 'code' ? t('settings.account.reauthTitle') : t('settings.account.passwordChange')}
+      title={
+        step === 'code' ? t('settings.account.reauthTitle') : t('settings.account.passwordChange')
+      }
       description={step === 'code' ? t('settings.account.reauthText', { email }) : undefined}
       size="sm"
       footer={
@@ -113,12 +120,29 @@ export function ChangePasswordDialog({ email, context }: { email: string; contex
         {step === 'password' ? (
           <>
             {/* Lets password managers attach the new password to the right account. */}
-            <input type="email" name="username" autoComplete="username" value={email} readOnly hidden />
+            <input
+              type="email"
+              name="username"
+              autoComplete="username"
+              value={email}
+              readOnly
+              hidden
+            />
             <Field label={t('settings.account.newPassword')} error={fieldErrors.password}>
-              <PasswordInput meter context={context} value={password} onChange={(e) => setPassword(e.target.value)} autoComplete="new-password" />
+              <PasswordInput
+                meter
+                context={context}
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                autoComplete="new-password"
+              />
             </Field>
             <Field label={t('settings.account.confirmPassword')} error={fieldErrors.confirm}>
-              <PasswordInput value={confirm} onChange={(e) => setConfirm(e.target.value)} autoComplete="new-password" />
+              <PasswordInput
+                value={confirm}
+                onChange={(e) => setConfirm(e.target.value)}
+                autoComplete="new-password"
+              />
             </Field>
           </>
         ) : (

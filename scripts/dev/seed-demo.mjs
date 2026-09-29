@@ -76,7 +76,7 @@ export async function createDemoAccount({ tag = 'demo', tasks = true, onboarded 
   });
   await admin(`/rest/v1/profiles?id=eq.${user.id}`, {
     method: 'PATCH',
-    body: JSON.stringify({ xp: 2050, level: 6, bio: 'Собираю свою галактику из маленьких побед. Утро — для глубокой работы.' }),
+    body: JSON.stringify({ xp: 2050, level: 6, bio: 'Утро — для глубокой работы, вечер — для бега.' }),
   });
   if (onboarded) {
     await admin(`/rest/v1/user_settings?user_id=eq.${user.id}`, {

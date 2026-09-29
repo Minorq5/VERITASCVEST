@@ -33,12 +33,21 @@ export function FriendCard({ profile }: { profile: Profile }) {
   return (
     <Surface className="flex flex-col gap-6 p-6 sm:flex-row sm:items-center lg:flex-col lg:items-stretch">
       <div className="flex flex-1 flex-col gap-2">
-        <p className="eyebrow">{t('publicId')}</p>
+        <p className="label-mono">{t('publicId')}</p>
         <div className="flex items-center gap-2">
-          <span className="font-mono text-2xl font-medium tracking-[0.08em] text-fg tabular" translate="no">
+          <span
+            className="font-mono tabular text-2xl font-medium tracking-[0.08em] text-fg"
+            translate="no"
+          >
             {profile.public_id}
           </span>
-          <Button variant="ghost" size="sm" icon={copied ? <Check /> : <Copy />} onClick={() => void copy()} aria-label={t('copyId')}>
+          <Button
+            variant="ghost"
+            size="sm"
+            icon={copied ? <Check /> : <Copy />}
+            onClick={() => void copy()}
+            aria-label={t('copyId')}
+          >
             <span className="sr-only sm:not-sr-only">{copied ? t('copied') : t('copy')}</span>
           </Button>
         </div>
@@ -49,7 +58,15 @@ export function FriendCard({ profile }: { profile: Profile }) {
             size="sm"
             icon={<Share2 />}
             className="mt-2 self-start"
-            onClick={() => void navigator.share({ title: 'Veritas Tasks', text: t('shareText', { id: profile.public_id }), url: link }).catch(() => undefined)}
+            onClick={() =>
+              void navigator
+                .share({
+                  title: 'Veritas Tasks',
+                  text: t('shareText', { id: profile.public_id }),
+                  url: link,
+                })
+                .catch(() => undefined)
+            }
           >
             {t('share')}
           </Button>
@@ -59,7 +76,7 @@ export function FriendCard({ profile }: { profile: Profile }) {
         {origin ? (
           <QrCode value={link} size={188} label={t('qrTitle')} className="" />
         ) : (
-          <span className="block size-[188px] rounded-xl bg-surface-3" />
+          <span className="block size-[188px] rounded-sm bg-surface-3" />
         )}
       </div>
     </Surface>

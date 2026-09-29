@@ -28,9 +28,12 @@ export function AvatarEditor({ profile, size = 112 }: { profile: Profile; size?:
   const [busy, setBusy] = useState(false);
   const updateProfile = useUpdateProfile();
 
-  useEffect(() => () => {
-    if (source) URL.revokeObjectURL(source);
-  }, [source]);
+  useEffect(
+    () => () => {
+      if (source) URL.revokeObjectURL(source);
+    },
+    [source],
+  );
 
   function pick(file: File | undefined) {
     if (!file) return;
@@ -85,7 +88,7 @@ export function AvatarEditor({ profile, size = 112 }: { profile: Profile; size?:
   const badge = (
     <span
       aria-hidden
-      className="absolute right-0 bottom-0 flex size-9 items-center justify-center rounded-full border border-line-strong bg-surface-4 text-fg transition-colors group-hover/avatar:bg-surface-5 [&_svg]:size-4"
+      className="absolute -right-1 -bottom-1 flex size-8 items-center justify-center rounded-full border border-line-strong bg-surface-3 text-fg-2 transition-colors group-hover/avatar:bg-surface-4 group-hover/avatar:text-fg [&_svg]:size-4"
     >
       <Camera />
     </span>
@@ -108,8 +111,16 @@ export function AvatarEditor({ profile, size = 112 }: { profile: Profile; size?:
       {profile.avatar_path ? (
         <Menu>
           <MenuTrigger asChild>
-            <button type="button" className="group/avatar focus-ring relative rounded-full" aria-label={t('profile.avatar.change')}>
-              <Avatar name={profile.display_name} src={avatarUrl(profile.avatar_path)} size={size} />
+            <button
+              type="button"
+              className="group/avatar relative rounded-full focus-ring"
+              aria-label={t('profile.avatar.change')}
+            >
+              <Avatar
+                name={profile.display_name}
+                src={avatarUrl(profile.avatar_path)}
+                size={size}
+              />
               {badge}
             </button>
           </MenuTrigger>
@@ -123,7 +134,12 @@ export function AvatarEditor({ profile, size = 112 }: { profile: Profile; size?:
           </MenuContent>
         </Menu>
       ) : (
-        <button type="button" onClick={openPicker} className="group/avatar focus-ring relative rounded-full" aria-label={t('profile.avatar.upload')}>
+        <button
+          type="button"
+          onClick={openPicker}
+          className="group/avatar relative rounded-full focus-ring"
+          aria-label={t('profile.avatar.upload')}
+        >
           <Avatar name={profile.display_name} size={size} />
           {badge}
         </button>
@@ -152,7 +168,10 @@ export function AvatarEditor({ profile, size = 112 }: { profile: Profile; size?:
           <div className="flex flex-col gap-5">
             <div
               data-vaul-no-drag
-              className={cn('relative aspect-square w-full overflow-hidden rounded-lg bg-void', busy && 'pointer-events-none opacity-70')}
+              className={cn(
+                'relative aspect-square w-full overflow-hidden rounded-md bg-void',
+                busy && 'pointer-events-none opacity-70',
+              )}
             >
               <Cropper
                 image={source}
@@ -167,11 +186,16 @@ export function AvatarEditor({ profile, size = 112 }: { profile: Profile; size?:
                 onCropChange={setCrop}
                 onZoomChange={setZoom}
                 onCropComplete={(_, pixels) => setArea(pixels)}
-                style={{ cropAreaStyle: { border: '2px solid var(--accent)', boxShadow: '0 0 0 9999px rgb(2 2 3 / 0.72)' } }}
+                style={{
+                  cropAreaStyle: {
+                    border: '2px solid var(--accent)',
+                    boxShadow: '0 0 0 9999px rgb(2 2 3 / 0.72)',
+                  },
+                }}
               />
             </div>
             <div className="flex flex-col gap-2">
-              <span className="text-sm font-medium text-fg-2">{t('profile.avatar.zoom')}</span>
+              <span className="label-mono">{t('profile.avatar.zoom')}</span>
               <Slider
                 label={t('profile.avatar.zoom')}
                 min={1}

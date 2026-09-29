@@ -134,16 +134,6 @@
   color: var(--color-fg-3);
 }
 
-@utility eyebrow {
-  font-family: var(--font-mono);
-  font-size: var(--text-label);
-  line-height: var(--text-label--line-height);
-  letter-spacing: var(--text-label--letter-spacing);
-  text-transform: uppercase;
-  font-weight: 500;
-  color: var(--color-fg-3);
-}
-
 @utility no-scrollbar {
   scrollbar-width: none;
   &::-webkit-scrollbar {

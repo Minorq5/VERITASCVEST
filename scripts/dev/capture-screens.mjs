@@ -67,7 +67,7 @@ for (const kind of only) {
   await guest.close();
 
   // Onboarding (a fresh account)
-  if (!screens || [...screens].some((s) => s.startsWith('onboarding'))) {
+  if (!screens || [...screens].some((s) => s.startsWith('onboarding') || s === 'empty')) {
     const fresh = await createDemoAccount({ tag: 'onb', tasks: false, onboarded: false });
     const ctx = await browser.newContext(options);
     const p = await ctx.newPage();
@@ -78,6 +78,13 @@ for (const kind of only) {
       await p.getByRole('button', { name: 'Далее' }).click();
       await settle(p, 1200);
       await shot(p, dir, `onboarding-${n}`);
+    }
+    // A brand-new account: the empty planner.
+    if (!screens || screens.has('empty')) {
+      await p.getByRole('button', { name: 'Пропустить' }).click();
+      await p.waitForURL(/\/ru\/today/);
+      await settle(p, 2500);
+      await shot(p, dir, 'empty');
     }
     await ctx.close();
   }
@@ -96,6 +103,11 @@ for (const kind of only) {
     ['trash', '/ru/trash'],
     ['profile', '/ru/profile'],
     ['settings', kind === 'desktop' ? '/ru/settings/appearance' : '/ru/settings'],
+    ['settings-account', '/ru/settings/account'],
+    ['settings-appearance', '/ru/settings/appearance'],
+    ['settings-sound', '/ru/settings/sound'],
+    ['settings-language', '/ru/settings/language'],
+    ['settings-privacy', '/ru/settings/privacy'],
   ]) {
     if (screens && !screens.has(name)) continue;
     await page.goto(`${BASE}${url}`);

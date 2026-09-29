@@ -3,13 +3,22 @@
 import { useTranslations } from 'next-intl';
 import { RadioGroup, RadioItem } from '@/components/ui/radio-group';
 import { Switch } from '@/components/ui/switch';
-import { useProfile, useSettings, useUpdateProfile, useUpdateSettings } from '@/features/account/queries';
+import {
+  useProfile,
+  useSettings,
+  useUpdateProfile,
+  useUpdateSettings,
+} from '@/features/account/queries';
 import { authErrorKey } from '@/lib/auth/errors';
 import { toast } from '@/stores/toasts';
 import { SettingRow, SettingsGroup } from './setting-row';
 
 const FRIEND_REQUESTS = ['everyone', 'friends_of_friends', 'nobody'] as const;
-const LABEL = { everyone: 'everyone', friends_of_friends: 'friendsOfFriends', nobody: 'nobody' } as const;
+const LABEL = {
+  everyone: 'everyone',
+  friends_of_friends: 'friendsOfFriends',
+  nobody: 'nobody',
+} as const;
 
 export function PrivacySection() {
   const t = useTranslations('settings.privacy');
@@ -52,7 +61,9 @@ export function PrivacySection() {
             label={t('leaderboard')}
             description={t('leaderboardHint')}
             checked={settings.show_in_leaderboard}
-            onCheckedChange={(on) => updateSettings.mutate({ show_in_leaderboard: on }, { onError: fail })}
+            onCheckedChange={(on) =>
+              updateSettings.mutate({ show_in_leaderboard: on }, { onError: fail })
+            }
           />
         </SettingRow>
       </SettingsGroup>

@@ -62,7 +62,8 @@ export function ProfileForm({ profile }: { profile: Profile }) {
         toast.success(t('profile.saved'));
       } catch (error) {
         const key = authErrorKey(error);
-        if (key === 'usernameTaken' || key === 'invalidUsername') setErrors({ username: t(`auth.errors.${key}`) });
+        if (key === 'usernameTaken' || key === 'invalidUsername')
+          setErrors({ username: t(`auth.errors.${key}`) });
         else toast.error(t(`auth.errors.${key}`));
       }
     });
@@ -70,7 +71,7 @@ export function ProfileForm({ profile }: { profile: Profile }) {
 
   return (
     <Surface className="p-6 sm:p-7">
-      <h2 className="font-display text-lg font-semibold text-fg">{t('profile.edit')}</h2>
+      <h2 className="label-mono">{t('profile.edit')}</h2>
       <form onSubmit={submit} noValidate className="mt-6 flex flex-col gap-5">
         <Field label={t('profile.displayName')} error={errors.displayName}>
           <Input
@@ -92,7 +93,10 @@ export function ProfileForm({ profile }: { profile: Profile }) {
           status={status}
           error={errors.username}
         />
-        <Field label={t('profile.bio')} hint={t('profile.bioCounter', { count: bio.length, max: BIO_MAX })}>
+        <Field
+          label={t('profile.bio')}
+          hint={t('profile.bioCounter', { count: bio.length, max: BIO_MAX })}
+        >
           <Textarea
             value={bio}
             onChange={(e) => setBio(e.target.value.slice(0, BIO_MAX))}
@@ -102,7 +106,12 @@ export function ProfileForm({ profile }: { profile: Profile }) {
           />
         </Field>
         <div className="flex justify-end">
-          <Button type="submit" variant="primary" loading={pending} disabled={!dirty || usernameBlocked}>
+          <Button
+            type="submit"
+            variant="primary"
+            loading={pending}
+            disabled={!dirty || usernameBlocked}
+          >
             {t('profile.save')}
           </Button>
         </div>

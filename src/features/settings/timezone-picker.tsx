@@ -9,7 +9,13 @@ import { allZones, describeZone, deviceTimeZone, searchZones } from '@/lib/time/
 import { cn } from '@/lib/utils/cn';
 
 /** Searchable list of every IANA time zone, with the device zone on top. */
-export function TimezonePicker({ value, onChange }: { value: string; onChange: (zone: string) => void }) {
+export function TimezonePicker({
+  value,
+  onChange,
+}: {
+  value: string;
+  onChange: (zone: string) => void;
+}) {
   const t = useTranslations('settings.language');
   const locale = useLocale();
   const [open, setOpen] = useState(false);
@@ -19,11 +25,16 @@ export function TimezonePicker({ value, onChange }: { value: string; onChange: (
   const listId = useId();
 
   const device = useMemo(() => deviceTimeZone(), []);
-  const zones = useMemo(() => (open ? allZones().map((z) => describeZone(z, locale)) : []), [open, locale]);
+  const zones = useMemo(
+    () => (open ? allZones().map((z) => describeZone(z, locale)) : []),
+    [open, locale],
+  );
   const current = useMemo(() => describeZone(value, locale), [value, locale]);
   const q = query.trim().toLowerCase().replace(/ё/g, 'е');
   const results = useMemo(() => searchZones(zones, q), [zones, q]);
-  const options = q ? results : [describeZone(device, locale), ...results.filter((z) => z.id !== device)];
+  const options = q
+    ? results
+    : [describeZone(device, locale), ...results.filter((z) => z.id !== device)];
 
   function choose(zone: string) {
     onChange(zone);
@@ -34,7 +45,9 @@ export function TimezonePicker({ value, onChange }: { value: string; onChange: (
   function move(next: number) {
     const clamped = Math.max(0, Math.min(options.length - 1, next));
     setActive(clamped);
-    listRef.current?.querySelector(`[data-index="${clamped}"]`)?.scrollIntoView({ block: 'nearest' });
+    listRef.current
+      ?.querySelector(`[data-index="${clamped}"]`)
+      ?.scrollIntoView({ block: 'nearest' });
   }
 
   function onKeyDown(event: KeyboardEvent<HTMLInputElement>) {
@@ -59,7 +72,10 @@ export function TimezonePicker({ value, onChange }: { value: string; onChange: (
       <PopoverTrigger asChild>
         <button
           type="button"
-          className={cn(controlFrame, 'h-11 w-full justify-between gap-3 px-3 text-left sm:w-80 hover-ok:border-line-bright')}
+          className={cn(
+            controlFrame,
+            'h-11 w-full justify-between gap-3 px-3 text-left sm:w-80 hover-ok:border-line-bright',
+          )}
           aria-label={`${t('timezone')}: ${current.city}`}
         >
           <span className="flex min-w-0 flex-col">
@@ -90,8 +106,16 @@ export function TimezonePicker({ value, onChange }: { value: string; onChange: (
             className="h-11 w-full bg-transparent text-base text-fg outline-none placeholder:text-fg-4"
           />
         </div>
-        <ul ref={listRef} id={listId} role="listbox" aria-label={t('timezone')} className="max-h-80 overflow-y-auto p-1.5">
-          {options.length === 0 && <li className="px-3 py-6 text-center text-sm text-fg-3">{t('timezoneEmpty')}</li>}
+        <ul
+          ref={listRef}
+          id={listId}
+          role="listbox"
+          aria-label={t('timezone')}
+          className="max-h-80 overflow-y-auto p-1.5"
+        >
+          {options.length === 0 && (
+            <li className="px-3 py-6 text-center text-sm text-fg-3">{t('timezoneEmpty')}</li>
+          )}
           {options.map((zone, index) => {
             const selected = zone.id === value;
             const isDevice = !q && index === 0;
@@ -121,8 +145,12 @@ export function TimezonePicker({ value, onChange }: { value: string; onChange: (
                   </span>
                   <span className="truncate text-xs text-fg-3">{zone.local || zone.region}</span>
                 </span>
-                <span className="shrink-0 font-mono text-xs text-fg-3 tabular">{zone.offset}</span>
-                {selected ? <Check className="size-4 shrink-0 text-accent" aria-hidden /> : <span className="size-4 shrink-0" />}
+                <span className="shrink-0 font-mono tabular text-xs text-fg-3">{zone.offset}</span>
+                {selected ? (
+                  <Check className="size-4 shrink-0 text-accent" aria-hidden />
+                ) : (
+                  <span className="size-4 shrink-0" />
+                )}
               </li>
             );
           })}

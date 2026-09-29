@@ -2,17 +2,17 @@
 
 import { CalendarDays } from 'lucide-react';
 import { useFormatter, useTranslations } from 'next-intl';
-import { RankIcon } from '@/components/brand/icons';
-import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
-import { Surface } from '@/components/ui/surface';
 import { useProfile } from '@/features/account/queries';
-import { levelProgress, tierRoman } from '@/lib/domain/levels';
 import { AvatarEditor } from './avatar-editor';
 import { FriendCard } from './friend-card';
-import { LevelRing } from './level-card';
+import { LevelReadings } from './level-card';
 import { ProfileForm } from './profile-form';
 
+/**
+ * The profile as an instrument page: who you are on the left, your readings
+ * (level, experience, rank) on the right, then editing and the friend code.
+ */
 export function ProfileView() {
   const t = useTranslations();
   const format = useFormatter();
@@ -20,42 +20,44 @@ export function ProfileView() {
 
   if (!profile) {
     return (
-      <div className="flex flex-col gap-6" aria-busy>
-        <Skeleton className="h-52 rounded-lg" />
+      <div className="flex flex-col gap-8" aria-busy>
+        <Skeleton className="h-36 rounded-md" />
         <div className="grid gap-6 lg:grid-cols-[1fr_340px]">
-          <Skeleton className="h-96 rounded-lg" />
-          <Skeleton className="h-80 rounded-lg" />
+          <Skeleton className="h-96 rounded-md" />
+          <Skeleton className="h-80 rounded-md" />
         </div>
       </div>
     );
   }
 
-  const lp = levelProgress(profile.xp);
-
   return (
-    <div className="flex flex-col gap-6">
+    <div className="flex flex-col gap-8">
       <h1 className="sr-only">{t('profile.title')}</h1>
-      <Surface className="overflow-hidden p-6 sm:p-8">
-        <div className="relative flex flex-col items-center gap-6 text-center sm:flex-row sm:items-center sm:text-left">
-          <AvatarEditor profile={profile} />
-          <div className="flex min-w-0 flex-1 flex-col items-center gap-2 sm:items-start">
-            <p className="font-display text-3xl leading-tight font-semibold break-words text-fg">{profile.display_name}</p>
-            <p className="font-mono text-base text-fg-3">@{profile.username}</p>
-            <div className="mt-1 flex flex-wrap items-center justify-center gap-2 sm:justify-start">
-              <Badge tone="accent">
-                <RankIcon aria-hidden />
-                {t(`ranks.${lp.rank}`)} {tierRoman(lp.tier)}
-              </Badge>
-              <Badge>
-                <CalendarDays aria-hidden />
-                {t('profile.memberSince', { date: format.dateTime(new Date(profile.created_at), { day: 'numeric', month: 'long', year: 'numeric' }) })}
-              </Badge>
-            </div>
-            {profile.bio && <p className="mt-2 max-w-prose text-base whitespace-pre-line text-fg-2">{profile.bio}</p>}
+      <header className="flex flex-col gap-6 border-b border-line pb-6 lg:flex-row lg:items-end lg:justify-between lg:gap-12">
+        <div className="flex min-w-0 items-center gap-5">
+          <AvatarEditor profile={profile} size={88} />
+          <div className="min-w-0">
+            <p className="font-display text-3xl leading-tight font-medium tracking-[-0.02em] break-words text-fg">
+              {profile.display_name}
+            </p>
+            <p className="mt-1 font-mono text-sm text-fg-3">@{profile.username}</p>
+            <p className="mt-2.5 flex items-center gap-1.5 font-mono text-[0.6875rem] tracking-[0.06em] text-fg-3 uppercase">
+              <CalendarDays aria-hidden className="size-3.5" />
+              {t('profile.memberSince', {
+                date: format.dateTime(new Date(profile.created_at), {
+                  day: 'numeric',
+                  month: 'long',
+                  year: 'numeric',
+                }),
+              })}
+            </p>
           </div>
-          <LevelRing profile={profile} />
         </div>
-      </Surface>
+        <LevelReadings profile={profile} className="w-full lg:max-w-md" />
+      </header>
+      {profile.bio && (
+        <p className="-mt-2 max-w-prose text-base whitespace-pre-line text-fg-2">{profile.bio}</p>
+      )}
 
       <div className="grid items-start gap-6 lg:grid-cols-[1fr_340px]">
         <ProfileForm profile={profile} />

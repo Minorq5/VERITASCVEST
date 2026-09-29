@@ -37,7 +37,9 @@ export function DeleteAccountDialog({ username }: { username: string }) {
         body: { confirm: typed.trim() },
       });
       if (invokeError) {
-        setError(invokeError.name === 'FunctionsFetchError' ? 'network' : authErrorKey(invokeError));
+        setError(
+          invokeError.name === 'FunctionsFetchError' ? 'network' : authErrorKey(invokeError),
+        );
         return;
       }
       // The account is gone; the local session and the device copy only need forgetting.
@@ -74,7 +76,13 @@ export function DeleteAccountDialog({ username }: { username: string }) {
           <Button variant="ghost" onClick={() => setOpen(false)} disabled={pending}>
             {t('common.cancel')}
           </Button>
-          <Button variant="danger" type="submit" form="delete-account" disabled={!matches} loading={pending}>
+          <Button
+            variant="danger"
+            type="submit"
+            form="delete-account"
+            disabled={!matches}
+            loading={pending}
+          >
             {t('settings.account.deleteButton')}
           </Button>
         </>
@@ -85,7 +93,9 @@ export function DeleteAccountDialog({ username }: { username: string }) {
         <Field
           label={t.rich('settings.account.deleteConfirmLabel', {
             username,
-            name: (chunks) => <span className="font-mono font-semibold break-all text-fg">{chunks}</span>,
+            name: (chunks) => (
+              <span className="font-mono font-semibold break-all text-fg">{chunks}</span>
+            ),
           })}
         >
           <Input

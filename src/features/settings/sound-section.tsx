@@ -11,7 +11,12 @@ import { sound } from '@/sound/engine';
 import { SettingRow, SettingsGroup } from './setting-row';
 
 type VolumeKey = 'sound_volume' | 'sound_ui' | 'sound_fx' | 'sound_ambient';
-const ENGINE_KEY = { sound_volume: 'volume', sound_ui: 'ui', sound_fx: 'fx', sound_ambient: 'ambient' } as const;
+const ENGINE_KEY = {
+  sound_volume: 'volume',
+  sound_ui: 'ui',
+  sound_fx: 'fx',
+  sound_ambient: 'ambient',
+} as const;
 
 export function SoundSection() {
   const t = useTranslations();
@@ -48,7 +53,9 @@ export function SoundSection() {
               if (key !== 'sound_ambient') sound.play(key === 'sound_fx' ? 'success' : 'click');
             }}
           />
-          <span className="w-11 shrink-0 text-right font-mono text-sm text-fg-3 tabular">{Math.round(value * 100)}%</span>
+          <span className="w-11 shrink-0 text-right font-mono tabular text-sm text-fg-3">
+            {Math.round(value * 100)}%
+          </span>
         </div>
       </SettingRow>
     );
@@ -85,7 +92,10 @@ export function SoundSection() {
         </SettingRow>
       </SettingsGroup>
 
-      <SettingsGroup title={t('settings.sound.channels')} description={t('settings.sound.channelsHint')}>
+      <SettingsGroup
+        title={t('settings.sound.channels')}
+        description={t('settings.sound.channelsHint')}
+      >
         {volumeRow('sound_ui', t('settings.sound.ui'), off)}
         {volumeRow('sound_fx', t('settings.sound.fx'), off)}
       </SettingsGroup>
@@ -100,7 +110,11 @@ export function SoundSection() {
             onCheckedChange={(on) => save({ ambient_enabled: on })}
           />
         </SettingRow>
-        {volumeRow('sound_ambient', t('settings.sound.ambientVolume'), off || !settings.ambient_enabled)}
+        {volumeRow(
+          'sound_ambient',
+          t('settings.sound.ambientVolume'),
+          off || !settings.ambient_enabled,
+        )}
       </SettingsGroup>
 
       <p className="flex items-start gap-2 px-1 text-sm text-fg-3">

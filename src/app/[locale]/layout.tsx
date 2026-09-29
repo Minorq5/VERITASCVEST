@@ -1,11 +1,10 @@
 import type { Metadata, Viewport } from 'next';
-import Script from 'next/script';
 import { notFound } from 'next/navigation';
 import { hasLocale, NextIntlClientProvider } from 'next-intl';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { fontVariables } from '@/app/fonts';
+import { BootScript } from '@/components/boot-script';
 import { Providers } from '@/components/providers';
-import { bootScript } from '@/lib/boot-script';
 import { siteUrl } from '@/lib/site';
 import { localeTags, routing } from '@/i18n/routing';
 import '@/styles/globals.css';
@@ -63,9 +62,7 @@ export default async function LocaleLayout({ children, params }: LayoutProps<'/[
   return (
     <html lang={locale} className={fontVariables} data-accent="amber" suppressHydrationWarning>
       <body>
-        <Script id="vt-boot" strategy="beforeInteractive">
-          {bootScript}
-        </Script>
+        <BootScript />
         <a
           href="#main"
           className="fixed top-4 left-4 z-[var(--z-toast)] -translate-y-24 rounded-md bg-accent px-4 py-2 font-semibold text-accent-ink focus-ring transition-transform focus:translate-y-0"

@@ -28,7 +28,11 @@ export function AppearanceSection() {
               label={t('accent.label')}
               value={device.accent}
               size={36}
-              swatches={accents.map((a) => ({ value: a, color: accentPalette[a].accent, label: t(`accent.${a}`) }))}
+              swatches={accents.map((a) => ({
+                value: a,
+                color: accentPalette[a].accent,
+                label: t(`accent.${a}`),
+              }))}
               onValueChange={(accent) => {
                 device.set('accent', accent);
                 updateSettings.mutate({ accent });
@@ -43,7 +47,11 @@ export function AppearanceSection() {
 
       <SettingsGroup title={t('quality.label')} description={t('settings.appearance.qualityHint')}>
         <SettingRow>
-          <QualityChoice value={device.quality} recommended={recommended} onChange={(q) => device.set('quality', q)} />
+          <QualityChoice
+            value={device.quality}
+            recommended={recommended}
+            onChange={(q) => device.set('quality', q)}
+          />
         </SettingRow>
       </SettingsGroup>
 
