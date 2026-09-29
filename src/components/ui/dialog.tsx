@@ -49,22 +49,20 @@ export function Dialog({
               className,
             )}
           >
-            <div className="flex items-start justify-between gap-4">
-              <div className="flex flex-col gap-2">
-                <D.Title className="font-display text-xl font-semibold text-fg">{title}</D.Title>
-                {description ? (
-                  <D.Description className="text-base text-fg-2">{description}</D.Description>
-                ) : (
-                  <D.Description className="sr-only">{title}</D.Description>
-                )}
-              </div>
-              <D.Close
-                aria-label={t('closeDialog')}
-                className="-mt-1 -mr-2 inline-flex size-9 shrink-0 items-center justify-center rounded-md text-fg-3 focus-ring transition-colors hover-ok:bg-surface-4 hover-ok:text-fg"
-              >
-                <X className="size-[18px]" />
-              </D.Close>
+            <div className="flex flex-col gap-2">
+              <D.Title className="pr-10 font-display text-xl font-semibold text-fg">{title}</D.Title>
+              {description ? (
+                <D.Description className="text-base text-fg-2">{description}</D.Description>
+              ) : (
+                <D.Description className="sr-only">{title}</D.Description>
+              )}
             </div>
+            <D.Close
+              aria-label={t('closeDialog')}
+              className="absolute top-5 right-5 inline-flex size-9 items-center justify-center rounded-md text-fg-3 focus-ring transition-colors hover-ok:bg-surface-4 hover-ok:text-fg sm:top-6 sm:right-6"
+            >
+              <X className="size-[18px]" />
+            </D.Close>
             {children && <div className="mt-5">{children}</div>}
             {footer && (
               <div className="mt-7 flex flex-col-reverse gap-2 sm:flex-row sm:justify-end">

@@ -1,8 +1,10 @@
 'use client';
 
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { MotionConfig } from 'motion/react';
-import { useEffect, type ReactNode } from 'react';
+import { useEffect, useState, type ReactNode } from 'react';
 import { CustomCursor } from '@/components/effects/custom-cursor';
+import { SessionSync } from '@/components/session-sync';
 import { Toaster } from '@/components/ui/toaster';
 import { TooltipProvider } from '@/components/ui/tooltip';
 import { spring } from '@/lib/motion/tokens';
@@ -23,19 +25,32 @@ function DeviceAttributes() {
   return null;
 }
 
+function createQueryClient() {
+  return new QueryClient({
+    defaultOptions: {
+      queries: { staleTime: 30_000, refetchOnWindowFocus: false, retry: 1 },
+      mutations: { retry: 0 },
+    },
+  });
+}
+
 export function Providers({ children }: { children: ReactNode }) {
   const motion = useDeviceSettings((s) => s.motion);
+  const [queryClient] = useState(createQueryClient);
   return (
-    <MotionConfig
-      reducedMotion={motion === 'reduced' ? 'always' : 'user'}
-      transition={spring.smooth}
-    >
-      <TooltipProvider delayDuration={450} skipDelayDuration={250}>
-        <DeviceAttributes />
-        {children}
-        <Toaster />
-        <CustomCursor />
-      </TooltipProvider>
-    </MotionConfig>
+    <QueryClientProvider client={queryClient}>
+      <MotionConfig
+        reducedMotion={motion === 'reduced' ? 'always' : 'user'}
+        transition={spring.smooth}
+      >
+        <TooltipProvider delayDuration={450} skipDelayDuration={250}>
+          <SessionSync />
+          <DeviceAttributes />
+          {children}
+          <Toaster />
+          <CustomCursor />
+        </TooltipProvider>
+      </MotionConfig>
+    </QueryClientProvider>
   );
 }

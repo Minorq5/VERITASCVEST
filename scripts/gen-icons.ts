@@ -64,7 +64,16 @@ async function icons() {
     await writeFile(`public/icons/icon-${size}.png`, await png(app, size));
     await writeFile(`public/icons/maskable-${size}.png`, await png(maskable, size));
   }
-  console.log('icons: favicon.ico, icon.svg, apple-icon.png, icon-192/512, maskable-192/512');
+  // Emails cannot show SVG reliably: a 2× PNG of the lockup (displayed at 180×40).
+  const lockup = await readFile(`${BRAND}/veritas-lockup.svg`);
+  await writeFile(
+    `${BRAND}/veritas-email-logo.png`,
+    await sharp(lockup, { density: 300 })
+      .resize(360, 80, { fit: 'contain', background: { r: 0, g: 0, b: 0, alpha: 0 } })
+      .png()
+      .toBuffer(),
+  );
+  console.log('icons: favicon.ico, icon.svg, apple-icon.png, icon-192/512, maskable-192/512, email logo');
 }
 
 async function ogCards(base: string) {

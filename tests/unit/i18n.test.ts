@@ -57,7 +57,7 @@ describe('translations', () => {
     // Run `node scripts/i18n/typograf.mjs` after editing translations.
     for (const locale of ['ru', 'bg'] as const) {
       for (const [key, value] of Object.entries(locales[locale])) {
-        const text = value.replace(/\{[^{}]*\}/g, '');
+        const text = value.replace(/\{[^{}]*\}/g, 'X');
         expect(text, `${locale}:${key}`).not.toMatch(
           /(^|[\s(«„"])(в|и|с|к|о|у|а|на|по|за|от|до|из|не) (?=\S)/iu,
         );

@@ -1,0 +1,8 @@
+{
+  "confirmation": "{{ if eq .Data.locale \"ru\" }}Подтвердите почту — Veritas Tasks{{ else if eq .Data.locale \"bg\" }}Потвърдете имейла си — Veritas Tasks{{ else }}Confirm your email — Veritas Tasks{{ end }}",
+  "recovery": "{{ if eq .Data.locale \"ru\" }}Новый пароль для Veritas Tasks{{ else if eq .Data.locale \"bg\" }}Нова парола за Veritas Tasks{{ else }}A new password for Veritas Tasks{{ end }}",
+  "email_change": "{{ if eq .Data.locale \"ru\" }}Подтвердите смену почты — Veritas Tasks{{ else if eq .Data.locale \"bg\" }}Потвърдете смяната на имейла — Veritas Tasks{{ else }}Confirm your email change — Veritas Tasks{{ end }}",
+  "reauthentication": "{{ if eq .Data.locale \"ru\" }}{{ .Token }} — код подтверждения Veritas Tasks{{ else if eq .Data.locale \"bg\" }}{{ .Token }} — код за потвърждение от Veritas Tasks{{ else }}{{ .Token }} is your Veritas Tasks code{{ end }}",
+  "password_changed_notification": "{{ if eq .Data.locale \"ru\" }}Пароль изменён — Veritas Tasks{{ else if eq .Data.locale \"bg\" }}Паролата е сменена — Veritas Tasks{{ else }}Password changed — Veritas Tasks{{ end }}",
+  "email_changed_notification": "{{ if eq .Data.locale \"ru\" }}Почта изменена — Veritas Tasks{{ else if eq .Data.locale \"bg\" }}Имейлът е сменен — Veritas Tasks{{ else }}Email changed — Veritas Tasks{{ end }}"
+}

@@ -1,0 +1,26 @@
+<!doctype html>
+<html>
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width"><meta name="color-scheme" content="dark"></head>
+<body style="margin:0;padding:0;background:#060912">
+<table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="background:#060912;padding:32px 12px">
+<tr><td align="center">
+<table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="max-width:520px">
+<tr><td style="padding:0 8px 20px"><img src="{{ .SiteURL }}/brand/veritas-email-logo.png" width="180" height="40" alt="Veritas Tasks" style="display:block;border:0"></td></tr>
+<tr><td style="background:#0e1422;border:1px solid #1d2842;border-radius:18px;padding:32px 28px">
+{{ if eq .Data.locale "ru" }}<h1 style="margin:0 0 12px;font:600 24px/1.25 Arial,sans-serif;color:#e8edfa">Почта изменена</h1>
+<p style="margin:0;font:16px/1.6 Arial,sans-serif;color:#b2bcd3">Почта аккаунта изменена с {{ .OldEmail }} на {{ .Email }}.</p>
+
+<p style="margin:24px 0 0;font:13px/1.6 Arial,sans-serif;color:#8791ae">Если это были не вы, восстановите доступ через «Забыли пароль?» и смените пароль.</p>{{ else if eq .Data.locale "bg" }}<h1 style="margin:0 0 12px;font:600 24px/1.25 Arial,sans-serif;color:#e8edfa">Имейлът е сменен</h1>
+<p style="margin:0;font:16px/1.6 Arial,sans-serif;color:#b2bcd3">Имейлът на профила беше сменен от {{ .OldEmail }} на {{ .Email }}.</p>
+
+<p style="margin:24px 0 0;font:13px/1.6 Arial,sans-serif;color:#8791ae">Ако не сте били вие, възстановете достъпа чрез „Забравена парола?“ и сменете паролата.</p>{{ else }}<h1 style="margin:0 0 12px;font:600 24px/1.25 Arial,sans-serif;color:#e8edfa">Email changed</h1>
+<p style="margin:0;font:16px/1.6 Arial,sans-serif;color:#b2bcd3">The account email was changed from {{ .OldEmail }} to {{ .Email }}.</p>
+
+<p style="margin:24px 0 0;font:13px/1.6 Arial,sans-serif;color:#8791ae">If this was not you, recover access with “Forgot password?” and change your password.</p>{{ end }}
+</td></tr>
+<tr><td style="padding:20px 8px 0;font:12px/1.6 Arial,sans-serif;color:#5c6788">Veritas Tasks</td></tr>
+</table>
+</td></tr>
+</table>
+</body>
+</html>

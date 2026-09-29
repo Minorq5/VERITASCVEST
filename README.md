@@ -23,9 +23,11 @@ npm run dev           # http://localhost:3000
 |---|---|
 | `npm run dev` | сайт в режиме разработки |
 | `npm run build` / `npm start` | production-сборка и запуск |
-| `npm run check` | линтер + проверка типов + тесты |
+| `npm run check` | линтер + проверка типов + юнит-тесты |
+| `npm run test:db` | тесты базы и правил доступа (pgTAP) |
+| `npm run test:e2e` | сценарии пользователя в браузере на ПК и телефоне (Playwright) |
 | `npm run icons` | иконки и фавиконы из логотипа (`-- --og <url>` — ещё и картинки превью) |
-| `npm run db:start` / `db:stop` / `db:reset` | локальный Supabase |
+| `npm run db:start` / `db:stop` / `db:reset` | локальный Supabase (письма — в тестовом ящике http://127.0.0.1:54324) |
 | `npx tsx scripts/screenshots.ts --routes /ru/design --full` | скриншоты ПК и телефона для дизайн-разбора |
 
 ## Структура

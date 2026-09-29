@@ -276,10 +276,11 @@
   --dur-base: 300ms;
   --dur-slow: 500ms;
   --dur-cinematic: 1200ms;
-  --z-dropdown: 50;
+  /* layers: floating panels sit above modals because menus and lists open inside dialogs */
   --z-sticky: 100;
   --z-overlay: 200;
   --z-modal: 300;
+  --z-dropdown: 350;
   --z-toast: 400;
   --z-cursor: 1000;
 }
@@ -363,16 +364,16 @@
 /*  Utilities                                                                */
 /* ------------------------------------------------------------------------ */
 
+/* Write only the standard property: the CSS optimizer adds the -webkit- copy
+   for Safari. Writing both made it keep just the prefixed one, which Chrome ignores. */
 @utility glass {
   background: var(--glass-bg);
   backdrop-filter: blur(20px) saturate(140%);
-  -webkit-backdrop-filter: blur(20px) saturate(140%);
 }
 
 @utility glass-strong {
   background: var(--glass-bg-strong);
   backdrop-filter: blur(28px) saturate(150%);
-  -webkit-backdrop-filter: blur(28px) saturate(150%);
 }
 
 /* Soft light that follows the pointer (set --mx/--my with useSpotlight). */
@@ -548,5 +549,14 @@ html[data-motion='reduced'] .dialog-anim[data-state='closed'] {
   }
   to {
     stroke-dashoffset: 1;
+  }
+}
+
+@keyframes planet-drift {
+  from {
+    background-position: 0 0;
+  }
+  to {
+    background-position: 1200px 0;
   }
 }
