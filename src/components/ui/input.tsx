@@ -5,17 +5,15 @@ import { cn } from '@/lib/utils/cn';
 import { useField } from './field';
 
 export const controlFrame = [
-  'group/control relative flex w-full items-center gap-2 rounded-md border bg-surface-2 text-fg',
-  'shadow-[inset_0_1px_0_rgb(255_255_255/0.03)] transition-[border-color,box-shadow,background-color] duration-200 ease-out',
+  'group/control relative flex w-full items-center gap-2 rounded-sm border bg-surface-2 text-fg',
+  'transition-[border-color,background-color] duration-[90ms] ease-out',
 ];
 
+/** Focus is a blue line on the field itself (no halo). */
 export function controlState({ invalid, disabled }: { invalid?: boolean; disabled?: boolean }) {
   return cn(
-    invalid
-      ? 'border-danger/60 focus-within:shadow-[0_0_0_4px_rgb(255_107_125/0.14)]'
-      : 'border-line-strong focus-within:border-[color-mix(in_oklab,var(--accent)_65%,transparent)] focus-within:shadow-[0_0_0_4px_color-mix(in_oklab,var(--accent)_14%,transparent)] hover-ok:border-line-bright',
-    'focus-within:bg-surface-3/60',
-    disabled && 'pointer-events-none opacity-50',
+    invalid ? 'border-danger/70 focus-within:border-danger' : 'border-line-strong hover-ok:border-line-bright focus-within:border-blue',
+    disabled && 'pointer-events-none opacity-45',
   );
 }
 
@@ -28,9 +26,9 @@ export interface InputProps extends Omit<InputHTMLAttributes<HTMLInputElement>, 
 }
 
 const sizes = {
-  sm: 'h-9 px-2.5 text-sm [&_svg]:size-4',
-  md: 'h-11 px-3 text-base [&_svg]:size-[18px]',
-  lg: 'h-12 px-4 text-md [&_svg]:size-5',
+  sm: 'h-8 px-2.5 text-sm [&_svg]:size-4',
+  md: 'h-9 px-3 text-base [&_svg]:size-4',
+  lg: 'h-11 px-3.5 text-md [&_svg]:size-[18px]',
 } as const;
 
 export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(

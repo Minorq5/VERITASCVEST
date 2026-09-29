@@ -28,8 +28,8 @@ export function Tooltip({ content, shortcut, side = 'top', children, disabled }:
           sideOffset={8}
           collisionPadding={12}
           className={cn(
-            'z-[var(--z-toast)] flex max-w-72 items-center gap-2 rounded-sm px-2.5 py-1.5 text-sm text-fg',
-            'border border-line-strong shadow-md glass-strong',
+            'z-[var(--z-toast)] flex max-w-72 items-center gap-2 rounded-sm px-2 py-1 text-sm text-fg',
+            'border border-line-bright bg-surface-3',
             'origin-[var(--radix-tooltip-content-transform-origin)]',
             'overlay-anim',
           )}

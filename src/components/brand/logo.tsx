@@ -2,31 +2,37 @@
 
 import { motion } from 'motion/react';
 import { useId } from 'react';
-import { cn } from '@/lib/utils/cn';
-import { ease } from '@/lib/motion/tokens';
 import { useLessMotion } from '@/lib/hooks/use-less-motion';
-import {
-  MARK_LEFT_ARM,
-  MARK_ORBIT,
-  MARK_RIGHT_ARM,
-  MARK_STAR,
-  MARK_STAR_CENTER,
-  MARK_VIEWBOX,
-} from './logo-geometry';
+import { ease } from '@/lib/motion/tokens';
+import { cn } from '@/lib/utils/cn';
+import { ECLIPSE, HORIZON, LENS, MARK_VIEWBOX, type MarkVariant } from './logo-geometry';
+
+/** The mark the product uses until the owner picks one of the three on /design. */
+export const DEFAULT_MARK: MarkVariant = 'lens';
 
 interface LogoMarkProps {
   size?: number;
-  /** Large renders show the orbit and a halo; small ones stay crisp. */
+  variant?: MarkVariant;
+  /** Large renders add hairlines (the dark point, the disk); small ones stay bare. */
   detail?: 'full' | 'compact';
-  /** Beams draw in and the star ignites on mount. */
+  /** The lines of light draw in toward the dark point, as at the end of the intro. */
   animated?: boolean;
   className?: string;
   /** Accessible name; omit when the mark sits next to visible text. */
   title?: string;
 }
 
+/** Thicker strokes as the mark gets smaller, so it keeps its weight at 16px. */
+function strokeFor(size: number) {
+  if (size >= 96) return 3.6;
+  if (size >= 48) return 4.5;
+  if (size >= 24) return 5.5;
+  return 6.5;
+}
+
 export function LogoMark({
   size = 32,
+  variant = DEFAULT_MARK,
   detail = size >= 72 ? 'full' : 'compact',
   animated = false,
   className,
@@ -35,6 +41,19 @@ export function LogoMark({
   const id = useId().replace(/:/g, '');
   const reduce = useLessMotion();
   const play = animated && !reduce;
+  const sw = strokeFor(size);
+  const full = detail === 'full';
+
+  const draw = (delay: number, opacity = 1) => ({
+    initial: play ? { pathLength: 0, opacity: 0 } : false,
+    animate: { pathLength: 1, opacity },
+    transition: { duration: 0.9, ease: ease.cinematic, delay },
+  });
+  const appear = (delay: number, opacity = 1) => ({
+    initial: play ? { opacity: 0 } : false,
+    animate: { opacity },
+    transition: { duration: 0.6, ease: ease.out, delay },
+  });
 
   return (
     <svg
@@ -45,96 +64,91 @@ export function LogoMark({
       role={title ? 'img' : undefined}
       aria-hidden={title ? undefined : true}
       aria-label={title}
+      fill="none"
     >
-      <defs>
-        <linearGradient id={`${id}-beam`} x1="0" y1="0" x2="0" y2="1">
-          <stop
-            offset="0"
-            style={{ stopColor: 'var(--accent-lo)', stopOpacity: detail === 'full' ? 0.35 : 0.7 }}
-          />
-          <stop offset="0.5" style={{ stopColor: 'var(--accent)' }} />
-          <stop offset="1" style={{ stopColor: 'var(--accent-hi)' }} />
-        </linearGradient>
-        <radialGradient id={`${id}-halo`}>
-          <stop offset="0" style={{ stopColor: 'var(--accent)', stopOpacity: 0.85 }} />
-          <stop offset="1" style={{ stopColor: 'var(--accent)', stopOpacity: 0 }} />
-        </radialGradient>
-      </defs>
-
-      {detail === 'full' && (
-        <motion.ellipse
-          cx={MARK_ORBIT.cx}
-          cy={MARK_ORBIT.cy}
-          rx={MARK_ORBIT.rx}
-          ry={MARK_ORBIT.ry}
-          transform={`rotate(${MARK_ORBIT.rotate} ${MARK_ORBIT.cx} ${MARK_ORBIT.cy})`}
-          fill="none"
-          stroke="var(--accent)"
-          strokeOpacity={0.32}
-          strokeWidth={0.55}
-          initial={play ? { pathLength: 0, opacity: 0 } : false}
-          animate={{ pathLength: 1, opacity: 1 }}
-          transition={{ duration: 1.4, ease: ease.cinematic, delay: 0.5 }}
-        />
+      {variant === 'lens' && (
+        <>
+          {full && (
+            <motion.circle
+              cx={LENS.point.cx}
+              cy={LENS.point.cy}
+              r={LENS.point.r - sw / 2 - 1.2}
+              stroke="var(--color-line-bright)"
+              strokeWidth={0.6}
+              {...appear(0.9)}
+            />
+          )}
+          <motion.path d={LENS.left} stroke="var(--accent)" strokeWidth={sw} {...draw(0.1)} />
+          <motion.path d={LENS.right} stroke="var(--accent)" strokeWidth={sw} {...draw(0.18)} />
+        </>
       )}
 
-      {detail === 'full' && (
-        <motion.circle
-          cx={MARK_STAR_CENTER.x}
-          cy={MARK_STAR_CENTER.y}
-          r={13}
-          fill={`url(#${id}-halo)`}
-          initial={play ? { opacity: 0, scale: 0.4 } : false}
-          animate={{ opacity: 0.5, scale: 1 }}
-          style={{ transformOrigin: `${MARK_STAR_CENTER.x}px ${MARK_STAR_CENTER.y}px` }}
-          transition={{ duration: 0.9, ease: ease.outExpo, delay: 0.75 }}
-        />
+      {variant === 'horizon' && (
+        <>
+          <defs>
+            <mask id={`${id}-k`}>
+              <rect width="64" height="64" fill="white" />
+              <path d="M2 36.2L62 29.8" stroke="black" strokeWidth={sw * 2.2} />
+            </mask>
+          </defs>
+          <g mask={`url(#${id}-k)`}>
+            <motion.path d={HORIZON.over} stroke="var(--accent)" strokeWidth={sw * 0.6} {...draw(0.25, 0.7)} />
+            <motion.path d={HORIZON.under} stroke="var(--accent)" strokeWidth={sw * 0.4} {...draw(0.35, 0.45)} />
+            <motion.circle
+              cx={HORIZON.ring.cx}
+              cy={HORIZON.ring.cy}
+              r={HORIZON.ring.r}
+              stroke="var(--accent-hi)"
+              strokeWidth={sw * 0.5}
+              {...draw(0.1)}
+            />
+          </g>
+          <motion.path d={HORIZON.diskNear} stroke="var(--accent-hi)" strokeWidth={sw * 0.8} {...draw(0.45)} />
+          <motion.path d={HORIZON.diskFar} stroke="var(--accent)" strokeWidth={sw * 0.8} {...draw(0.5, 0.7)} />
+        </>
       )}
 
-      {[MARK_LEFT_ARM, MARK_RIGHT_ARM].map((d, i) => (
-        <motion.path
-          key={d}
-          d={d}
-          fill={`url(#${id}-beam)`}
-          initial={play ? { opacity: 0, y: -6 } : false}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, ease: ease.outExpo, delay: 0.1 + i * 0.08 }}
-        />
-      ))}
-
-      <motion.path
-        d={MARK_STAR}
-        fill="#ffffff"
-        initial={play ? { opacity: 0, scale: 0, rotate: -45 } : false}
-        animate={{ opacity: 1, scale: 1, rotate: 0 }}
-        style={{ transformOrigin: `${MARK_STAR_CENTER.x}px ${MARK_STAR_CENTER.y}px` }}
-        transition={{ type: 'spring', stiffness: 260, damping: 16, delay: 0.55 }}
-      />
+      {variant === 'eclipse' && (
+        <>
+          {full && (
+            <motion.circle
+              cx={ECLIPSE.disk.cx}
+              cy={ECLIPSE.disk.cy}
+              r={ECLIPSE.disk.r - sw / 2 - 1.5}
+              stroke="var(--color-line-bright)"
+              strokeWidth={0.6}
+              {...appear(0.2)}
+            />
+          )}
+          <motion.path d={ECLIPSE.stroke} stroke="var(--accent)" strokeWidth={sw} {...draw(0.1)} />
+        </>
+      )}
     </svg>
   );
 }
 
 interface LogoLockupProps {
   size?: 'sm' | 'md' | 'lg';
+  variant?: MarkVariant;
   animated?: boolean;
   className?: string;
 }
 
 const lockupSizes = {
-  sm: { mark: 28, text: 'text-md', gap: 'gap-2' },
-  md: { mark: 36, text: 'text-lg', gap: 'gap-2.5' },
-  lg: { mark: 56, text: 'text-2xl', gap: 'gap-3.5' },
+  sm: { mark: 24, word: 'text-sm', gap: 'gap-2.5' },
+  md: { mark: 32, word: 'text-md', gap: 'gap-3' },
+  lg: { mark: 48, word: 'text-2xl', gap: 'gap-4' },
 } as const;
 
-/** Mark + wordmark. "Tasks" is lighter so "Veritas" carries the name. */
-export function LogoLockup({ size = 'md', animated = false, className }: LogoLockupProps) {
+/** Mark + wordmark: VERITAS in strict capitals, TASKS as a mono label. */
+export function LogoLockup({ size = 'md', variant, animated = false, className }: LogoLockupProps) {
   const s = lockupSizes[size];
   return (
     <span className={cn('inline-flex items-center', s.gap, className)}>
-      <LogoMark size={s.mark} animated={animated} detail="compact" />
-      <span className={cn('font-display leading-none tracking-[0.01em]', s.text)}>
-        <span className="font-semibold text-fg">Veritas</span>{' '}
-        <span className="font-light text-fg-2">Tasks</span>
+      <LogoMark size={s.mark} variant={variant} animated={animated} detail="compact" />
+      <span className="inline-flex items-baseline gap-2 leading-none">
+        <span className={cn('font-display font-medium tracking-[0.2em] text-fg', s.word)}>VERITAS</span>
+        <span className="font-mono text-[0.625rem] font-medium tracking-[0.2em] text-fg-3">TASKS</span>
       </span>
     </span>
   );

@@ -27,7 +27,7 @@ import { Button } from '@/components/ui/button';
 import { IconButton } from '@/components/ui/icon-button';
 import { Menu, MenuContent, MenuItem, MenuSeparator, MenuTrigger } from '@/components/ui/menu';
 import { Skeleton } from '@/components/ui/skeleton';
-import { StarCheck } from '@/components/ui/star-check';
+import { HorizonCheck } from '@/components/ui/horizon-check';
 import { EmptyState } from '@/components/ui/empty-state';
 import type { TagRow, TaskRow } from '@/lib/db/types';
 import { priorityVar } from '@/lib/color/swatches';
@@ -209,7 +209,7 @@ export function TaskDetail({ id, onClose }: { id: string; onClose: () => void })
       );
     }
     return (
-      <StarCheck
+      <HorizonCheck
         checked={Boolean(task.completed_at)}
         size={28}
         color={priorityVar(priority?.system_key)}

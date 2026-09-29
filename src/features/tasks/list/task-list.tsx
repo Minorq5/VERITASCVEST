@@ -72,7 +72,7 @@ function SortableRow({ id, title, children }: { id: string; title: string; child
     <div
       ref={setNodeRef}
       style={{ transform: CSS.Translate.toString(transform), transition }}
-      className={cn('relative', isDragging && 'z-10 rounded-lg bg-surface-3 shadow-lg ring-1 ring-line-strong')}
+      className={cn('relative', isDragging && 'z-10 rounded-lg bg-surface-3 ring-1 ring-line-strong')}
     >
       {children(handle)}
     </div>
@@ -126,7 +126,7 @@ export function TaskList(props: TaskListProps) {
   );
 
   const list = (
-    <ul aria-label={label} className="glass shadow-inset-top overflow-hidden rounded-xl border border-line">
+    <ul aria-label={label} className="bg-surface-1 overflow-hidden rounded-xl border border-line">
       {items}
     </ul>
   );

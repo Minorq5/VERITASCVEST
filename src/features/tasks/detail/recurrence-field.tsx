@@ -58,7 +58,7 @@ export function RecurrenceField({
       <Menu>
         <MenuTrigger asChild>
           <button type="button" className={cn(valueButton, rule ? 'text-fg' : 'text-fg-3')}>
-            {rule && <Repeat aria-hidden className="text-[color:var(--color-swatch-violet)]" />}
+            {rule && <Repeat aria-hidden className="text-fg-3" />}
             <span className="truncate first-letter:uppercase">{rule ? describe(rule) : t('recurrence.none')}</span>
           </button>
         </MenuTrigger>

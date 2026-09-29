@@ -71,7 +71,7 @@ function SidebarLink({
         <motion.span
           layoutId="sidebar-active"
           transition={spring.snappy}
-          className="absolute left-0 h-5 w-0.5 rounded-full bg-accent shadow-[0_0_10px_var(--accent)]"
+          className="absolute left-0 h-5 w-0.5 rounded-full bg-accent"
         />
       )}
       {icon}
@@ -97,7 +97,7 @@ function Sidebar() {
   }
 
   return (
-    <aside className="glass fixed inset-y-0 left-0 z-[var(--z-sticky)] hidden w-68 flex-col border-r border-line lg:flex">
+    <aside className="bg-surface-1 fixed inset-y-0 left-0 z-[var(--z-sticky)] hidden w-68 flex-col border-r border-line lg:flex">
       <div className="flex h-16 items-center px-5">
         <Link href={APP_HOME} className="focus-ring rounded-md">
           <LogoLockup size="sm" />
@@ -108,8 +108,8 @@ function Sidebar() {
           type="button"
           onClick={() => openQuickAdd(true)}
           className={cn(
-            'focus-ring group flex h-10 w-full items-center gap-3 rounded-md border border-line-strong px-3 text-base text-fg glass',
-            'shadow-inset-top transition-[border-color,box-shadow] duration-200 hover-ok:border-[color-mix(in_oklab,var(--accent)_45%,transparent)] hover-ok:shadow-glow-sm',
+            'focus-ring group flex h-10 w-full items-center gap-3 rounded-md border border-line-strong px-3 text-base text-fg bg-surface-1',
+            'transition-[border-color,box-shadow] duration-200 hover-ok:border-[color-mix(in_oklab,var(--accent)_45%,transparent)]',
           )}
         >
           <span className="inline-flex size-5 items-center justify-center rounded-full bg-accent text-accent-ink">
@@ -153,11 +153,8 @@ function Sidebar() {
                       icon={
                         <span
                           aria-hidden
-                          className="mx-[3px] size-3 shrink-0 rounded-full"
-                          style={{
-                            background: `radial-gradient(circle at 35% 30%, color-mix(in oklab, ${swatchVar(project.color)} 30%, white), ${swatchVar(project.color)} 60%, color-mix(in oklab, ${swatchVar(project.color)} 45%, black))`,
-                            boxShadow: `0 0 8px -1px ${swatchVar(project.color)}`,
-                          }}
+                          className="mx-1 size-2 shrink-0 rounded-full"
+                          style={{ background: swatchVar(project.color) }}
                         />
                       }
                       trailing={<NavCount value={projectCounts.get(project.id) ?? 0} kind="muted" />}
@@ -199,7 +196,7 @@ function PhoneTab({ section, active, count }: { section: Section; active: boolea
           <motion.span
             layoutId="bottom-active"
             transition={spring.snappy}
-            className="absolute top-0 h-0.5 w-8 rounded-full bg-accent shadow-[0_0_10px_var(--accent)]"
+            className="absolute top-0 h-0.5 w-8 rounded-full bg-accent"
           />
         )}
         <span className="relative">
@@ -227,7 +224,7 @@ function PhoneNav() {
   return (
     <nav
       aria-label={t('sections')}
-      className="glass-strong fixed inset-x-0 bottom-0 z-[var(--z-sticky)] border-t border-line pb-[env(safe-area-inset-bottom)] lg:hidden"
+      className="bg-surface-1 fixed inset-x-0 bottom-0 z-[var(--z-sticky)] border-t border-line pb-[env(safe-area-inset-bottom)] lg:hidden"
     >
       <ul className="mx-auto flex h-16 max-w-md items-stretch justify-around px-2">
         {phoneTabs.map(tab)}
@@ -237,12 +234,11 @@ function PhoneNav() {
             onClick={() => openQuickAdd(true)}
             aria-label={t('newTask')}
             className={cn(
-              'focus-ring inline-flex size-12 items-center justify-center rounded-full text-accent-ink',
-              'bg-[linear-gradient(180deg,var(--accent-hi),var(--accent)_60%)] shadow-glow-md',
-              'motion-ok:transition-transform motion-ok:active:scale-95',
+              'focus-ring inline-flex size-11 items-center justify-center rounded-md bg-accent text-accent-ink',
+              'transition-colors active:bg-accent-lo',
             )}
           >
-            <Plus aria-hidden className="size-6" strokeWidth={2.4} />
+            <Plus aria-hidden className="size-5" strokeWidth={2} />
           </button>
         </li>
         {phoneTabsAfter.map(tab)}
@@ -281,7 +277,7 @@ export function AppShell({ children }: { children: ReactNode }) {
       <Sidebar />
 
       {/* Phone top bar */}
-      <header className="glass-strong sticky top-0 z-[var(--z-sticky)] flex h-14 items-center justify-between border-b border-line px-4 pt-[env(safe-area-inset-top)] lg:hidden">
+      <header className="bg-surface-1 sticky top-0 z-[var(--z-sticky)] flex h-14 items-center justify-between border-b border-line px-4 pt-[env(safe-area-inset-top)] lg:hidden">
         <Link href={APP_HOME} className="focus-ring rounded-md" aria-label="Veritas Tasks">
           <LogoLockup size="sm" />
         </Link>

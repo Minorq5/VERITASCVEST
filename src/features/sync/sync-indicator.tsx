@@ -87,7 +87,7 @@ export function SyncBadge() {
         >
           <Icon aria-hidden className={cn('size-[18px]', l.tone, l.spin && 'motion-ok:animate-spin')} />
           {status && status.pending > 0 && (
-            <span className="absolute top-1.5 right-1.5 size-2 rounded-full bg-warning shadow-[0_0_8px_var(--color-warning)]" />
+            <span className="absolute top-1.5 right-1.5 size-2 rounded-full bg-warning" />
           )}
         </button>
       </PopoverTrigger>

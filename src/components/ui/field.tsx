@@ -57,12 +57,12 @@ export function Field({
         <label
           htmlFor={id}
           className={cn(
-            'flex items-baseline justify-between gap-3 text-sm font-medium text-fg-2',
+            'label-mono flex items-baseline justify-between gap-3',
             hideLabel && 'sr-only',
           )}
         >
           <span>{label}</span>
-          {optional && <span className="text-xs font-normal text-fg-3">{optional}</span>}
+          {optional && <span className="font-sans text-xs tracking-normal normal-case">{optional}</span>}
         </label>
         {children}
         {hint && !message && (

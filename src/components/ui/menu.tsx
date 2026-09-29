@@ -14,7 +14,7 @@ export const MenuSub = M.Sub;
 export const MenuRadioGroup = M.RadioGroup;
 
 const itemBase = cn(
-  'relative flex h-9 cursor-default items-center gap-2.5 rounded-sm px-2.5 text-base text-fg-2 outline-none select-none',
+  'relative flex h-8 cursor-default items-center gap-2.5 rounded-xs px-2.5 text-base text-fg-2 outline-none select-none',
   'transition-colors duration-100 data-[highlighted]:bg-surface-4 data-[highlighted]:text-fg',
   'data-[disabled]:pointer-events-none data-[disabled]:opacity-45 [&_svg]:size-4 [&_svg]:shrink-0',
 );
@@ -31,7 +31,7 @@ export function MenuContent({
         collisionPadding={12}
         className={cn(
           panelSurface,
-          'overlay-anim z-[var(--z-dropdown)] min-w-56 p-1.5 outline-none',
+          'overlay-anim z-[var(--z-dropdown)] min-w-56 p-1 outline-none',
           'origin-[var(--radix-dropdown-menu-content-transform-origin)]',
           className,
         )}
@@ -60,7 +60,7 @@ export function MenuItem({
       className={cn(
         itemBase,
         tone === 'danger' &&
-          'text-danger data-[highlighted]:bg-danger/12 data-[highlighted]:text-danger',
+          'text-danger data-[highlighted]:bg-danger/10 data-[highlighted]:text-danger',
         className,
       )}
       {...props}
@@ -101,7 +101,7 @@ export function MenuRadioItem({
   return (
     <M.RadioItem className={cn(itemBase, 'pl-8', className)} {...props}>
       <M.ItemIndicator className="absolute left-3 inline-flex">
-        <span className="size-2 rounded-full bg-accent shadow-[0_0_8px_var(--accent)]" />
+        <span className="size-1.5 rounded-full bg-accent" />
       </M.ItemIndicator>
       {children}
     </M.RadioItem>
@@ -141,7 +141,7 @@ export function MenuSubContent({
         collisionPadding={12}
         className={cn(
           panelSurface,
-          'overlay-anim z-[var(--z-dropdown)] min-w-48 p-1.5 outline-none',
+          'overlay-anim z-[var(--z-dropdown)] min-w-48 p-1 outline-none',
           className,
         )}
         {...props}
@@ -158,5 +158,5 @@ export function MenuSeparator({
   className,
   ...props
 }: ComponentPropsWithoutRef<typeof M.Separator>) {
-  return <M.Separator className={cn('mx-1 my-1.5 h-px bg-line', className)} {...props} />;
+  return <M.Separator className={cn('-mx-1 my-1 h-px bg-line-strong', className)} {...props} />;
 }

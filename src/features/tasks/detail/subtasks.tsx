@@ -9,7 +9,7 @@ import { useTranslations } from 'next-intl';
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { IconButton } from '@/components/ui/icon-button';
-import { StarCheck } from '@/components/ui/star-check';
+import { HorizonCheck } from '@/components/ui/horizon-check';
 import type { TaskRow } from '@/lib/db/types';
 import { compareManual } from '@/lib/domain/sections';
 import { keyBetween } from '@/lib/order';
@@ -44,7 +44,7 @@ function Item({
     <li
       ref={setNodeRef}
       style={{ transform: CSS.Translate.toString(transform), transition }}
-      className={cn('group/sub relative flex items-center gap-2.5 rounded-md py-1.5 pr-1 pl-5', isDragging ? 'z-10 bg-surface-4 shadow-lg' : 'hover-ok:bg-surface-3/60')}
+      className={cn('group/sub relative flex items-center gap-2.5 rounded-md py-1.5 pr-1 pl-5', isDragging ? 'z-10 bg-surface-4' : 'hover-ok:bg-surface-3/60')}
     >
       {!readOnly && (
         <button
@@ -58,7 +58,7 @@ function Item({
           <GripVertical aria-hidden className="size-3.5" />
         </button>
       )}
-      <StarCheck
+      <HorizonCheck
         checked={Boolean(task.completed_at)}
         size={20}
         disabled={readOnly}

@@ -114,7 +114,7 @@ function Gallery({ images, index, onIndex, onClose }: { images: AttachmentRow[];
   return (
     <D.Root open onOpenChange={(open) => !open && onClose()}>
       <D.Portal>
-        <D.Overlay className="backdrop-anim fixed inset-0 z-[var(--z-modal)] bg-[rgb(3_5_10/0.92)] backdrop-blur-sm" />
+        <D.Overlay className="scrim-anim fixed inset-0 z-[var(--z-modal)] bg-[rgb(2_2_3/0.92)]" />
         <D.Content
           className="fixed inset-0 z-[var(--z-modal)] flex flex-col outline-none"
           onKeyDown={(e) => {

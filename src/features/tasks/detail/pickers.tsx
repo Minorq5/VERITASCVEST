@@ -353,7 +353,7 @@ export function RemindersPicker({ value, hasDue, onChange }: { value: unknown; h
       <div className="flex flex-wrap items-center gap-1.5">
         {reminders.map((r) => (
           <span key={r.before} className="inline-flex h-7 items-center gap-1 rounded-full border border-line-strong bg-surface-3 pr-1 pl-2.5 text-sm text-fg-2">
-            <Bell aria-hidden className="size-3.5 text-[color:var(--color-swatch-sky)]" />
+            <Bell aria-hidden className="size-3.5 text-fg-3" />
             {label(r)}
             <button
               type="button"
@@ -402,14 +402,14 @@ export function ColorPicker({ value, onChange }: { value: string | null; onChang
         aria-label={t('colorNone')}
         onClick={() => onChange(null)}
         className={cn(
-          'focus-ring relative inline-flex size-6 items-center justify-center rounded-full border border-line-bright',
-          value === null && 'ring-2 ring-fg-2 ring-offset-2 ring-offset-surface-2',
+          'focus-ring relative inline-flex size-6 items-center justify-center rounded-xs border border-line-bright',
+          value === null && 'outline outline-1 outline-offset-2 outline-fg',
         )}
       >
         <span aria-hidden className="h-px w-4 rotate-45 bg-fg-3" />
       </button>
       {swatchNames
-        .filter((name) => name !== 'slate')
+        .filter((name) => name !== 'ash')
         .map((name) => (
           <button
             key={name}
@@ -418,8 +418,8 @@ export function ColorPicker({ value, onChange }: { value: string | null; onChang
             aria-checked={value === name}
             aria-label={tc(name)}
             onClick={() => onChange(name)}
-            className={cn('focus-ring size-6 rounded-full transition-transform hover-ok:scale-110', value === name && 'ring-2 ring-fg ring-offset-2 ring-offset-surface-2')}
-            style={{ background: swatchVar(name), boxShadow: value === name ? `0 0 12px -2px ${swatchVar(name)}` : undefined }}
+            className={cn('focus-ring size-6 rounded-xs', value === name && 'outline outline-1 outline-offset-2 outline-fg')}
+            style={{ background: swatchVar(name) }}
           />
         ))}
     </div>

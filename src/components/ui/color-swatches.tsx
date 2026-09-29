@@ -25,7 +25,7 @@ export function ColorSwatches<T extends string>({
   onValueChange,
   swatches,
   label,
-  size = 32,
+  size = 28,
   className,
 }: ColorSwatchesProps<T>) {
   return (
@@ -34,7 +34,7 @@ export function ColorSwatches<T extends string>({
       onValueChange={(v) => onValueChange(v as T)}
       aria-label={label}
       orientation="horizontal"
-      className={cn('flex flex-wrap gap-2.5', className)}
+      className={cn('flex flex-wrap gap-2', className)}
     >
       {swatches.map((swatch) => (
         <Tooltip key={swatch.value} content={swatch.label}>
@@ -42,19 +42,17 @@ export function ColorSwatches<T extends string>({
             value={swatch.value}
             aria-label={swatch.label}
             className={cn(
-              'relative inline-flex items-center justify-center rounded-full focus-ring transition-transform duration-200 ease-out',
-              'data-[state=checked]:ring-2 data-[state=checked]:ring-offset-2 data-[state=checked]:ring-offset-bg motion-ok:hover-ok:scale-110',
+              'relative inline-flex items-center justify-center rounded-xs focus-ring',
+              'outline-offset-2 data-[state=checked]:outline data-[state=checked]:outline-1 data-[state=checked]:outline-fg',
             )}
             style={{
               width: size,
               height: size,
-              background: `radial-gradient(circle at 32% 28%, color-mix(in oklab, ${swatch.color} 55%, white), ${swatch.color} 55%, color-mix(in oklab, ${swatch.color} 60%, black))`,
-              ['--tw-ring-color' as string]: swatch.color,
-              boxShadow: value === swatch.value ? `0 0 18px -2px ${swatch.color}` : undefined,
+              background: swatch.color,
             }}
           >
             <RadioGroup.Indicator>
-              <Check className="size-4 text-[#05080f]" strokeWidth={3} />
+              <Check className="size-3.5 text-void" strokeWidth={2.5} />
             </RadioGroup.Indicator>
           </RadioGroup.Item>
         </Tooltip>

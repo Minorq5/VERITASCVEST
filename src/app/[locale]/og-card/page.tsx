@@ -19,23 +19,15 @@ export default async function OgCardPage({ params }: PageProps<'/[locale]/og-car
 
   return (
     <main className="relative flex h-[630px] w-[1200px] items-center gap-16 overflow-hidden px-24">
-      <SpaceBackdrop intensity={1.2} />
-      <div
-        aria-hidden
-        className="pointer-events-none absolute -top-56 -right-40 size-[760px] rounded-full bg-[radial-gradient(circle,color-mix(in_oklab,var(--accent)_22%,transparent),transparent_62%)]"
-      />
-      <div
-        aria-hidden
-        className="pointer-events-none absolute -bottom-64 left-10 size-[620px] rounded-full bg-[radial-gradient(circle,rgb(178_148_255/0.16),transparent_62%)]"
-      />
+      <SpaceBackdrop />
       <div className="relative shrink-0">
         <LogoMark size={300} detail="full" />
       </div>
       <div className="relative flex flex-col">
         <p className="eyebrow text-accent">Veritas Tasks</p>
-        <h1 className="mt-5 font-display text-[3.4rem] leading-[1.08] font-semibold tracking-[-0.025em] text-fg">
+        <h1 className="mt-5 font-display text-[3.4rem] leading-[1.08] font-medium tracking-[-0.025em] text-fg">
           <span className="block">{t('title')}</span>
-          <span className="block bg-[linear-gradient(100deg,var(--accent-hi),var(--accent)_45%,var(--color-fg)_100%)] bg-clip-text text-transparent">
+          <span className="block text-accent">
             {t('titleAccent')}
           </span>
         </h1>

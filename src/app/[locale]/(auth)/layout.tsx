@@ -2,7 +2,7 @@ import { setRequestLocale } from 'next-intl/server';
 import { LogoLockup } from '@/components/brand/logo';
 import { SpaceBackdrop } from '@/components/effects/space-backdrop';
 import { LocaleSwitcher } from '@/components/layout/locale-switcher';
-import { PlanetHorizon } from '@/features/auth/planet-horizon';
+import { DistantHorizon } from '@/features/cinema/distant-horizon';
 import { Link } from '@/i18n/navigation';
 
 export default async function AuthLayout({ children, params }: LayoutProps<'/[locale]'>) {
@@ -11,7 +11,7 @@ export default async function AuthLayout({ children, params }: LayoutProps<'/[lo
   return (
     <>
       <SpaceBackdrop />
-      <PlanetHorizon />
+      <DistantHorizon />
       <header className="mx-auto flex w-full max-w-7xl items-center justify-between px-4 pt-[max(1rem,env(safe-area-inset-top))] sm:px-8 sm:pt-6">
         <Link href="/" className="focus-ring rounded-md" aria-label="Veritas Tasks">
           <LogoLockup size="sm" />

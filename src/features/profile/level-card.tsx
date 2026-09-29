@@ -12,7 +12,7 @@ export function LevelRing({ profile, size = 132 }: { profile: Profile; size?: nu
   const lp = levelProgress(profile.xp);
   return (
     <div className="flex flex-col items-center gap-3 text-center">
-      <ProgressRing value={lp.progress} size={size} stroke={6}>
+      <ProgressRing value={lp.progress} size={size}>
         <span className="flex flex-col items-center leading-none">
           <span className="font-display text-4xl font-semibold text-fg tabular">{lp.level}</span>
           <span className="eyebrow mt-1.5 text-[10px]">{t('levelShort')}</span>

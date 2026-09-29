@@ -31,7 +31,7 @@ export function FriendCard({ profile }: { profile: Profile }) {
   }
 
   return (
-    <Surface tone="glass" className="flex flex-col gap-6 p-6 sm:flex-row sm:items-center lg:flex-col lg:items-stretch">
+    <Surface className="flex flex-col gap-6 p-6 sm:flex-row sm:items-center lg:flex-col lg:items-stretch">
       <div className="flex flex-1 flex-col gap-2">
         <p className="eyebrow">{t('publicId')}</p>
         <div className="flex items-center gap-2">
@@ -57,7 +57,7 @@ export function FriendCard({ profile }: { profile: Profile }) {
       </div>
       <div className="flex justify-center">
         {origin ? (
-          <QrCode value={link} size={188} label={t('qrTitle')} className="shadow-lg" />
+          <QrCode value={link} size={188} label={t('qrTitle')} className="" />
         ) : (
           <span className="block size-[188px] rounded-xl bg-surface-3" />
         )}

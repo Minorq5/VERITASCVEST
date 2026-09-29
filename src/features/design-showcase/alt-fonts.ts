@@ -1,24 +1,12 @@
-import { Geologica, Golos_Text, Inter, Manrope, Martian_Mono } from 'next/font/google';
+import { Golos_Text, IBM_Plex_Mono, Tektur, Wix_Madefor_Display } from 'next/font/google';
 
-/** Alternatives shown next to the approved trio. Loaded on /design only. */
-export const altGeologica = Geologica({
+/** Candidates compared with the chosen faces on /design (DESIGN_V2 §4). Loaded on /design only. */
+export const altWix = Wix_Madefor_Display({ subsets: ['latin', 'cyrillic'], display: 'swap', preload: false });
+export const altTektur = Tektur({ subsets: ['latin', 'cyrillic'], display: 'swap', preload: false });
+export const altGolos = Golos_Text({ subsets: ['latin', 'cyrillic', 'cyrillic-ext'], display: 'swap', preload: false });
+export const altPlexMono = IBM_Plex_Mono({
   subsets: ['latin', 'cyrillic'],
-  display: 'swap',
-  preload: false,
-});
-export const altManrope = Manrope({
-  subsets: ['latin', 'cyrillic'],
-  display: 'swap',
-  preload: false,
-});
-export const altGolos = Golos_Text({
-  subsets: ['latin', 'cyrillic'],
-  display: 'swap',
-  preload: false,
-});
-export const altInter = Inter({ subsets: ['latin', 'cyrillic'], display: 'swap', preload: false });
-export const altMartian = Martian_Mono({
-  subsets: ['latin', 'cyrillic'],
+  weight: ['400', '500'],
   display: 'swap',
   preload: false,
 });

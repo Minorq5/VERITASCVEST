@@ -22,15 +22,15 @@ export function RadioItem({ label, description, className, id: idProp, ...props 
         <R.Item
           id={id}
           className={cn(
-            'relative inline-flex size-[18px] shrink-0 items-center justify-center rounded-full focus-ring',
-            'border border-line-bright bg-surface-2 transition-[border-color,box-shadow] duration-200 ease-out',
-            'hover-ok:border-[color-mix(in_oklab,var(--accent)_60%,transparent)]',
-            'data-[state=checked]:border-accent data-[state=checked]:shadow-glow-sm',
+            'relative inline-flex size-4 shrink-0 items-center justify-center rounded-full focus-ring',
+            'border border-line-bright bg-surface-2 transition-[border-color] duration-140 ease-out',
+            'hover-ok:border-fg-3',
+            'data-[state=checked]:border-accent',
             'disabled:pointer-events-none disabled:opacity-45',
           )}
           {...props}
         >
-          <R.Indicator className="size-2 rounded-full bg-accent shadow-[0_0_8px_var(--accent)] motion-ok:animate-[pop-in_180ms_var(--ease-out)]" />
+          <R.Indicator className="size-1.5 rounded-full bg-accent" />
         </R.Item>
       </span>
       <label

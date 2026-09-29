@@ -53,7 +53,7 @@ export function BulkBar({
           transition={spring.smooth}
           className="fixed inset-x-0 bottom-[calc(4.75rem+env(safe-area-inset-bottom))] z-[var(--z-sticky)] flex justify-center px-3 lg:bottom-6 lg:pl-68"
         >
-          <div className="glass-strong shadow-inset-top flex max-w-full items-center gap-1 overflow-x-auto rounded-xl border border-line-strong p-1.5 shadow-xl">
+          <div className="bg-surface-1 flex max-w-full items-center gap-1 overflow-x-auto rounded-xl border border-line-strong p-1.5">
             <span className="px-2.5 text-sm font-medium whitespace-nowrap text-fg" aria-live="polite">
               {t('bulk.selected', { count: ids.length })}
             </span>

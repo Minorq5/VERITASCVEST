@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 /** Requests outside any locale (e.g. /xx/unknown). Trilingual, no JavaScript needed. */
 export default function GlobalNotFound() {
   return (
-    <html lang="en" className={fontVariables} data-accent="cyan">
+    <html lang="en" className={fontVariables} data-accent="amber">
       <body>
         <main className="mx-auto flex min-h-dvh max-w-xl flex-col items-center justify-center gap-4 px-6 text-center">
           <p className="font-mono text-sm tracking-[0.3em] text-accent">404</p>

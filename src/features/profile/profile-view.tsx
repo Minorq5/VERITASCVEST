@@ -35,12 +35,7 @@ export function ProfileView() {
   return (
     <div className="flex flex-col gap-6">
       <h1 className="sr-only">{t('profile.title')}</h1>
-      <Surface tone="glass" spotlight className="overflow-hidden p-6 sm:p-8">
-        <div
-          aria-hidden
-          className="pointer-events-none absolute -top-24 -right-16 size-80 rounded-full opacity-60 blur-3xl"
-          style={{ background: 'radial-gradient(closest-side, color-mix(in oklab, var(--accent) 22%, transparent), transparent)' }}
-        />
+      <Surface className="overflow-hidden p-6 sm:p-8">
         <div className="relative flex flex-col items-center gap-6 text-center sm:flex-row sm:items-center sm:text-left">
           <AvatarEditor profile={profile} />
           <div className="flex min-w-0 flex-1 flex-col items-center gap-2 sm:items-start">

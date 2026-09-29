@@ -28,7 +28,7 @@ export function PercentWidget({ task, actions, readOnly }: WidgetProps) {
   return (
     <WidgetCard accent={typeMeta.percent.color}>
       <div className="flex items-center gap-5">
-        <ProgressRing value={value / 100} size={88} stroke={7} color={color} />
+        <ProgressRing value={value / 100} size={88} color={color} />
         <div className="flex min-w-0 flex-1 flex-col gap-3">
           <Slider
             label={t('widgets.percent.slider')}

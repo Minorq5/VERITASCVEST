@@ -3,7 +3,9 @@ import path from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { contrastRatio, WCAG_AA_LARGE, WCAG_AA_TEXT } from '@/lib/color/contrast';
 
-const css = readFileSync(path.resolve(__dirname, '../../src/styles/globals.css'), 'utf8');
+const css = ['globals.css', 'tokens.css']
+  .map((f) => readFileSync(path.resolve(__dirname, '../../src/styles', f), 'utf8'))
+  .join('\n');
 
 function token(name: string): string {
   const match = css.match(new RegExp(`--${name}:\\s*([^;]+);`));
@@ -49,7 +51,7 @@ describe('design tokens meet WCAG AA', () => {
     },
   );
 
-  it.each(['cyan', 'ice', 'aurora', 'nebula', 'plasma', 'solar'])(
+  it.each(['amber', 'blue', 'white'])(
     'accent %s: text on surfaces and ink on accent',
     (name) => {
       const accent = accentBlock(name);

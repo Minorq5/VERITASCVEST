@@ -32,20 +32,20 @@ export function Sheet({
     <Drawer.Root open={open} onOpenChange={onOpenChange}>
       {trigger && <Drawer.Trigger asChild>{trigger}</Drawer.Trigger>}
       <Drawer.Portal>
-        <Drawer.Overlay className="fixed inset-0 z-[var(--z-modal)] bg-[rgb(3_5_10/0.75)] backdrop-blur-[4px]" />
+        <Drawer.Overlay className="fixed inset-0 z-[var(--z-modal)] bg-[rgb(2_2_3/0.78)]" />
         <Drawer.Content
           className={cn(
-            'fixed inset-x-0 bottom-0 z-[var(--z-modal)] flex max-h-[92dvh] flex-col glass-strong outline-none',
-            'shadow-inset-top rounded-t-2xl border-t border-line-strong shadow-xl',
+            'fixed inset-x-0 bottom-0 z-[var(--z-modal)] flex max-h-[92dvh] flex-col bg-surface-1 outline-none',
+            'rounded-t-xl border-t border-line-strong',
             className,
           )}
         >
           <Drawer.Handle
             aria-label={t('dragHandle')}
-            className="!mt-3 !h-1.5 !w-10 !rounded-full !bg-surface-5 !opacity-100"
+            className="!mt-2.5 !h-1 !w-9 !rounded-xs !bg-line-bright !opacity-100"
           />
           <div className="flex flex-col gap-1.5 px-5 pt-4 pb-2">
-            <Drawer.Title className="font-display text-lg font-semibold text-fg">
+            <Drawer.Title className="font-display text-lg font-medium text-fg">
               {title}
             </Drawer.Title>
             {description ? (

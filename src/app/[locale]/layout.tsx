@@ -61,7 +61,7 @@ export default async function LocaleLayout({ children, params }: LayoutProps<'/[
   const t = await getTranslations({ locale, namespace: 'a11y' });
 
   return (
-    <html lang={locale} className={fontVariables} data-accent="cyan" suppressHydrationWarning>
+    <html lang={locale} className={fontVariables} data-accent="amber" suppressHydrationWarning>
       <body>
         <Script id="vt-boot" strategy="beforeInteractive">
           {bootScript}

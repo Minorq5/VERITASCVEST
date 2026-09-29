@@ -54,8 +54,8 @@ export function TabsTrigger({
     <T.Trigger
       value={value}
       className={cn(
-        'relative -mb-px inline-flex h-10 items-center gap-2 rounded-t-sm px-3 text-sm font-medium focus-ring',
-        'transition-colors duration-200 ease-out [&_svg]:size-4',
+        'relative -mb-px inline-flex h-9 items-center gap-2 rounded-t-xs px-3 text-sm font-medium focus-ring',
+        'transition-colors duration-140 ease-out [&_svg]:size-4',
         active ? 'text-fg' : 'text-fg-3 hover-ok:text-fg-2',
         className,
       )}
@@ -66,7 +66,7 @@ export function TabsTrigger({
         <motion.span
           layoutId={ctx.layoutId}
           transition={spring.snappy}
-          className="absolute inset-x-2 -bottom-px h-0.5 rounded-full bg-accent shadow-[0_0_10px_var(--accent)]"
+          className="absolute inset-x-0 -bottom-px h-px bg-accent"
         />
       )}
     </T.Trigger>

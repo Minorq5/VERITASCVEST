@@ -40,10 +40,10 @@ export function TaskPanel() {
     return (
       <Drawer.Root open={Boolean(openId)} onOpenChange={(open) => !open && close()} repositionInputs={false}>
         <Drawer.Portal>
-          <Drawer.Overlay className="fixed inset-0 z-[var(--z-modal)] bg-[rgb(3_5_10/0.7)] backdrop-blur-[3px]" />
+          <Drawer.Overlay className="fixed inset-0 z-[var(--z-modal)] bg-[rgb(3_5_10/0.7)]" />
           <Drawer.Content
             aria-describedby={undefined}
-            className="glass-strong shadow-inset-top fixed inset-x-0 bottom-0 z-[var(--z-modal)] flex h-[94dvh] flex-col rounded-t-2xl border-t border-line-strong shadow-xl outline-none"
+            className="bg-surface-1 fixed inset-x-0 bottom-0 z-[var(--z-modal)] flex h-[94dvh] flex-col rounded-t-2xl border-t border-line-strong outline-none"
           >
             <Drawer.Handle className="!mt-2.5 !mb-1 !h-1.5 !w-10 !shrink-0 !rounded-full !bg-surface-5 !opacity-100" />
             <Drawer.Title className="sr-only">{t('label')}</Drawer.Title>
@@ -68,7 +68,7 @@ export function TaskPanel() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="fixed inset-0 z-[var(--z-overlay)] bg-[rgb(3_5_10/0.55)] backdrop-blur-[2px] lg:left-68"
+              className="fixed inset-0 z-[var(--z-overlay)] bg-[rgb(3_5_10/0.55)] lg:left-68"
             />
           )}
           <motion.aside
@@ -80,7 +80,7 @@ export function TaskPanel() {
             animate={{ x: 0, opacity: 1 }}
             exit={reduce ? { opacity: 0 } : { x: 48, opacity: 0 }}
             transition={reduce ? { duration: 0.15 } : spring.smooth}
-            className="glass-strong shadow-inset-top fixed inset-y-0 right-0 z-[var(--z-overlay)] flex w-[min(var(--panel-w),100vw)] flex-col border-l border-line-strong shadow-xl outline-none"
+            className="bg-surface-1 fixed inset-y-0 right-0 z-[var(--z-overlay)] flex w-[min(var(--panel-w),100vw)] flex-col border-l border-line-strong outline-none"
           >
             <TaskDetail key={openId} id={openId} onClose={close} />
           </motion.aside>

@@ -41,24 +41,23 @@ export function Slider({
       onLostPointerCapture={() => setDragging(false)}
       {...props}
     >
-      <S.Track className="relative h-1.5 grow overflow-hidden rounded-full bg-surface-5">
-        <S.Range className="absolute h-full rounded-full bg-[linear-gradient(90deg,var(--accent-lo),var(--accent))] shadow-[0_0_12px_var(--accent)]" />
+      <S.Track className="relative h-0.5 grow overflow-hidden bg-line-bright">
+        <S.Range className="absolute h-full bg-accent" />
       </S.Track>
       {current.map((v, i) => (
         <S.Thumb
           key={i}
           aria-label={label}
           className={cn(
-            'relative block size-5 rounded-full border-2 border-accent bg-fg shadow-[0_2px_8px_rgb(0_0_0/0.5)] focus-ring',
-            'transition-[transform,box-shadow] duration-200 ease-out hover-ok:shadow-glow-sm',
-            'motion-ok:active:scale-110',
+            'relative block h-4 w-2 rounded-[1px] bg-fg focus-ring',
+            'transition-colors duration-140 ease-out hover-ok:bg-accent-hi',
           )}
         >
           {formatValue && (
             <span
               className={cn(
                 'pointer-events-none absolute bottom-full left-1/2 mb-2 -translate-x-1/2 rounded-xs px-1.5 py-0.5',
-                'border border-line-strong font-mono tabular text-xs text-fg shadow-md glass-strong',
+                'border border-line-bright bg-surface-3 font-mono text-xs text-fg tabular',
                 'transition-[opacity,transform] duration-150 ease-out',
                 dragging
                   ? 'translate-y-0 opacity-100'

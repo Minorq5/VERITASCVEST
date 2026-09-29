@@ -1,13 +1,47 @@
 /**
- * Geometry of the Veritas mark, shared by the React component, the icon
- * generator and the particle intro (points are sampled from these paths).
- *
- * Idea: two beams of light converge into a single star — veritas, "truth",
- * is the point where paths meet. The beams fade in from the dark at the top
- * and brighten toward the star, so the mark reads as movement toward light.
+ * Geometry of the Veritas marks on a 64×64 grid, shared by the React
+ * component, the icon generator and the intro (points are sampled from these
+ * paths). Three directions of DESIGN_V2 §9 are on /design for the owner to
+ * choose; all are strokes of light, no fills, no gradients.
  */
 export const MARK_VIEWBOX = '0 0 64 64';
 
+/**
+ * «Линза»: a V whose two lines of light bend around a dark point, the way a
+ * mass bends light. The short left arm and the long right arm read as ✓.
+ */
+export const LENS = {
+  left: 'M7 24L16.26 45.73A9.5 9.5 0 0 0 22.38 51.13',
+  right: 'M58 4L33.22 46.76A9.5 9.5 0 0 1 27.62 51.13',
+  point: { cx: 25, cy: 42, r: 9.5 },
+} as const;
+
+/**
+ * «Горизонт»: the shadow, the photon ring and the disk in three lines. The
+ * far side of the disk is lensed into an arc over the shadow (and a fainter
+ * one under it); the near side crosses in front. Left is brighter (Doppler).
+ */
+export const HORIZON = {
+  ring: { cx: 32, cy: 33, r: 9.5 },
+  over: 'M15 34.5A17 15.5 0 0 1 49 31.2',
+  under: 'M19.5 36A12.5 11.5 0 0 0 44.5 33.4',
+  diskNear: 'M2 36.2L32 33',
+  diskFar: 'M32 33L62 29.8',
+} as const;
+
+/**
+ * «Затмение»: a dark disk with a thin crescent of light on its edge; the
+ * crescent runs out into the long stroke of a check: truth shows at the edge.
+ */
+export const ECLIPSE = {
+  stroke: 'M12.06 31.69A15 15 0 0 0 39.72 40.95L58.8 10.42',
+  disk: { cx: 27, cy: 33, r: 15 },
+} as const;
+
+export type MarkVariant = 'lens' | 'horizon' | 'eclipse';
+export const markVariants: readonly MarkVariant[] = ['lens', 'horizon', 'eclipse'];
+
+/* V1 «Орбита» mark, still used by the QR code and the icon build until the owner picks the V2 mark. */
 /** Left beam: angled cut at the top, sharp tip at the convergence point. */
 export const MARK_LEFT_ARM = 'M8.4 9.2L14.4 6.4Q20.9 32.8 32 46.6Q14.6 36.6 8.4 9.2Z';
 

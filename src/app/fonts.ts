@@ -1,10 +1,14 @@
-import { JetBrains_Mono, Onest, Unbounded } from 'next/font/google';
+import { Geologica, JetBrains_Mono, Onest } from 'next/font/google';
 import localFont from 'next/font/local';
 
-/** Display face: wide, cosmic, full Cyrillic. Headlines, levels, big numbers. */
-export const fontDisplay = Unbounded({
-  subsets: ['latin', 'cyrillic'],
-  variable: '--font-unbounded',
+/**
+ * Headings: a strict grotesque with full Cyrillic, including ѝ and the
+ * Bulgarian letterforms (locl BGR). Chosen on /design against Wix Madefor
+ * Display and Tektur (DESIGN_V2.md §4).
+ */
+export const fontDisplay = Geologica({
+  subsets: ['latin', 'cyrillic', 'cyrillic-ext'],
+  variable: '--font-heading',
   display: 'swap',
 });
 

@@ -38,7 +38,7 @@ import {
   MenuTrigger,
 } from '@/components/ui/menu';
 import { ProgressRing } from '@/components/ui/progress';
-import { StarCheck } from '@/components/ui/star-check';
+import { HorizonCheck } from '@/components/ui/horizon-check';
 import { priorityVar, swatchVar } from '@/lib/color/swatches';
 import { readTypeConfig } from '@/lib/domain/task-types';
 import { addDays, type IsoDate } from '@/lib/time/dates';
@@ -107,7 +107,7 @@ function ProgressBadge({ model, prefs }: { model: RowModel; prefs: PlannerPrefs 
       break;
     case 'habit':
       label = (
-        <span className="inline-flex items-center gap-0.5 text-[color:var(--color-swatch-coral)]">
+        <span className="inline-flex items-center gap-0.5 text-[color:var(--color-amber)]">
           <Flame aria-hidden className="size-3.5" />
           {p.detail.streak}
         </span>
@@ -141,17 +141,17 @@ function Leading({ model, prefs, actions, lingering, today }: Pick<TaskRowProps,
   const nextLabel = (date: IsoDate) => relativeDay(date, today, prefs.locale, t);
 
   if (task.deleted_at) {
-    return <StarCheck checked={Boolean(task.completed_at)} onCheckedChange={() => undefined} disabled label={task.title} color={color} className="mt-0.5" />;
+    return <HorizonCheck checked={Boolean(task.completed_at)} onCheckedChange={() => undefined} disabled label={task.title} color={color} className="mt-0.5" />;
   }
   if (model.type === 'habit' && model.progress?.detail.kind === 'habit') {
     const d = model.progress.detail;
     const done = d.todayStatus === 'done' || d.todayStatus === 'freeze';
     return (
-      <StarCheck
+      <HorizonCheck
         checked={done}
         onCheckedChange={() => void markHabitDay(actions, task, today, done ? null : 'done', t('toast.changed'))}
         label={done ? t('widgets.habit.undo') : t('widgets.habit.markDone')}
-        color="var(--color-swatch-coral)"
+        color="var(--color-amber)"
         className={cn('mt-0.5', !d.scheduledToday && !done && 'opacity-60')}
       />
     );
@@ -173,15 +173,15 @@ function Leading({ model, prefs, actions, lingering, today }: Pick<TaskRowProps,
     return (
       <span
         aria-hidden
-        className="mt-0.5 inline-flex size-[22px] shrink-0 items-center justify-center rounded-full border-[1.75px] border-[color:var(--color-swatch-lime)] shadow-[0_0_10px_-3px_var(--color-swatch-lime)]"
+        className="mt-0.5 inline-flex size-[22px] shrink-0 items-center justify-center rounded-full border-[1.75px] border-[color:var(--color-swatch-steel)]"
       >
-        <span className="size-1.5 rounded-full bg-[color:var(--color-swatch-lime)]" />
+        <span className="size-1.5 rounded-full bg-[color:var(--color-swatch-steel)]" />
       </span>
     );
   }
   const checked = Boolean(task.completed_at) || Boolean(lingering);
   return (
-    <StarCheck
+    <HorizonCheck
       checked={checked}
       onCheckedChange={() => void actions.toggle(task, nextLabel)}
       label={task.completed_at ? t('row.reopen', { title: task.title }) : t('row.complete', { title: task.title })}
@@ -311,7 +311,7 @@ function TaskRowView(props: TaskRowProps) {
         selected && 'bg-accent/12',
       )}
     >
-      {active && <span aria-hidden className="absolute inset-y-2 left-0 w-0.5 rounded-full bg-accent shadow-[0_0_10px_var(--accent)]" />}
+      {active && <span aria-hidden className="absolute inset-y-2 left-0 w-0.5 rounded-full bg-accent" />}
       {dragHandle}
       {(selecting || selected) && (
         <Checkbox
@@ -357,7 +357,7 @@ function TaskRowView(props: TaskRowProps) {
           )}
           {task.recurrence != null && <Meta icon={<Repeat aria-hidden />} label={t('row.repeats')} />}
           {running && (
-            <Meta icon={<span className="size-1.5 animate-pulse rounded-full bg-accent shadow-[0_0_8px_var(--accent)]" />} className="text-accent">
+            <Meta icon={<span className="size-1.5 animate-pulse rounded-full bg-accent" />} className="text-accent">
               {t('row.running')}
             </Meta>
           )}

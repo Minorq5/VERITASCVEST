@@ -21,7 +21,7 @@ export function SettingsGroup({
       </div>
       <div
         className={cn(
-          'shadow-inset-top flex flex-col divide-y divide-line rounded-lg border glass',
+          'flex flex-col divide-y divide-line rounded-lg border bg-surface-1',
           tone === 'danger' ? 'border-danger/25' : 'border-line',
         )}
       >

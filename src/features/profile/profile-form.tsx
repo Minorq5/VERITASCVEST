@@ -69,7 +69,7 @@ export function ProfileForm({ profile }: { profile: Profile }) {
   }
 
   return (
-    <Surface tone="glass" className="p-6 sm:p-7">
+    <Surface className="p-6 sm:p-7">
       <h2 className="font-display text-lg font-semibold text-fg">{t('profile.edit')}</h2>
       <form onSubmit={submit} noValidate className="mt-6 flex flex-col gap-5">
         <Field label={t('profile.displayName')} error={errors.displayName}>

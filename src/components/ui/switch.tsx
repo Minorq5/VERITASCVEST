@@ -20,9 +20,9 @@ export const Switch = forwardRef<HTMLButtonElement, SwitchProps>(function Switch
       ref={ref}
       id={id}
       className={cn(
-        'relative inline-flex h-6 w-11 shrink-0 items-center rounded-full focus-ring',
-        'border border-line-strong bg-surface-4 transition-[background-color,border-color,box-shadow] duration-200 ease-out',
-        'data-[state=checked]:border-transparent data-[state=checked]:bg-accent data-[state=checked]:shadow-glow-sm',
+        'relative inline-flex h-5 w-9 shrink-0 items-center rounded-xs focus-ring',
+        'border border-line-bright bg-surface-3 transition-[background-color,border-color] duration-140 ease-out',
+        'data-[state=checked]:border-accent data-[state=checked]:bg-accent',
         'disabled:pointer-events-none disabled:opacity-45',
         !label && className,
       )}
@@ -30,9 +30,9 @@ export const Switch = forwardRef<HTMLButtonElement, SwitchProps>(function Switch
     >
       <S.Thumb
         className={cn(
-          'block size-[18px] translate-x-[3px] rounded-full bg-fg shadow-[0_1px_3px_rgb(0_0_0/0.5)]',
-          'transition-[transform,background-color] duration-300 ease-out-expo',
-          'data-[state=checked]:translate-x-[21px] data-[state=checked]:bg-accent-ink',
+          'block size-3.5 translate-x-0.5 rounded-[1px] bg-fg-2',
+          'transition-[transform,background-color] duration-200 ease-out',
+          'data-[state=checked]:translate-x-[18px] data-[state=checked]:bg-accent-ink',
         )}
       />
     </S.Root>

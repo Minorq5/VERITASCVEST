@@ -19,7 +19,7 @@ import { formatClock, formatDuration, formatShortDate, formatStopwatch } from '.
 import { typeMeta } from '../shared/type-meta';
 import { NumberInput, WidgetCard, type WidgetProps } from './shared';
 
-const VIOLET = typeMeta.time.color;
+const BLUE = typeMeta.time.color;
 type Pomodoro = typeof defaultPomodoro | NonNullable<ReturnType<typeof readTypeConfig<'time'>>['pomodoro']>;
 
 function phaseMinutes(session: TimeSessionRow, p: Pomodoro): number {
@@ -35,20 +35,20 @@ function OrbitDial({ ratio, children }: { ratio: number; children: React.ReactNo
   return (
     <div className="relative size-36 shrink-0">
       <svg viewBox="0 0 120 120" className="size-full overflow-visible" aria-hidden>
-        <circle cx={60} cy={60} r={r} fill="none" stroke="var(--color-surface-5)" strokeWidth={4} strokeDasharray="2 5" />
+        <circle cx={60} cy={60} r={r} fill="none" stroke="var(--color-line-strong)" strokeWidth={1.5} strokeDasharray="1 5" />
         <circle
           cx={60}
           cy={60}
           r={r}
           fill="none"
-          stroke={VIOLET}
-          strokeWidth={4}
-          strokeLinecap="round"
+          stroke={BLUE}
+          strokeWidth={1.5}
+          strokeLinecap="butt"
           strokeDasharray={`${circumference * Math.min(1, ratio)} ${circumference}`}
           transform="rotate(-90 60 60)"
-          style={{ filter: `drop-shadow(0 0 6px ${VIOLET})`, transition: 'stroke-dasharray 0.9s linear' }}
+          style={{ transition: 'stroke-dasharray 0.9s linear' }}
         />
-        <circle cx={60 + r * Math.cos(a)} cy={60 + r * Math.sin(a)} r={6} fill={`color-mix(in oklab, ${VIOLET} 60%, white)`} style={{ filter: `drop-shadow(0 0 8px ${VIOLET})`, transition: 'cx 0.9s linear, cy 0.9s linear' }} />
+        <circle cx={60 + r * Math.cos(a)} cy={60 + r * Math.sin(a)} r={3} fill={BLUE} style={{ transition: 'cx 0.9s linear, cy 0.9s linear' }} />
       </svg>
       <div className="absolute inset-0 flex flex-col items-center justify-center text-center">{children}</div>
     </div>
@@ -160,7 +160,7 @@ export function TimeWidget({ task, parts, prefs, now, today, actions, readOnly }
   };
 
   return (
-    <WidgetCard accent={VIOLET}>
+    <WidgetCard accent={BLUE}>
       <div className="flex flex-col items-center gap-5 sm:flex-row">
         <OrbitDial ratio={ratio}>
           <span className="font-mono text-2xl font-semibold text-fg tabular">{center}</span>
@@ -268,7 +268,7 @@ export function TimeWidget({ task, parts, prefs, now, today, actions, readOnly }
           <ul className="flex flex-col">
             {sessions.map((s) => (
               <li key={s.id} className="group/session flex items-center gap-3 border-b border-line py-1.5 text-sm last:border-b-0">
-                <span className={cn('size-2 rounded-full', s.kind === 'break' ? 'bg-fg-4' : '')} style={s.kind === 'break' ? undefined : { background: VIOLET }} />
+                <span className={cn('size-2 rounded-full', s.kind === 'break' ? 'bg-fg-4' : '')} style={s.kind === 'break' ? undefined : { background: BLUE }} />
                 <span className="text-fg-2">
                   {formatShortDate(todayIn(prefs.timeZone, new Date(s.started_at)), prefs.locale, today)},{' '}
                   {formatClock(new Date(s.started_at), prefs.locale, prefs.hour12, prefs.timeZone)}

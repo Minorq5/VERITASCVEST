@@ -4,7 +4,7 @@ import { Flame, Snowflake, SkipForward } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { Button } from '@/components/ui/button';
 import { Segmented } from '@/components/ui/segmented';
-import { StarCheck } from '@/components/ui/star-check';
+import { HorizonCheck } from '@/components/ui/horizon-check';
 import type { TaskRow } from '@/lib/db/types';
 import { readTypeConfig, type HabitSchedule } from '@/lib/domain/task-types';
 import { addDays, startOfWeek, todayIn, weekday, type IsoDate } from '@/lib/time/dates';
@@ -15,7 +15,7 @@ import { markHabitDay } from './habit-actions';
 import { NumberInput, Stat, WidgetCard, type WidgetProps } from './shared';
 
 const CORAL = typeMeta.habit.color;
-const ICE = 'var(--color-swatch-sky)';
+const ICE = 'var(--color-swatch-ice)';
 
 const cellColor: Record<string, string> = {
   done: CORAL,
@@ -50,7 +50,7 @@ export function HabitWidget({ task, parts, progress, prefs, today, actions, read
   return (
     <WidgetCard accent={CORAL}>
       <div className="flex flex-wrap items-center gap-4">
-        <StarCheck
+        <HorizonCheck
           checked={done}
           size={48}
           color={CORAL}
@@ -166,10 +166,9 @@ export function HabitWidget({ task, parts, progress, prefs, today, actions, read
                   aria-label={label}
                   title={label}
                   onClick={() => mark(date, status === 'done' ? null : 'done')}
-                  className={cn('size-2.5 rounded-[3px] transition-transform hover-ok:scale-125 sm:size-3', date === today && 'ring-1 ring-fg-2')}
+                  className={cn('size-2.5 rounded-[1px] sm:size-3', date === today && 'ring-1 ring-fg-2')}
                   style={{
                     background: status ? cellColor[status] : before ? 'transparent' : scheduled ? 'var(--color-surface-4)' : 'var(--color-surface-3)',
-                    boxShadow: status === 'done' ? `0 0 6px -1px ${CORAL}` : undefined,
                     opacity: before ? 0.25 : 1,
                   }}
                 />

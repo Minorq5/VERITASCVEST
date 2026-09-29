@@ -36,7 +36,7 @@ function scopeKey(scope: Scope) {
 
 function ListSkeleton() {
   return (
-    <div className="glass overflow-hidden rounded-xl border border-line" aria-hidden>
+    <div className="bg-surface-1 overflow-hidden rounded-xl border border-line" aria-hidden>
       {['w-[90%]', 'w-[60%]', 'w-[75%]', 'w-[50%]', 'w-[80%]'].map((w, i) => (
         <div key={i} className="flex items-start gap-3 border-b border-line px-4 py-3 last:border-b-0">
           <Skeleton className="size-[22px] rounded-full" />

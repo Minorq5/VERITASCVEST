@@ -2,7 +2,7 @@
 
 import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
-import { DEVICE_SETTINGS_KEY, defaultDeviceSettings, type DeviceSettings } from '@/lib/device';
+import { accents, DEVICE_SETTINGS_KEY, defaultDeviceSettings, type DeviceSettings } from '@/lib/device';
 
 interface DeviceSettingsStore extends DeviceSettings {
   set: <K extends keyof DeviceSettings>(key: K, value: DeviceSettings[K]) => void;
@@ -20,8 +20,14 @@ export const useDeviceSettings = create<DeviceSettingsStore>()(
     }),
     {
       name: DEVICE_SETTINGS_KEY,
-      version: 1,
+      version: 2,
       storage: createJSONStorage(() => localStorage),
+      // v2: the redesign replaced the six accents with amber, blue and white.
+      migrate: (persisted) => {
+        const state = (persisted ?? {}) as Partial<DeviceSettings>;
+        const accent = (accents as readonly string[]).includes(state.accent ?? '') ? state.accent : defaultDeviceSettings.accent;
+        return { ...defaultDeviceSettings, ...state, accent } as DeviceSettingsStore;
+      },
       partialize: ({ set: _set, ...rest }) => rest,
     },
   ),

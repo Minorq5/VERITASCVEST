@@ -30,11 +30,11 @@ export function Chip({
   return (
     <span
       className={cn(
-        'inline-flex h-7 items-center gap-1.5 rounded-full border text-sm transition-colors duration-150',
+        'inline-flex h-6 items-center gap-1.5 rounded-xs border text-sm transition-colors duration-140',
         selected
-          ? 'border-[color-mix(in_oklab,var(--accent)_45%,transparent)] bg-accent/12 text-fg'
-          : 'border-line-strong bg-surface-3 text-fg-2',
-        onRemove ? 'pr-1 pl-2.5' : 'px-2.5',
+          ? 'border-accent/60 bg-accent/10 text-fg'
+          : 'border-line-strong bg-surface-2 text-fg-2',
+        onRemove ? 'pr-0.5 pl-2' : 'px-2',
         className,
       )}
     >
@@ -42,14 +42,11 @@ export function Chip({
         {...(onClick ? { type: 'button' as const, onClick, 'aria-pressed': selected } : {})}
         className={cn(
           'inline-flex items-center gap-1.5 [&_svg]:size-3.5',
-          onClick && 'rounded-full focus-ring hover-ok:text-fg',
+          onClick && 'rounded-xs focus-ring hover-ok:text-fg',
         )}
       >
         {color && (
-          <span
-            className="size-2 rounded-full"
-            style={{ background: color, boxShadow: `0 0 6px ${color}` }}
-          />
+          <span className="size-1.5 rounded-full" style={{ background: color }} />
         )}
         {icon}
         {children}
@@ -59,7 +56,7 @@ export function Chip({
           type="button"
           onClick={onRemove}
           aria-label={removeLabel}
-          className="inline-flex size-5 items-center justify-center rounded-full text-fg-3 focus-ring transition-colors hover-ok:bg-surface-5 hover-ok:text-fg"
+          className="inline-flex size-5 items-center justify-center rounded-xs text-fg-3 focus-ring transition-colors hover-ok:bg-surface-4 hover-ok:text-fg"
         >
           <X className="size-3.5" />
         </button>

@@ -16,6 +16,14 @@ const toneIcon: Record<ToastTone, React.ReactNode> = {
   error: <CircleAlert className="text-danger" />,
 };
 
+// A 2px bar on the left edge carries the tone; the card itself stays neutral.
+const toneBar: Record<ToastTone, string> = {
+  info: 'before:bg-info',
+  success: 'before:bg-success',
+  warning: 'before:bg-warning',
+  error: 'before:bg-danger',
+};
+
 const VISIBLE = 3;
 
 export function Toaster() {
@@ -86,14 +94,14 @@ function ToastCard({
   }, [paused, item.id, item.duration, dismiss]);
 
   const collapsedOffset = index * 10;
-  const collapsedScale = 1 - index * 0.05;
+  const collapsedScale = 1 - index * 0.04;
 
   return (
     <motion.li
       layout={!reduce}
       role={item.tone === 'error' ? 'alert' : 'status'}
       aria-live={item.tone === 'error' ? 'assertive' : 'polite'}
-      initial={reduce ? { opacity: 0 } : { opacity: 0, y: 24, scale: 0.96 }}
+      initial={reduce ? { opacity: 0 } : { opacity: 0, y: 16 }}
       animate={
         reduce
           ? { opacity: hidden ? 0 : 1 }
@@ -113,7 +121,9 @@ function ToastCard({
       }}
       style={{ zIndex: 50 - index, pointerEvents: hidden ? 'none' : undefined }}
       className={cn(
-        'shadow-inset-top relative mt-2 flex items-start gap-3 rounded-lg border border-line-strong bg-[rgb(19_26_43/0.96)] p-3 pr-1.5 shadow-lg backdrop-blur-xl',
+        'relative mt-2 flex items-start gap-3 overflow-hidden rounded-md border border-line-strong bg-surface-2 p-3 pr-1.5 pl-4',
+        'before:absolute before:inset-y-0 before:left-0 before:w-0.5',
+        toneBar[item.tone],
         '[&_svg]:size-5 [&_svg]:shrink-0',
         !expanded && index > 0 && 'absolute inset-x-0 bottom-0',
       )}
@@ -130,7 +140,7 @@ function ToastCard({
             item.action?.onClick();
             dismiss(item.id);
           }}
-          className="relative inline-flex h-9 shrink-0 items-center gap-1.5 rounded-md px-2.5 text-sm font-semibold text-accent focus-ring transition-colors hover-ok:bg-surface-4"
+          className="relative inline-flex h-8 shrink-0 items-center gap-1.5 rounded-sm px-2.5 font-mono text-xs font-medium tracking-[0.06em] text-blue uppercase focus-ring transition-colors hover-ok:bg-surface-4"
         >
           {item.countdown && Number.isFinite(item.duration) && (
             <Countdown duration={item.duration} paused={paused} />
@@ -142,7 +152,7 @@ function ToastCard({
         type="button"
         onClick={() => dismiss(item.id)}
         aria-label={t('dismissNotification')}
-        className="inline-flex size-8 shrink-0 items-center justify-center rounded-md text-fg-3 focus-ring transition-colors hover-ok:bg-surface-4 hover-ok:text-fg [&_svg]:!size-4"
+        className="inline-flex size-8 shrink-0 items-center justify-center rounded-sm text-fg-3 focus-ring transition-colors hover-ok:bg-surface-4 hover-ok:text-fg [&_svg]:!size-4"
       >
         <X />
       </button>
@@ -170,7 +180,7 @@ function Countdown({ duration, paused }: { duration: number; paused: boolean }) 
         fill="none"
         stroke="currentColor"
         strokeWidth={2}
-        strokeLinecap="round"
+        strokeLinecap="butt"
         pathLength={1}
         strokeDasharray="1"
         style={{

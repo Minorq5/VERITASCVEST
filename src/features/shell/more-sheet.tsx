@@ -49,7 +49,7 @@ export function MoreSheet({ counts }: { counts: Record<Section, number> | null }
             <span className="relative">
               <Ellipsis aria-hidden className="size-[22px]" />
               {(counts?.overdue ?? 0) > 0 && (
-                <span className="absolute -top-0.5 -right-1 size-2 rounded-full bg-danger shadow-[0_0_8px_var(--color-danger)]" />
+                <span className="absolute -top-0.5 -right-1 size-2 rounded-full bg-danger" />
               )}
             </span>
             {t('nav.more')}

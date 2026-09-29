@@ -51,7 +51,6 @@ function Sparkline({ points, color }: { points: number[]; color: string }) {
         initial={{ pathLength: 0 }}
         animate={{ pathLength: 1 }}
         transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-        style={{ filter: `drop-shadow(0 0 6px ${color})` }}
       />
       <circle cx={xy.at(-1)![0]} cy={xy.at(-1)![1]} r={3.5} fill={color} />
     </svg>
@@ -98,7 +97,7 @@ export function NumericWidget({ task, parts, progress, prefs, actions, readOnly 
   return (
     <WidgetCard accent={typeMeta.numeric.color}>
       <div className="flex items-center gap-5">
-        <ProgressRing value={progress.ratio} size={88} stroke={7} color={color} />
+        <ProgressRing value={progress.ratio} size={88} color={color} />
         <div className="min-w-0 flex-1">
           <p className="font-mono text-3xl font-semibold text-fg tabular">
             <RollingNumber value={current} locale={prefs.locale} />

@@ -40,7 +40,7 @@ export function SettingsFrame({ section }: { section: SettingsSection | null }) 
       <div className="grid gap-8 lg:grid-cols-[220px_minmax(0,1fr)] lg:gap-12">
         <div className={cn(section && 'hidden lg:block')}>
           {/* phone: big tappable rows */}
-          <ul className="shadow-inset-top flex flex-col divide-y divide-line overflow-hidden rounded-lg border border-line glass lg:hidden">
+          <ul className="flex flex-col divide-y divide-line overflow-hidden rounded-lg border border-line bg-surface-1 lg:hidden">
             {settingsSections.map((s) => {
               const Icon = sectionIcons[s];
               return (
@@ -74,7 +74,7 @@ export function SettingsFrame({ section }: { section: SettingsSection | null }) 
                       )}
                     >
                       {active && (
-                        <motion.span layoutId="settings-active" transition={spring.snappy} className="absolute left-0 h-5 w-0.5 rounded-full bg-accent shadow-[0_0_10px_var(--accent)]" />
+                        <motion.span layoutId="settings-active" transition={spring.snappy} className="absolute left-0 h-5 w-0.5 rounded-full bg-accent" />
                       )}
                       <Icon className={cn('size-[18px]', active && 'text-accent')} aria-hidden />
                       {t(`sections.${s}`)}

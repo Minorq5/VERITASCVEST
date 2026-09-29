@@ -6,24 +6,22 @@ import { Tooltip } from './tooltip';
 
 const iconButtonVariants = cva(
   [
-    'relative inline-flex shrink-0 items-center justify-center rounded-md select-none',
-    'transition-[color,background-color,border-color,box-shadow,transform] duration-200 ease-out',
-    'focus-ring disabled:pointer-events-none motion-ok:active:scale-[0.94] [&:disabled:not([aria-busy=true])]:opacity-45',
+    'relative inline-flex shrink-0 items-center justify-center rounded-sm select-none',
+    'transition-[color,background-color,border-color] duration-[90ms] ease-out',
+    'focus-ring disabled:pointer-events-none [&:disabled:not([aria-busy=true])]:opacity-40',
   ],
   {
     variants: {
       variant: {
-        ghost: 'text-fg-2 hover-ok:bg-surface-3 hover-ok:text-fg',
-        secondary:
-          'shadow-inset-top border border-line-strong text-fg glass hover-ok:border-line-bright',
-        primary:
-          'bg-[linear-gradient(180deg,var(--accent-hi),var(--accent)_58%)] text-accent-ink shadow-[inset_0_1px_0_rgb(255_255_255/0.4)] hover-ok:shadow-glow-md',
-        danger: 'text-danger hover-ok:bg-danger/12',
+        ghost: 'text-fg-3 hover-ok:bg-surface-3 hover-ok:text-fg active:bg-surface-4',
+        secondary: 'border border-line-strong text-fg-2 hover-ok:border-line-bright hover-ok:bg-surface-3 hover-ok:text-fg',
+        primary: 'bg-accent text-accent-ink hover-ok:bg-accent-hi active:bg-accent-lo',
+        danger: 'text-fg-3 hover-ok:bg-danger/10 hover-ok:text-danger',
       },
       size: {
-        sm: 'size-8 [&_svg]:size-4',
-        md: 'size-10 [&_svg]:size-[18px]',
-        lg: 'size-12 rounded-lg [&_svg]:size-5',
+        sm: 'size-7 [&_svg]:size-4',
+        md: 'size-8 [&_svg]:size-4',
+        lg: 'size-11 rounded-md [&_svg]:size-5',
       },
     },
     defaultVariants: { variant: 'ghost', size: 'md' },

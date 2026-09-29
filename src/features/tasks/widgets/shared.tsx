@@ -21,12 +21,9 @@ export interface WidgetProps {
 }
 
 /** The framed area at the top of the task that holds the type's controls. */
-export function WidgetCard({ children, className, accent }: { children: ReactNode; className?: string; accent?: string }) {
+export function WidgetCard({ children, className }: { children: ReactNode; className?: string; accent?: string }) {
   return (
-    <section
-      className={cn('shadow-inset-top relative overflow-hidden rounded-xl border border-line bg-surface-2/70 p-4', className)}
-      style={accent ? { backgroundImage: `radial-gradient(120% 90% at 0% 0%, color-mix(in oklab, ${accent} 10%, transparent), transparent 60%)` } : undefined}
-    >
+    <section className={cn('relative overflow-hidden rounded-lg border border-line-strong bg-surface-1 p-4', className)}>
       {children}
     </section>
   );

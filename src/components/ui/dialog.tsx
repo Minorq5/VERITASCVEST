@@ -38,19 +38,19 @@ export function Dialog({
       <D.Portal>
         <D.Overlay
           className={cn(
-            'backdrop-anim fixed inset-0 z-[var(--z-modal)] grid place-items-center overflow-y-auto p-4 sm:p-8',
-            'bg-[radial-gradient(ellipse_at_center,rgb(6_9_18/0.55),rgb(3_5_10/0.85))] backdrop-blur-[6px]',
+            'scrim-anim fixed inset-0 z-[var(--z-modal)] grid place-items-center overflow-y-auto p-4 sm:p-8',
+            'bg-[rgb(2_2_3/0.78)]',
           )}
         >
           <D.Content
             className={cn(
-              'dialog-anim shadow-inset-top relative w-full rounded-xl border border-line-strong p-6 shadow-xl glass-strong outline-none sm:p-7',
+              'dialog-anim relative w-full rounded-xl border border-line-strong bg-surface-1 p-6 outline-none',
               widths[size],
               className,
             )}
           >
             <div className="flex flex-col gap-2">
-              <D.Title className="pr-10 font-display text-xl font-semibold text-fg">{title}</D.Title>
+              <D.Title className="pr-10 font-display text-xl font-medium text-fg">{title}</D.Title>
               {description ? (
                 <D.Description className="text-base text-fg-2">{description}</D.Description>
               ) : (
@@ -59,13 +59,13 @@ export function Dialog({
             </div>
             <D.Close
               aria-label={t('closeDialog')}
-              className="absolute top-5 right-5 inline-flex size-9 items-center justify-center rounded-md text-fg-3 focus-ring transition-colors hover-ok:bg-surface-4 hover-ok:text-fg sm:top-6 sm:right-6"
+              className="absolute top-5 right-5 inline-flex size-8 items-center justify-center rounded-sm text-fg-3 focus-ring transition-colors hover-ok:bg-surface-3 hover-ok:text-fg"
             >
               <X className="size-[18px]" />
             </D.Close>
             {children && <div className="mt-5">{children}</div>}
             {footer && (
-              <div className="mt-7 flex flex-col-reverse gap-2 sm:flex-row sm:justify-end">
+              <div className="-mx-6 mt-6 -mb-6 flex flex-col-reverse gap-2 border-t border-line px-6 py-4 sm:flex-row sm:justify-end">
                 {footer}
               </div>
             )}

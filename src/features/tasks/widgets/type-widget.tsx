@@ -17,7 +17,7 @@ function SubtasksSummary({ progress }: WidgetProps) {
   const d = progress.detail.kind === 'subtasks' ? progress.detail : { done: 0, total: 0 };
   return (
     <WidgetCard accent={typeMeta.subtasks.color} className="flex items-center gap-4">
-      <ProgressRing value={progress.ratio} size={64} stroke={6} color={progress.reached ? 'var(--color-success)' : typeMeta.subtasks.color} />
+      <ProgressRing value={progress.ratio} size={64} color={progress.reached ? 'var(--color-success)' : typeMeta.subtasks.color} />
       <p className="text-base text-fg-2">{d.total ? t('widgets.subtasks.of', d) : t('widgets.subtasks.empty')}</p>
     </WidgetCard>
   );

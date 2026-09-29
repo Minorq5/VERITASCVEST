@@ -6,7 +6,7 @@ import { useTranslations } from 'next-intl';
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { IconButton } from '@/components/ui/icon-button';
-import { StarCheck } from '@/components/ui/star-check';
+import { HorizonCheck } from '@/components/ui/horizon-check';
 import type { MilestoneRow } from '@/lib/db/types';
 import { normalizeWeights, orderedMilestones } from '@/lib/domain/progress';
 import type { Change } from '@/lib/sync/repo';
@@ -94,7 +94,6 @@ export function MilestonesWidget({ task, parts, actions, readOnly }: WidgetProps
                 style={{
                   flexGrow: Math.max(0.5, weights[i] ?? 0),
                   background: m.done_at ? meta.color : 'var(--color-surface-5)',
-                  boxShadow: m.done_at ? `0 0 10px -2px ${meta.color}` : undefined,
                 }}
               />
             ))}
@@ -119,8 +118,8 @@ export function MilestonesWidget({ task, parts, actions, readOnly }: WidgetProps
                     <span className="sr-only">{t('widgets.chain.locked')}</span>
                   </span>
                 ) : (
-                  <span className={cn('inline-flex rounded-full', isNext && 'shadow-[0_0_18px_-3px_var(--c)]')} style={{ ['--c' as string]: meta.color }}>
-                    <StarCheck
+                  <span className={cn('inline-flex rounded-full', isNext && '')} style={{ ['--c' as string]: meta.color }}>
+                    <HorizonCheck
                       checked={Boolean(m.done_at)}
                       size={26}
                       color={meta.color}

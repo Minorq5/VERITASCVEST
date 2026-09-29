@@ -10,7 +10,7 @@ export default function GlobalError({
   reset: () => void;
 }) {
   return (
-    <html lang="en" data-accent="cyan">
+    <html lang="en" data-accent="amber">
       <body style={{ fontFamily: 'system-ui, sans-serif' }}>
         <main className="mx-auto flex min-h-dvh max-w-xl flex-col items-center justify-center gap-4 px-6 text-center">
           <h1 className="text-3xl font-semibold text-fg">

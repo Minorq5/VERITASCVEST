@@ -40,7 +40,7 @@ export function CollabWidget({ task, parts, progress, prefs, today, actions, rea
   return (
     <WidgetCard accent={color}>
       <div className="flex items-center gap-5">
-        <ProgressRing value={target ? Math.min(1, total / target) : 0} size={88} stroke={7} color={progress.reached ? 'var(--color-success)' : color} />
+        <ProgressRing value={target ? Math.min(1, total / target) : 0} size={88} color={progress.reached ? 'var(--color-success)' : color} />
         <div className="min-w-0 flex-1">
           <p className="font-mono text-3xl font-semibold text-fg tabular">
             <RollingNumber value={total} locale={prefs.locale} />
@@ -146,7 +146,7 @@ export function AbstainWidget({ task, parts, progress, prefs, today, actions, re
   return (
     <WidgetCard accent={color}>
       <div className="flex flex-wrap items-center gap-5">
-        <ProgressRing value={goal ? Math.min(1, days / goal) : days > 0 ? 1 : 0} size={96} stroke={7} color={color}>
+        <ProgressRing value={goal ? Math.min(1, days / goal) : days > 0 ? 1 : 0} size={96} color={color}>
           <span className="font-mono text-2xl font-semibold text-fg tabular">{days}</span>
         </ProgressRing>
         <div className="min-w-0 flex-1">

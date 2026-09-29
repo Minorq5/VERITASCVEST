@@ -120,7 +120,7 @@ export function Onboarding() {
               <span
                 className={cn(
                   'block h-full rounded-full bg-accent transition-[width] duration-500 ease-out-expo',
-                  i <= step ? 'w-full shadow-[0_0_10px_var(--accent)]' : 'w-0',
+                  i <= step ? 'w-full' : 'w-0',
                 )}
               />
             </li>
@@ -133,7 +133,7 @@ export function Onboarding() {
 
       <section
         aria-labelledby={headingId}
-        className="glass-strong relative mt-5 flex-1 overflow-hidden rounded-2xl border border-line-strong shadow-xl shadow-inset-top sm:flex-none"
+        className="bg-surface-1 relative mt-5 flex-1 overflow-hidden rounded-2xl border border-line-strong sm:flex-none"
       >
         <AnimatePresence mode="wait" initial={false} custom={direction}>
           <motion.div
@@ -311,7 +311,7 @@ export function Onboarding() {
       </section>
 
       {/* On phones the actions stay under the thumb while the step scrolls. */}
-      <div className="sticky bottom-0 z-10 -mx-4 mt-5 flex items-center justify-between gap-3 bg-[linear-gradient(to_top,var(--color-bg)_55%,transparent)] px-4 pt-6 pb-[max(1rem,env(safe-area-inset-bottom))] sm:static sm:mx-0 sm:bg-none sm:p-0">
+      <div className="sticky bottom-0 z-10 -mx-4 mt-5 flex items-center justify-between gap-3 border-t border-line bg-bg px-4 pt-3 pb-[max(1rem,env(safe-area-inset-bottom))] sm:static sm:mx-0 sm:border-0 sm:bg-transparent sm:p-0">
         <Button variant="ghost" icon={<ArrowLeft />} onClick={() => go(-1)} className={cn(step === 0 && 'invisible')} disabled={finishing}>
           {t('common.back')}
         </Button>

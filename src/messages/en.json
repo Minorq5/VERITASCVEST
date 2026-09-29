@@ -73,12 +73,9 @@
   },
   "accent": {
     "label": "Accent colour",
-    "cyan": "Cyan",
-    "ice": "Ice",
-    "aurora": "Aurora",
-    "nebula": "Nebula",
-    "plasma": "Plasma",
-    "solar": "Solar wind"
+    "amber": "Amber",
+    "blue": "Blue",
+    "white": "White"
   },
   "quality": {
     "label": "Graphics quality",
@@ -99,17 +96,16 @@
     }
   },
   "design": {
-    "title": "“Orbit” design system",
-    "lead": "Every token, component and state of Veritas Tasks on a single page. Visible in development mode only.",
+    "title": "Design system «Event Horizon»",
+    "lead": "Tokens, components and interface rules on one page. The black hole is “now”; the interface around it is a strict instrument with no light of its own. Visible in development only.",
     "nav": "Sections",
     "sections": {
       "brand": "Logo",
       "color": "Colour",
       "type": "Typography",
-      "fonts": "Font comparison",
-      "spacing": "Grid and spacing",
-      "radius": "Corner radii",
-      "depth": "Depth, glass and glow",
+      "fonts": "Typefaces compared",
+      "grid": "Grid, radii, heights",
+      "depth": "Depth",
       "motion": "Motion",
       "icons": "Icons",
       "buttons": "Buttons",
@@ -122,41 +118,45 @@
       "progress": "Progress",
       "loading": "Loading",
       "empty": "Empty states",
-      "effects": "Effects"
+      "background": "Background",
+      "bans": "Bans"
     },
     "tokens": {
+      "lead": "The background is near black, text is warm starlight. Three physical colours: the amber of the accretion disk, Doppler blue, and red for danger only. Contrast is measured on surface-1.",
       "surfaces": "Surfaces",
+      "lines": "Lines, 1 px",
       "text": "Text",
-      "accents": "Accents",
+      "physical": "Three physical colours",
+      "amberNote": "Main accent and done",
+      "blueNote": "Interaction: focus, selection, links",
+      "redNote": "Danger and critical priority only",
+      "accents": "Accent (chosen in settings)",
       "semantic": "Semantic colours",
       "priorities": "Priorities",
-      "swatches": "Project colours",
+      "swatches": "Tag and project colours: the star spectrum",
       "contrast": "Contrast {ratio}:1"
     },
     "typeSamples": {
-      "display": "A supernova in your plans",
-      "h1": "In orbit today",
-      "h2": "Project “Moving house”",
-      "body": "Tasks, habits and projects turn into constellations. Every action responds instantly — even without internet.",
+      "display": "What matters is now",
+      "h1": "Today",
+      "h2": "Project “Moving”",
+      "body": "Tasks, habits and projects orbit around “now”. Every action answers instantly, even offline.",
       "small": "Due tomorrow at 18:00 · 3 subtasks",
-      "mono": "25:00",
       "bulgarian": "Всяка задача е звезда. Подреди своето небе и ѝ дай светлина.",
       "pangram": "Sphinx of black quartz, judge my vow.",
-      "word": "Orbit"
+      "word": "Horizon",
+      "label": "Today 18:00"
     },
     "fontCompare": {
-      "chosen": "Approved",
-      "alternative": "Alternative",
+      "lead": "Headings: a strict grotesque with full Cyrillic, including the Bulgarian forms (д, л, ж and ѝ change shape in Bulgarian text). Body text is Onest; numbers and labels are monospaced.",
+      "recommended": "Recommended",
+      "alternative": "Option",
       "headingPair": "Headings",
-      "textPair": "Text",
-      "monoPair": "Numbers"
+      "textPair": "Body text",
+      "monoPair": "Numbers, dates, labels"
     },
     "motionSamples": {
-      "instant": "Instant · 100 ms",
-      "fast": "Fast · 200 ms",
-      "base": "Base · 300 ms",
-      "slow": "Slow · 500 ms",
-      "cinematic": "Cinematic · 1–3 s",
+      "lead": "Short and exact, no springy overshoot. Long moves belong to the cinematic scenes.",
       "replay": "Replay"
     },
     "buttons": {
@@ -165,8 +165,7 @@
       "ghost": "Details",
       "danger": "Delete",
       "loading": "Saving",
-      "disabled": "Unavailable",
-      "magnetic": "Magnetic button"
+      "disabled": "Unavailable"
     },
     "inputs": {
       "title": "Title",
@@ -251,17 +250,78 @@
     },
     "empty": {
       "title": "Nothing here yet",
-      "text": "The astronaut is waiting for your first task. Press N and a new star will light up.",
+      "text": "No tasks yet. Press N and the first one goes into orbit.",
       "action": "Create task"
     },
-    "effects": {
-      "cursor": "Custom cursor",
-      "cursorHint": "Desktop only. Can be turned off in settings.",
-      "spotlight": "Spotlight under the cursor",
-      "spotlightText": "A soft light follows the pointer and shows where you are.",
-      "grain": "Film grain over the background",
-      "reduced": "Reduced motion",
-      "reducedHint": "Animations become gentle cross-fades."
+    "eyebrow": "Veritas Tasks · V2",
+    "brand": {
+      "lead": "Three directions on “truth and a black hole”. Every mark is lines of light, no fills, no gradients; small sizes are checked down to 16 px.",
+      "recommended": "Recommended",
+      "lens": "Lens",
+      "horizon": "Horizon",
+      "eclipse": "Eclipse",
+      "lensText": "Two lines of light bend around a dark point, the way mass bends light. The short left and long right arms read as a check mark: done.",
+      "horizonText": "The shadow, the photon ring and the disk in three lines. The far side of the disk is lensed over the shadow; the left side is brighter (Doppler).",
+      "eclipseText": "A dark disk and a thin crescent of light on its edge. The crescent runs into the long stroke of a check: truth shows at the edge."
+    },
+    "grid": {
+      "lead": "A 4 px step with an 8 px rhythm. Radii from 0 to 8 px; circles only for things that are round: the horizon checkbox, avatars, status dots.",
+      "spacing": "Spacing",
+      "radius": "Radii",
+      "heights": "Control heights",
+      "control": "Field",
+      "touch": "Touch"
+    },
+    "depth": {
+      "lead": "Depth comes only from background levels and 1 px lines. The higher the layer, the lighter the surface.",
+      "panel": "panel",
+      "card": "card",
+      "menu": "menu",
+      "noShadows": "No shadows, glow, glass or blur. Dialogs sit on 78 % black, not blurred."
+    },
+    "icons": {
+      "lead": "Lucide, 16 px, 1.5 stroke. Icons get colour only when it means something."
+    },
+    "background": {
+      "lead": "The working background is rare, still stars on near black. No nebulae, no moving wallpapers.",
+      "starsLabel": "Stars",
+      "stars": "About one star per 20,000 px², 0.35–1.1 px, from warm white to blue. On a computer with a mouse, stars near the pointer bend like light around a mass: a main image and a faint second one. Move the pointer across the page.",
+      "lens": "Lens at the pointer",
+      "lensHint": "Only on computers with a mouse.",
+      "reduced": "Reduce motion",
+      "reducedHint": "Animations become a short cross-fade."
+    },
+    "bans": {
+      "lead": "None of this exists in the interface. Light and bloom live only inside the 3D scenes, and only from real sources.",
+      "test": "The design-rules test checks the source for every item: if it fails, the screen is not done.",
+      "violet": {
+        "no": "Violet, pink, decorative gradients",
+        "instead": "Amber, blue and red, each only for its meaning"
+      },
+      "blur": {
+        "no": "Glass, blur, backdrop-filter",
+        "instead": "Surface levels and 1 px lines"
+      },
+      "radius": {
+        "no": "Radii above 8 px",
+        "instead": "0–8 px; circles only for round things"
+      },
+      "glow": {
+        "no": "Glow, neon, big soft shadows",
+        "instead": "Flat colour; light only in 3D"
+      },
+      "emoji": {
+        "no": "Emoji instead of icons",
+        "instead": "Lucide, 1.5 stroke"
+      },
+      "nebula": {
+        "no": "Nebulae and “space wallpapers”",
+        "instead": "Rare, still stars"
+      },
+      "template": {
+        "no": "Three cards with an icon in a circle, an empty hero, centred paragraphs, stock phrases",
+        "instead": "A live piece of the product, left-aligned text, concrete words"
+      }
     }
   },
   "auth": {
@@ -508,8 +568,8 @@
       "signOutAllShort": "Sign out everywhere"
     },
     "appearance": {
-      "cursor": "Custom cursor",
-      "cursorHint": "Only on computers with a mouse.",
+      "cursor": "Lens at the pointer",
+      "cursorHint": "Background stars bend slightly around the pointer. Only on computers with a mouse.",
       "motion": "Reduce motion",
       "motionHint": "Animations become gentle fades. The system setting is always respected.",
       "qualityHint": "Affects 3D scenes and the background. Saved for this device.",
@@ -890,18 +950,15 @@
       "properties": "Properties"
     },
     "colors": {
-      "cyan": "Cyan",
-      "sky": "Sky",
-      "indigo": "Indigo",
-      "violet": "Violet",
-      "orchid": "Orchid",
-      "rose": "Rose",
-      "coral": "Coral",
+      "rust": "Rust",
       "amber": "Amber",
-      "lime": "Lime",
-      "mint": "Mint",
-      "teal": "Teal",
-      "slate": "Slate"
+      "gold": "Gold",
+      "sand": "Sand",
+      "star": "Star white",
+      "ice": "Ice",
+      "blue": "Blue",
+      "steel": "Steel",
+      "ash": "Ash"
     },
     "editor": {
       "toolbar": "Formatting",

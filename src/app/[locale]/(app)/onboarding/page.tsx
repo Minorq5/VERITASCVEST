@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { SpaceBackdrop } from '@/components/effects/space-backdrop';
-import { PlanetHorizon } from '@/features/auth/planet-horizon';
+import { DistantHorizon } from '@/features/cinema/distant-horizon';
 import { Onboarding } from '@/features/onboarding/onboarding';
 
 export async function generateMetadata({ params }: PageProps<'/[locale]/onboarding'>): Promise<Metadata> {
@@ -15,7 +15,7 @@ export default async function OnboardingPage({ params }: PageProps<'/[locale]/on
   return (
     <>
       <SpaceBackdrop />
-      <PlanetHorizon />
+      <DistantHorizon />
       <main id="main">
         <Onboarding />
       </main>

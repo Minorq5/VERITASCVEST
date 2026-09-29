@@ -37,13 +37,11 @@ const kindColor = (token: Token, catalog: ReturnType<typeof useCatalog>): string
     case 'priority':
       return priorityVar(token.priority) ?? 'var(--accent)';
     case 'repeat':
-      return 'var(--color-swatch-violet)';
     case 'estimate':
-      return 'var(--color-swatch-amber)';
     case 'reminder':
-      return 'var(--color-swatch-sky)';
+      return 'var(--color-fg-2)';
     default:
-      return 'var(--accent)';
+      return 'var(--color-blue)';
   }
 };
 
@@ -299,9 +297,9 @@ export function QuickAdd({ scope, autoFocus, onCreated, defaultText, className }
     <div className={cn('relative', className)}>
       <div
         className={cn(
-          'glass shadow-inset-top relative flex items-start gap-2 rounded-xl border px-2 py-2 transition-[border-color,box-shadow] duration-200',
+          'bg-surface-1 relative flex items-start gap-2 rounded-xl border px-2 py-2 transition-[border-color,box-shadow] duration-200',
           focused
-            ? 'border-[color-mix(in_oklab,var(--accent)_55%,transparent)] shadow-[0_0_0_4px_color-mix(in_oklab,var(--accent)_12%,transparent)]'
+            ? 'border-[color-mix(in_oklab,var(--accent)_55%,transparent)]'
             : 'border-line-strong hover-ok:border-line-bright',
           error && 'border-danger/60',
         )}
@@ -334,11 +332,11 @@ export function QuickAdd({ scope, autoFocus, onCreated, defaultText, className }
               seg.token ? (
                 <mark
                   key={i}
-                  className="rounded-[5px] [box-decoration-break:clone] text-[color:var(--c)]"
+                  className="rounded-xs [box-decoration-break:clone] text-[color:var(--c)]"
                   style={{
                     ['--c' as string]: kindColor(seg.token, catalog),
-                    background: 'color-mix(in oklab, var(--c) 16%, transparent)',
-                    boxShadow: '0 0 0 2px color-mix(in oklab, var(--c) 16%, transparent)',
+                    background: 'color-mix(in oklab, var(--c) 14%, transparent)',
+                    boxShadow: '0 0 0 1px color-mix(in oklab, var(--c) 14%, transparent)',
                   }}
                 >
                   {seg.text}
@@ -383,13 +381,13 @@ export function QuickAdd({ scope, autoFocus, onCreated, defaultText, className }
           disabled={!result.title.trim() || busy}
           aria-label={t('quickAdd.add')}
           className={cn(
-            'focus-ring mt-px inline-flex size-9 shrink-0 items-center justify-center rounded-md transition-[background-color,color,opacity,transform] duration-200',
+            'focus-ring mt-px inline-flex size-9 shrink-0 items-center justify-center rounded-md transition-[background-color,color,opacity] duration-140',
             result.title.trim()
-              ? 'bg-[linear-gradient(180deg,var(--accent-hi),var(--accent)_60%)] text-accent-ink shadow-glow-sm motion-ok:active:scale-95'
-              : 'bg-surface-4 text-fg-3 opacity-60',
+              ? 'bg-accent text-accent-ink hover-ok:bg-accent-hi'
+              : 'bg-surface-3 text-fg-4',
           )}
         >
-          <ArrowUp aria-hidden className="size-[18px]" strokeWidth={2.4} />
+          <ArrowUp aria-hidden className="size-4" strokeWidth={2} />
         </button>
       </div>
 
@@ -397,7 +395,7 @@ export function QuickAdd({ scope, autoFocus, onCreated, defaultText, className }
         <ul
           id={listId}
           role="listbox"
-          className="glass-strong shadow-inset-top absolute top-full left-12 z-[var(--z-dropdown)] mt-2 w-72 overflow-hidden rounded-lg border border-line-strong p-1.5 shadow-lg"
+          className="bg-surface-1 absolute top-full left-12 z-[var(--z-dropdown)] mt-2 w-72 overflow-hidden rounded-lg border border-line-strong p-1.5"
         >
           {suggestions.map((item, i) => (
             <li

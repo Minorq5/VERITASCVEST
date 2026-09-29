@@ -39,7 +39,7 @@ export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(function 
     <div
       className={cn(
         controlFrame,
-        'items-start px-3 py-2.5',
+        'items-start px-3 py-2',
         controlState({ invalid: isInvalid, disabled: isDisabled }),
       )}
     >
@@ -59,7 +59,7 @@ export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(function 
           onInput?.(event);
         }}
         className={cn(
-          'min-h-[4.5rem] w-full resize-none bg-transparent text-base leading-6 outline-none placeholder:text-fg-3',
+          'min-h-[4.5rem] w-full resize-none bg-transparent text-base leading-5 outline-none placeholder:text-fg-3',
           className,
         )}
         {...props}

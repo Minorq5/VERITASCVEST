@@ -85,7 +85,7 @@ export function AvatarEditor({ profile, size = 112 }: { profile: Profile; size?:
   const badge = (
     <span
       aria-hidden
-      className="absolute right-0 bottom-0 flex size-9 items-center justify-center rounded-full border border-line-strong bg-surface-4 text-fg shadow-md transition-colors group-hover/avatar:bg-surface-5 [&_svg]:size-4"
+      className="absolute right-0 bottom-0 flex size-9 items-center justify-center rounded-full border border-line-strong bg-surface-4 text-fg transition-colors group-hover/avatar:bg-surface-5 [&_svg]:size-4"
     >
       <Camera />
     </span>
@@ -167,7 +167,7 @@ export function AvatarEditor({ profile, size = 112 }: { profile: Profile; size?:
                 onCropChange={setCrop}
                 onZoomChange={setZoom}
                 onCropComplete={(_, pixels) => setArea(pixels)}
-                style={{ cropAreaStyle: { border: '2px solid var(--accent)', boxShadow: '0 0 0 9999px rgb(3 5 10 / 0.72)' } }}
+                style={{ cropAreaStyle: { border: '2px solid var(--accent)', boxShadow: '0 0 0 9999px rgb(2 2 3 / 0.72)' } }}
               />
             </div>
             <div className="flex flex-col gap-2">

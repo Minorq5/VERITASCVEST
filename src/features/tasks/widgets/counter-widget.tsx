@@ -53,12 +53,12 @@ export function CounterWidget({ task, parts, progress, prefs, today, now, action
           disabled={readOnly || current <= 0}
           onClick={() => void actions.addEvent(task.id, 'delta', -config.step)}
           aria-label={t('widgets.counter.minus', { step })}
-          className="focus-ring inline-flex size-14 shrink-0 items-center justify-center rounded-full border border-line-strong text-fg-2 transition-[background-color,transform] hover-ok:bg-surface-4 motion-ok:active:scale-95 disabled:opacity-40"
+          className="focus-ring inline-flex size-12 shrink-0 items-center justify-center rounded-md border border-line-strong text-fg-2 transition-colors hover-ok:bg-surface-3 disabled:opacity-40"
         >
-          <Minus aria-hidden className="size-6" />
+          <Minus aria-hidden className="size-5" />
         </button>
         <div className="min-w-0 text-center">
-          <p className={cn('font-mono text-5xl font-semibold tabular', over ? 'text-danger' : 'text-fg')}>
+          <p className={cn('font-mono text-5xl font-medium tabular', over ? 'text-danger' : 'text-fg')}>
             <RollingNumber value={current} locale={prefs.locale} />
             {target != null && <span className="text-2xl text-fg-3"> / {formatNumber(target, prefs.locale)}</span>}
           </p>
@@ -72,10 +72,9 @@ export function CounterWidget({ task, parts, progress, prefs, today, now, action
           disabled={readOnly}
           onClick={() => void actions.addEvent(task.id, 'delta', config.step)}
           aria-label={t('widgets.counter.plus', { step })}
-          className="focus-ring inline-flex size-14 shrink-0 items-center justify-center rounded-full text-accent-ink shadow-[0_0_24px_-4px_var(--c)] transition-transform motion-ok:active:scale-95 disabled:opacity-40"
-          style={{ ['--c' as string]: AMBER, background: `linear-gradient(180deg, color-mix(in oklab, ${AMBER} 70%, white), ${AMBER})` }}
+          className="focus-ring inline-flex size-12 shrink-0 items-center justify-center rounded-md bg-accent text-accent-ink transition-colors hover-ok:bg-accent-hi disabled:opacity-40"
         >
-          <Plus aria-hidden className="size-6" strokeWidth={2.6} />
+          <Plus aria-hidden className="size-5" strokeWidth={2} />
         </button>
       </div>
 
@@ -90,11 +89,10 @@ export function CounterWidget({ task, parts, progress, prefs, today, now, action
                   initial={false}
                   animate={on && !reduce ? { scale: [1, 1.25, 1] } : { scale: 1 }}
                   transition={{ duration: 0.4 }}
-                  className="size-4 rounded-full border"
+                  className="size-3 rounded-full border"
                   style={{
                     borderColor: on ? 'transparent' : 'var(--color-line-bright)',
-                    background: on ? `radial-gradient(circle at 35% 30%, white, ${limit && i >= target! ? 'var(--color-danger)' : AMBER} 55%)` : 'transparent',
-                    boxShadow: on ? `0 0 12px -1px ${AMBER}` : undefined,
+                    background: on ? (limit && i >= target! ? 'var(--color-danger)' : AMBER) : 'transparent',
                   }}
                 />
               );
@@ -151,7 +149,7 @@ export function CounterWidget({ task, parts, progress, prefs, today, now, action
             {[...history].reverse().map((h) => (
               <li key={h.from} className="flex flex-1 flex-col items-center gap-1" title={`${formatShortDate(h.from, prefs.locale, today)}: ${formatNumber(h.total, prefs.locale)}`}>
                 <span
-                  className="w-full rounded-t-sm"
+                  className="w-full"
                   style={{
                     height: `${Math.max(3, (h.total / historyMax) * 40)}px`,
                     background: limit && target != null && h.total > target ? 'var(--color-danger)' : `color-mix(in oklab, ${AMBER} 70%, transparent)`,

@@ -4,17 +4,8 @@ import { Avatar as A } from 'radix-ui';
 import { cn } from '@/lib/utils/cn';
 import { hashString } from '@/lib/utils/hash';
 
-/** Curated two-tone "nebula" fills for people without a photo. */
-const NEBULAE: [string, string][] = [
-  ['#1f6f8b', '#5ce1ee'],
-  ['#3b3f9e', '#8fb8ff'],
-  ['#1e7a5f', '#6bf0b8'],
-  ['#5b3fa8', '#b294ff'],
-  ['#8a2f73', '#f28ad9'],
-  ['#8a5a1f', '#f2d48f'],
-  ['#2d5a8a', '#6fb6ff'],
-  ['#7a3144', '#ff7f9f'],
-];
+/** People without a photo get their initials on a dark disc, ringed in a star colour. */
+const STARS = ['rust', 'amber', 'gold', 'sand', 'star', 'ice', 'blue', 'steel'] as const;
 
 function initials(name: string) {
   const parts = name.trim().split(/\s+/).filter(Boolean);
@@ -42,7 +33,7 @@ export function Avatar({
   className,
   ring,
 }: AvatarProps) {
-  const [from, to] = NEBULAE[hashString(name) % NEBULAE.length] ?? NEBULAE[0]!;
+  const star = `var(--color-swatch-${STARS[hashString(name) % STARS.length]})`;
   return (
     <span
       className={cn('relative inline-flex shrink-0', className)}
@@ -57,11 +48,8 @@ export function Avatar({
         {src && <A.Image src={src} alt={name} className="size-full object-cover" />}
         <A.Fallback
           delayMs={src ? 400 : 0}
-          className="flex size-full items-center justify-center font-display font-semibold text-white"
-          style={{
-            background: `radial-gradient(circle at 30% 25%, ${to}, ${from} 70%)`,
-            fontSize: Math.max(10, size * 0.36),
-          }}
+          className="flex size-full items-center justify-center rounded-full border bg-surface-3 font-mono font-medium text-fg"
+          style={{ borderColor: star, fontSize: Math.max(10, size * 0.34) }}
           aria-label={name}
         >
           {initials(name)}
@@ -69,7 +57,7 @@ export function Avatar({
       </A.Root>
       {online && (
         <span
-          className="absolute right-0 bottom-0 block rounded-full border-2 border-bg bg-success shadow-[0_0_8px_var(--color-success)]"
+          className="absolute right-0 bottom-0 block rounded-full border-2 border-bg bg-success"
           style={{ width: Math.max(8, size * 0.28), height: Math.max(8, size * 0.28) }}
           role="img"
           aria-label={onlineLabel}
@@ -106,7 +94,7 @@ export function AvatarGroup({
       ))}
       {rest > 0 && (
         <span
-          className="-ml-2 inline-flex items-center justify-center rounded-full bg-surface-4 font-mono text-xs text-fg-2 ring-2 ring-bg"
+          className="-ml-2 inline-flex items-center justify-center rounded-full border border-line-strong bg-surface-3 font-mono text-xs text-fg-2 ring-2 ring-bg"
           style={{ width: size, height: size }}
         >
           +{rest}

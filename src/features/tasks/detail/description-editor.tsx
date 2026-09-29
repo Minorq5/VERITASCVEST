@@ -123,7 +123,7 @@ export default function DescriptionEditor({ value, placeholder, label, onSave }:
   );
 
   return (
-    <div className="shadow-inset-top overflow-hidden rounded-lg border border-line-strong bg-surface-2/60 transition-[border-color,box-shadow] focus-within:border-[color-mix(in_oklab,var(--accent)_55%,transparent)] focus-within:shadow-[0_0_0_4px_color-mix(in_oklab,var(--accent)_12%,transparent)]">
+    <div className="overflow-hidden rounded-lg border border-line-strong bg-surface-2/60 transition-[border-color,box-shadow] focus-within:border-[color-mix(in_oklab,var(--accent)_55%,transparent)]">
       {editor && <Toolbar editor={editor} />}
       <EditorContent editor={editor} />
     </div>

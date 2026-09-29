@@ -21,11 +21,10 @@ export function ChoiceCard({ label, description, media, badge, className, ...pro
   return (
     <R.Item
       className={cn(
-        'group/choice focus-ring relative flex w-full items-center gap-3.5 rounded-lg border border-line bg-surface-2/60 p-3 text-left sm:p-3.5',
-        'transition-[border-color,background-color,box-shadow] duration-200 ease-out',
-        'hover-ok:border-line-strong hover-ok:bg-surface-3/70',
-        'data-[state=checked]:border-[color-mix(in_oklab,var(--accent)_65%,transparent)]',
-        'data-[state=checked]:bg-[color-mix(in_oklab,var(--accent)_7%,var(--color-surface-2))] data-[state=checked]:shadow-glow-sm',
+        'group/choice focus-ring relative flex w-full items-center gap-3.5 rounded-md border border-line-strong bg-surface-1 p-3 text-left',
+        'transition-[border-color,background-color] duration-140 ease-out',
+        'hover-ok:border-line-bright hover-ok:bg-surface-2',
+        'data-[state=checked]:border-accent data-[state=checked]:bg-surface-2',
         'disabled:pointer-events-none disabled:opacity-45',
         className,
       )}
@@ -42,12 +41,12 @@ export function ChoiceCard({ label, description, media, badge, className, ...pro
       <span
         aria-hidden
         className={cn(
-          'flex size-[18px] shrink-0 items-center justify-center rounded-full border border-line-bright bg-surface-2',
-          'transition-[border-color,box-shadow] duration-200',
-          'group-data-[state=checked]/choice:border-accent group-data-[state=checked]/choice:shadow-glow-sm',
+          'flex size-4 shrink-0 items-center justify-center rounded-full border border-line-bright bg-surface-2',
+          'transition-[border-color] duration-140',
+          'group-data-[state=checked]/choice:border-accent',
         )}
       >
-        <R.Indicator className="size-2 rounded-full bg-accent shadow-[0_0_8px_var(--accent)] motion-ok:animate-[pop-in_180ms_var(--ease-out)]" />
+        <R.Indicator className="size-1.5 rounded-full bg-accent" />
       </span>
     </R.Item>
   );

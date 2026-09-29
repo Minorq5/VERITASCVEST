@@ -18,7 +18,6 @@ import {
 import { useTranslations } from 'next-intl';
 import { useState } from 'react';
 import { GalaxyIcon } from '@/components/brand/icons';
-import { Magnetic } from '@/components/effects/magnetic';
 import { AvatarGroup, Avatar } from '@/components/ui/avatar';
 import { Badge, CountBadge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -52,14 +51,13 @@ import { Sheet } from '@/components/ui/sheet';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Slider } from '@/components/ui/slider';
 import { Spinner } from '@/components/ui/spinner';
-import { StarCheck } from '@/components/ui/star-check';
+import { HorizonCheck } from '@/components/ui/horizon-check';
 import { Surface } from '@/components/ui/surface';
 import { Switch } from '@/components/ui/switch';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Textarea } from '@/components/ui/textarea';
 import { Tooltip } from '@/components/ui/tooltip';
 import { priorities } from '@/design/palette';
-import { useDeviceSettings } from '@/stores/device-settings';
 import { toast } from '@/stores/toasts';
 import { Group, Section } from './primitives';
 
@@ -104,11 +102,6 @@ export function ButtonsSection() {
         <Button variant="secondary" disabled>
           {t('buttons.disabled')}
         </Button>
-        <Magnetic>
-          <Button variant="primary" size="lg" trailing={<ArrowRight />}>
-            {t('buttons.magnetic')}
-          </Button>
-        </Magnetic>
       </Group>
       <Group label="icon">
         <IconButton label={t('inputs.search')} icon={<Search />} shortcut={['/']} />
@@ -218,9 +211,9 @@ export function ChoiceSection() {
           <Checkbox checked="indeterminate" label={t('checkbox')} />
           <Checkbox disabled label={t('checkboxDisabled')} />
         </Group>
-        <Group label="star-check">
+        <Group label="horizon-check">
           {(['critical', 'high', 'medium', 'low'] as const).map((p) => (
-            <StarCheck
+            <HorizonCheck
               key={p}
               checked={!!stars[p]}
               onCheckedChange={(v) => setStars((s) => ({ ...s, [p]: v }))}
@@ -228,8 +221,8 @@ export function ChoiceSection() {
               label={`${t('star')} (${p})`}
             />
           ))}
-          <StarCheck checked={false} onCheckedChange={() => undefined} label={t('star')} />
-          <StarCheck checked={false} onCheckedChange={() => undefined} label={t('star')} disabled />
+          <HorizonCheck checked={false} onCheckedChange={() => undefined} label={t('star')} />
+          <HorizonCheck checked={false} onCheckedChange={() => undefined} label={t('star')} disabled />
         </Group>
         <Group label="radio">
           <RadioGroup value={repeat} onValueChange={setRepeat} aria-label={t('radioLabel')}>
@@ -428,7 +421,7 @@ export function IdentitySection() {
     home: t('chipHome'),
     work: t('chipWork'),
   };
-  const colors: Record<string, string> = { sport: '#6bf0b8', home: '#ffb547', work: '#8c9bff' };
+  const colors: Record<string, string> = { sport: 'var(--color-swatch-gold)', home: 'var(--color-swatch-sand)', work: 'var(--color-swatch-blue)' };
   return (
     <Section id="identity" title={td('sections.identity')}>
       <Group label="avatar">
@@ -494,9 +487,9 @@ export function ProgressSection() {
     <Section id="progress" title={td('sections.progress')}>
       <Group label={t('ring')}>
         <ProgressRing value={0.18} />
-        <ProgressRing value={value} size={72} stroke={6} />
-        <ProgressRing value={1} size={72} stroke={6} color="var(--color-success)" />
-        <ProgressRing value={0.4} size={96} stroke={7} color={priorities.critical}>
+        <ProgressRing value={value} size={72} />
+        <ProgressRing value={1} size={72} color="var(--color-success)" />
+        <ProgressRing value={0.4} size={96} color={priorities.critical}>
           <span className="flex flex-col items-center leading-none">
             <span className="font-mono tabular text-xl text-fg">12</span>
             <span className="mt-1 text-xs text-fg-3">/ 30</span>
@@ -562,39 +555,6 @@ export function EmptySection() {
           }
         />
       </Surface>
-    </Section>
-  );
-}
-
-export function EffectsSection() {
-  const td = useTranslations('design');
-  const t = useTranslations('design.effects');
-  const cursor = useDeviceSettings((s) => s.cursor);
-  const motionMode = useDeviceSettings((s) => s.motion);
-  const set = useDeviceSettings((s) => s.set);
-  return (
-    <Section id="effects" title={td('sections.effects')}>
-      <div className="grid gap-4 md:grid-cols-2">
-        <Surface spotlight interactive className="min-h-40 p-6">
-          <p className="relative text-base font-medium text-fg">{t('spotlight')}</p>
-          <p className="relative mt-2 text-sm text-fg-2">{t('spotlightText')}</p>
-        </Surface>
-        <Surface className="flex flex-col gap-5 p-6">
-          <Switch
-            checked={cursor === 'custom'}
-            onCheckedChange={(v) => set('cursor', v ? 'custom' : 'system')}
-            label={t('cursor')}
-            description={t('cursorHint')}
-          />
-          <Switch
-            checked={motionMode === 'reduced'}
-            onCheckedChange={(v) => set('motion', v ? 'reduced' : 'system')}
-            label={t('reduced')}
-            description={t('reducedHint')}
-          />
-          <p className="text-sm text-fg-3">{t('grain')}</p>
-        </Surface>
-      </div>
     </Section>
   );
 }

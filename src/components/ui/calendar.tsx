@@ -129,7 +129,7 @@ export function Calendar({ value, onChange, today, weekStart, locale, labels, ma
                     className={cn(
                       'focus-ring relative inline-flex size-9 items-center justify-center rounded-full font-mono text-sm tabular transition-colors duration-150',
                       selected
-                        ? 'bg-[linear-gradient(180deg,var(--accent-hi),var(--accent)_60%)] font-semibold text-accent-ink shadow-glow-sm'
+                        ? 'bg-accent font-semibold text-accent-ink'
                         : isToday
                           ? 'text-accent ring-1 ring-[color-mix(in_oklab,var(--accent)_55%,transparent)] hover-ok:bg-surface-4'
                           : inMonth

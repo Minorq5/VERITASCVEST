@@ -3,7 +3,6 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { MotionConfig } from 'motion/react';
 import { useEffect, useState, type ReactNode } from 'react';
-import { CustomCursor } from '@/components/effects/custom-cursor';
 import { SessionSync } from '@/components/session-sync';
 import { Toaster } from '@/components/ui/toaster';
 import { TooltipProvider } from '@/components/ui/tooltip';
@@ -48,7 +47,6 @@ export function Providers({ children }: { children: ReactNode }) {
           <DeviceAttributes />
           {children}
           <Toaster />
-          <CustomCursor />
         </TooltipProvider>
       </MotionConfig>
     </QueryClientProvider>

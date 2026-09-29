@@ -3,7 +3,7 @@
 import { Flame } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { ProgressRing } from '@/components/ui/progress';
-import { StarCheck } from '@/components/ui/star-check';
+import { HorizonCheck } from '@/components/ui/horizon-check';
 import type { CompletionRow, TaskRow } from '@/lib/db/types';
 import { todayIn } from '@/lib/time/dates';
 import type { PlannerPrefs } from '../data/hooks';
@@ -38,9 +38,9 @@ export function TodaySummary({
   const text = total === 0 ? t('summary.nothing') : remaining === 0 ? t('summary.allDone') : t('summary.progress', { done: doneToday, total });
 
   return (
-    <div className="glass shadow-inset-top flex flex-col gap-4 rounded-xl border border-line p-4 sm:flex-row sm:items-center sm:gap-6 sm:p-5">
+    <div className="bg-surface-1 flex flex-col gap-4 rounded-xl border border-line p-4 sm:flex-row sm:items-center sm:gap-6 sm:p-5">
       <div className="flex items-center gap-4">
-        <ProgressRing value={total ? doneToday / total : 0} size={56} stroke={5} color={remaining === 0 && total > 0 ? 'var(--color-success)' : undefined} />
+        <ProgressRing value={total ? doneToday / total : 0} size={56} color={remaining === 0 && total > 0 ? 'var(--color-success)' : undefined} />
         <p className="text-md font-medium text-fg">{text}</p>
       </div>
       {habits.length > 0 && (
@@ -52,16 +52,16 @@ export function TodaySummary({
               const done = detail.todayStatus === 'done' || detail.todayStatus === 'freeze';
               return (
                 <li key={row.task.id} className="flex items-center gap-2 rounded-full border border-line-strong bg-surface-3/70 py-1 pr-3 pl-1">
-                  <StarCheck
+                  <HorizonCheck
                     checked={done}
                     size={24}
-                    color="var(--color-swatch-coral)"
+                    color="var(--color-amber)"
                     label={`${row.task.title}: ${done ? t('widgets.habit.undo') : t('widgets.habit.markDone')}`}
                     onCheckedChange={() => void markHabitDay(actions, row.task, rc.today, done ? null : 'done', t('toast.changed'))}
                   />
                   <span className="max-w-40 truncate text-sm text-fg">{row.task.title}</span>
                   {detail.streak > 0 && (
-                    <span className="inline-flex items-center gap-0.5 font-mono text-xs text-[color:var(--color-swatch-coral)] tabular">
+                    <span className="inline-flex items-center gap-0.5 font-mono text-xs text-[color:var(--color-amber)] tabular">
                       <Flame aria-hidden className="size-3" />
                       {detail.streak}
                     </span>

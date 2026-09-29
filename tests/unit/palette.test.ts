@@ -1,9 +1,9 @@
 import { readFileSync } from 'node:fs';
 import path from 'node:path';
 import { describe, expect, it } from 'vitest';
-import { accentPalette, priorities, semantic, surfaces, swatches, text } from '@/design/palette';
+import { accentPalette, lines, physical, priorities, semantic, surfaces, swatches, text } from '@/design/palette';
 
-const css = readFileSync(path.resolve(__dirname, '../../src/styles/globals.css'), 'utf8');
+const css = readFileSync(path.resolve(__dirname, '../../src/styles/tokens.css'), 'utf8');
 const cssToken = (name: string) =>
   css
     .match(new RegExp(`--${name}:\\s*([^;]+);`))?.[1]
@@ -12,7 +12,7 @@ const cssToken = (name: string) =>
 
 describe('TypeScript palette mirrors CSS tokens', () => {
   it('surfaces and text', () => {
-    for (const [key, value] of Object.entries({ ...surfaces, ...text })) {
+    for (const [key, value] of Object.entries({ ...surfaces, ...lines, ...text, ...physical })) {
       expect(cssToken(`color-${key}`), key).toBe(value);
     }
   });

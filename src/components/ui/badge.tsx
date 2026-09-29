@@ -3,18 +3,18 @@ import type { HTMLAttributes } from 'react';
 import { cn } from '@/lib/utils/cn';
 
 const badgeVariants = cva(
-  'inline-flex h-6 items-center gap-1 rounded-full px-2.5 text-xs font-semibold [&_svg]:size-3.5',
+  'inline-flex h-5 items-center gap-1 rounded-xs border px-1.5 font-mono text-[0.6875rem] font-medium tracking-[0.06em] uppercase [&_svg]:size-3',
   {
     variants: {
       tone: {
-        neutral: 'bg-surface-4 text-fg-2',
-        accent: 'bg-accent/15 text-accent',
-        success: 'bg-success/15 text-success',
-        warning: 'bg-warning/15 text-warning',
-        danger: 'bg-danger/15 text-danger',
-        info: 'bg-info/15 text-info',
+        neutral: 'border-line-strong bg-surface-2 text-fg-2',
+        accent: 'border-accent/40 bg-accent/8 text-accent',
+        success: 'border-success/40 bg-success/8 text-success',
+        warning: 'border-warning/40 bg-warning/8 text-warning',
+        danger: 'border-danger/45 bg-danger/8 text-danger',
+        info: 'border-info/40 bg-info/8 text-info',
       },
-      outline: { true: 'border border-current/30 bg-transparent' },
+      outline: { true: 'bg-transparent' },
     },
     defaultVariants: { tone: 'neutral' },
   },
@@ -33,7 +33,7 @@ export function CountBadge({ count, className }: { count: number; className?: st
   return (
     <span
       className={cn(
-        'inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-surface-4 px-1.5 font-mono tabular text-xs font-medium text-fg-2',
+        'inline-flex h-5 min-w-5 items-center justify-center px-1 font-mono text-xs text-fg-3 tabular',
         className,
       )}
     >

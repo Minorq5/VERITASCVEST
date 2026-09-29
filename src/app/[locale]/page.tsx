@@ -1,7 +1,6 @@
 import { ArrowRight, Globe2, Smartphone, WifiOff } from 'lucide-react';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { LogoLockup, LogoMark } from '@/components/brand/logo';
-import { Magnetic } from '@/components/effects/magnetic';
 import { SpaceBackdrop } from '@/components/effects/space-backdrop';
 import { LocaleSwitcher } from '@/components/layout/locale-switcher';
 import { Button } from '@/components/ui/button';
@@ -36,20 +35,18 @@ export default async function HomePage({ params }: PageProps<'/[locale]'>) {
         <p className="mb-5 eyebrow text-accent">{t('eyebrow')}</p>
         <h1 className="font-display text-[clamp(1.75rem,4.4vw,4.25rem)] leading-[1.1] font-semibold tracking-[-0.025em] text-fg">
           <span className="block">{t('title')}</span>
-          <span className="block bg-[linear-gradient(100deg,var(--accent-hi),var(--accent)_45%,var(--color-fg)_100%)] bg-clip-text text-transparent">
+          <span className="block text-accent">
             {t('titleAccent')}
           </span>
         </h1>
         <p className="mt-6 max-w-xl text-md text-fg-2 sm:text-lg">{t('lead')}</p>
         <div className="mt-10 flex w-full flex-col items-center gap-3 sm:w-auto sm:flex-row">
-          <Magnetic className="w-full sm:w-auto">
-            <Button asChild variant="primary" size="lg" block className="sm:w-auto">
-              <Link href="/register">
-                {t('start')}
-                <ArrowRight />
-              </Link>
-            </Button>
-          </Magnetic>
+          <Button asChild variant="primary" size="lg" block className="sm:w-auto">
+            <Link href="/register">
+              {t('start')}
+              <ArrowRight />
+            </Link>
+          </Button>
           <Button asChild variant="secondary" size="lg" block className="sm:w-auto">
             <Link href="/login">{t('signIn')}</Link>
           </Button>

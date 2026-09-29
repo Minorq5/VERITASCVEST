@@ -9,8 +9,8 @@ export const PopoverTrigger = P.Trigger;
 export const PopoverClose = P.Close;
 export const PopoverAnchor = P.Anchor;
 
-export const panelSurface =
-  'glass-strong rounded-lg border border-line-strong shadow-lg shadow-inset-top text-fg';
+/** Floating panels: one step above the page, a 1px line, radius 6. No blur, no shadow. */
+export const panelSurface = 'rounded-lg border border-line-strong bg-surface-2 text-fg';
 
 export function PopoverContent({
   className,
