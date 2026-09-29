@@ -58,6 +58,20 @@ export function AppGuard({ children }: { children: ReactNode }) {
     });
   }, [data, setDevice]);
 
+  // The space ambient, if the person turned it on (off by default). Browsers
+  // let it start only after the first click or key press.
+  const ambientOn = Boolean(data?.sound_enabled && data.ambient_enabled);
+  useEffect(() => {
+    if (!ambientOn) return;
+    const start = () => sound.startAmbient();
+    if (navigator.userActivation?.hasBeenActive) start();
+    else window.addEventListener('pointerdown', start, { once: true });
+    return () => {
+      window.removeEventListener('pointerdown', start);
+      sound.stopAmbient();
+    };
+  }, [ambientOn]);
+
   // Once per page load: open the app in the language the account prefers.
   // Later switches (settings, onboarding) go through useSetLocale.
   useEffect(() => {

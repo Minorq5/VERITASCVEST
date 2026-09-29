@@ -6,7 +6,7 @@ import { useSync } from '@/features/sync/sync-provider';
 import type { TaskRow } from '@/lib/db/types';
 import type { Change, Repo } from '@/lib/sync/repo';
 import type { IsoDate } from '@/lib/time/dates';
-import { sound } from '@/sound/engine';
+import { completeSound, sound } from '@/sound/engine';
 import { toast } from '@/stores/toasts';
 import { useUndo } from '@/stores/undo';
 import {
@@ -62,7 +62,10 @@ export function useTaskActions() {
     const remember = (label: string, changes: Change[], title?: string, description?: string) => {
       const id = useUndo.getState().record(label, changes);
       if (id !== null && title) {
-        toast.undo(title, tc('undo'), () => void undoAction(repo, id).then((l) => l && toast.info(t('toast.undone'))), {
+        toast.undo(title, tc('undo'), () => {
+          sound.play('undo');
+          void undoAction(repo, id).then((l) => l && toast.info(t('toast.undone')));
+        }, {
           id: `undo-${id}`,
           description,
         });
@@ -90,6 +93,7 @@ export function useTaskActions() {
       create: (input: NewTask) =>
         run(async () => {
           const { task, inverse } = await createTask(ctx, input);
+          sound.play('taskCreate');
           remember(t('toast.created'), inverse);
           return task;
         }),
@@ -104,8 +108,10 @@ export function useTaskActions() {
       complete: (task: TaskRow, options: { auto?: boolean; nextLabel?: (date: IsoDate) => string } = {}) =>
         run(async () => {
           useLingering.getState().add(task);
+          // The deeper the priority, the richer the sound; a subtask is a short high pluck.
+          const priority = task.priority_id ? await repo.db.priorities.get(task.priority_id) : undefined;
+          sound.play(task.parent_id ? 'subtaskComplete' : completeSound(priority?.system_key as string | undefined));
           const outcome = await completeTask(ctx, task);
-          sound.play('success');
           const title = options.auto
             ? t('toast.autoCompleted')
             : outcome.nextDue && options.nextLabel
@@ -118,6 +124,7 @@ export function useTaskActions() {
       reopen: (task: TaskRow) =>
         run(async () => {
           const inverse = await reopenTask(ctx, task);
+          sound.play('undo');
           remember(t('toast.reopened'), inverse, t('toast.reopened'));
         }),
 
@@ -128,6 +135,7 @@ export function useTaskActions() {
         run(async () => {
           const inverse: Change[] = [];
           for (const id of ids) inverse.unshift(...(await trashTask(ctx, id)));
+          sound.play('trash');
           const title = ids.length === 1 ? t('toast.deleted') : t('toast.deletedMany', { count: ids.length });
           remember(title, inverse, title);
         }),
@@ -136,6 +144,7 @@ export function useTaskActions() {
         run(async () => {
           const inverse: Change[] = [];
           for (const id of ids) inverse.unshift(...(await restoreTask(ctx, id)));
+          sound.play('undo');
           const title = ids.length === 1 ? t('toast.restored') : t('toast.restoredMany', { count: ids.length });
           remember(title, inverse, title);
         }),
@@ -144,12 +153,14 @@ export function useTaskActions() {
       purge: (ids: readonly string[]) =>
         run(async () => {
           for (const id of ids) await purgeTask(ctx, id);
+          sound.play('trash');
           toast.success(t('toast.purged'));
         }),
 
       emptyTrash: (ids: readonly string[]) =>
         run(async () => {
           for (const id of ids) await purgeTask(ctx, id);
+          sound.play('trash');
           toast.success(t('toast.trashEmptied'));
         }),
 
@@ -179,7 +190,7 @@ export function useTaskActions() {
             useLingering.getState().add(task);
             inverse.unshift(...(await completeTask(ctx, task)).inverse);
           }
-          sound.play('success');
+          sound.play('completeHigh');
           const title = t('toast.completedMany', { count: tasks.length });
           remember(title, inverse, title);
         }),
@@ -210,6 +221,7 @@ export function useTaskActions() {
 
       undo: async () => {
         const label = await undoAction(repo);
+        if (label) sound.play('undo');
         if (label) toast.info(t('toast.undone'), { id: 'undo-result', description: label });
         else toast.info(t('toast.nothingToUndo'), { id: 'undo-result' });
       },

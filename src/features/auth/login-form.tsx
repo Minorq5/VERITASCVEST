@@ -18,6 +18,7 @@ import { getSupabase } from '@/lib/supabase/client';
 import { useSession } from '@/stores/session';
 import { toast } from '@/stores/toasts';
 import { AuthCard, FormAlert } from './auth-card';
+import { sound } from '@/sound/engine';
 
 export function LoginForm() {
   const t = useTranslations('auth');
@@ -54,9 +55,11 @@ export function LoginForm() {
         password,
       });
       if (signInError) {
+        sound.play('error');
         setError(authErrorKey(signInError));
         return;
       }
+      sound.play('hyperjump');
       router.replace(next);
     });
   };

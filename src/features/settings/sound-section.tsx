@@ -71,7 +71,6 @@ export function SoundSection() {
             checked={settings.sound_enabled}
             onCheckedChange={(on) => {
               sound.configure({ enabled: on });
-              if (on) sound.play('toggleOn');
               save({ sound_enabled: on });
             }}
           />

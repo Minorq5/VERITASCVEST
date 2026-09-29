@@ -4,6 +4,7 @@ import { useTranslations } from 'next-intl';
 import type { ReactNode } from 'react';
 import { Drawer } from 'vaul';
 import { cn } from '@/lib/utils/cn';
+import { sound } from '@/sound/engine';
 
 interface SheetProps {
   open?: boolean;
@@ -29,7 +30,7 @@ export function Sheet({
 }: SheetProps) {
   const t = useTranslations('a11y');
   return (
-    <Drawer.Root open={open} onOpenChange={onOpenChange}>
+    <Drawer.Root open={open} onOpenChange={onOpenChange} onAnimationEnd={(isOpen) => sound.play(isOpen ? 'panelOpen' : 'panelClose')}>
       {trigger && <Drawer.Trigger asChild>{trigger}</Drawer.Trigger>}
       <Drawer.Portal>
         <Drawer.Overlay className="fixed inset-0 z-[var(--z-modal)] bg-[rgb(2_2_3/0.78)]" />

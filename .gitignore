@@ -48,3 +48,9 @@ next-env.d.ts
 /supabase/.branches/
 .env*.local
 !.env.example
+
+# Frames of the pre-rendered intro film (scripts/cinema/render-intro.mjs)
+.cache/
+
+# Sound renders for listening (scripts/sound/render-sounds.mjs): only the compilation is kept
+docs/review/v2/sounds/*.wav

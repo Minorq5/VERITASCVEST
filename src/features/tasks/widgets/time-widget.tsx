@@ -89,10 +89,12 @@ export function TimeWidget({ task, parts, prefs, now, today, actions, readOnly }
     const p = pomodoro;
     const i = index ?? (p ? (lastIndex() % p.cycles) + 1 : undefined);
     await startTimer(actions.ctx, task.id, kind, i);
+    sound.play('timerStart');
   };
 
   const stop = async (session: TimeSessionRow) => {
     await stopTimer(actions.ctx, session.id);
+    sound.play('timerPause');
     if (session.kind !== 'break' && goalSeconds != null && !task.completed_at) {
       const after = trackedSeconds(
         parts.sessions.map((s) => (s.id === session.id ? { ...s, ended_at: new Date().toISOString(), seconds: sessionSeconds(s, new Date()) } : s)),
@@ -111,8 +113,8 @@ export function TimeWidget({ task, parts, prefs, now, today, actions, readOnly }
       finishing.current = running.id;
       const seconds = Math.round((end - Date.parse(running.started_at)) / 1000);
       await actions.ctx.repo.update('time_sessions', running.id, { ended_at: new Date(end).toISOString(), seconds });
-      sound.play('chime');
       const wasFocus = running.kind !== 'break';
+      sound.play(wasFocus ? 'pomodoroEnd' : 'breakEnd');
       toast.info(wasFocus ? t('widgets.time.focusDone') : t('widgets.time.breakDone'), { id: `pomodoro-${task.id}` });
       if (pomodoro.autoStart) {
         const index = running.pomodoro_index ?? 1;

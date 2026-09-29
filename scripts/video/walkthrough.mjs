@@ -1,10 +1,13 @@
 /**
  * A walkthrough video of the site, from the first screen to signing out:
- * a new person registers, confirms the email and goes through the first
- * flight; then a person with a planned week signs in and works with tasks,
- * sections, the profile and the settings.
+ * the intro (with its sound turned on, as a visitor would), then a new person
+ * registers, confirms the email and sets the app up; then a person with a
+ * planned week signs in and works with tasks, sections, the profile and the
+ * settings. Every sound the app plays is laid under the picture.
  *
- * Needs the local stack (npm run db:start) and the dev server on :3000.
+ * Needs the local stack (npm run db:start), the app on :3000 (best: the
+ * production build, `npm run build && npx next start`) and the rendered
+ * intro film and score (scripts/cinema/render-intro.mjs).
  *
  *   node scripts/video/walkthrough.mjs <out.mp4> [desktop|phone] [--dry]
  */
@@ -13,6 +16,7 @@ import { chromium } from '@playwright/test';
 import { createDemoAccount } from '../dev/seed-demo.mjs';
 import { overlayInit } from './overlay.mjs';
 import { Recorder } from './recorder.mjs';
+import { Soundtrack } from './soundtrack.mjs';
 
 const out = process.argv[2] ?? 'walkthrough.mp4';
 const device = process.argv[3] === 'phone' ? 'phone' : 'desktop';
@@ -139,6 +143,10 @@ const context = await browser.newContext({
   colorScheme: 'dark',
 });
 await context.addInitScript(overlayInit);
+// The intro plays for automated browsers only when asked to.
+await context.addInitScript(() => localStorage.setItem('vt:intro-force', '1'));
+const soundtrack = dry ? null : new Soundtrack(context);
+await soundtrack?.attach();
 const page = await context.newPage();
 const errors = [];
 page.on('pageerror', (e) => errors.push(e.message));
@@ -184,27 +192,34 @@ const id = randomBytes(3).toString('hex').slice(0, 4);
 const fresh = { email: `alina.orlova.${id}@example.com`, username: `alina_${id}`, password: 'Zvezda2026k' };
 const planned = await createDemoAccount({ tag: 'video' });
 
-await page.goto(`${BASE}/ru`);
-await page.waitForLoadState('networkidle');
-await sleep(1500);
-await page.mouse.move(d.x, d.y);
-
+// A blank page first, so the recording starts in the dark, then the site: the intro on camera.
+await page.goto('about:blank');
 const rec = dry ? null : new Recorder(page, { out, width: size.width * scale, height: size.height * scale });
 await rec?.start();
 const started = Date.now();
 
 try {
-  // 01 — the landing page
-  await d.caption('01 · Главная страница');
-  await d.hold(2200);
-  await d.moveTo({ x: size.width * 0.35, y: size.height * 0.4 }, { ms: 1400 });
-  await d.moveTo({ x: size.width * 0.62, y: size.height * 0.32 }, { ms: 1400 });
-  await d.hold(600);
-  await d.click(page.getByRole('link', { name: 'Начать' }), { before: 500 });
+  // 01 — the intro, with the sound turned on
+  await page.goto(`${BASE}/ru`);
+  await page.mouse.move(d.x, d.y);
+  await page.locator('.vt-intro').waitFor({ timeout: 30_000 });
+  await d.caption('01 · Заставка');
+  await d.hold(700);
+  await d.click(page.getByRole('button', { name: 'Включить звук' }), { before: 250, after: 100 });
+  await d.moveTo({ x: size.width * 0.5, y: size.height * 0.62 }, { ms: 1600 });
+  await page.waitForFunction(() => !document.documentElement.hasAttribute('data-intro'), null, { timeout: 30_000 });
 
-  // 02 — registration
+  // 02 — the landing page
+  await d.caption('02 · Главная страница');
+  await d.hold(2200);
+  await d.moveTo({ x: size.width * 0.3, y: size.height * 0.42 }, { ms: 1400 });
+  await d.moveTo({ x: size.width * 0.66, y: size.height * 0.4 }, { ms: 1400 });
+  await d.hold(1400);
+  await d.click(page.getByRole('link', { name: 'Создать аккаунт' }).first(), { before: 500 });
+
+  // 03 — registration
   await page.waitForURL(/\/ru\/register/);
-  await d.caption('02 · Регистрация');
+  await d.caption('03 · Регистрация');
   await d.hold(1200);
   await d.click(page.getByLabel('Почта'));
   await d.type(fresh.email, { min: 30, max: 70 });
@@ -218,22 +233,22 @@ try {
   const mailAfter = Date.now() - 2000;
   await d.click(page.getByRole('button', { name: 'Создать аккаунт' }), { before: 400 });
 
-  // 03 — the confirmation email
+  // 04 — the confirmation email
   await page.waitForURL(/\/ru\/check-email/);
-  await d.caption('03 · Письмо с подтверждением');
+  await d.caption('04 · Письмо с подтверждением');
   await d.hold(2600);
   const mail = await waitForMail(fresh.email, mailAfter);
   await page.setContent(mail.HTML, { waitUntil: 'load' });
   await page.evaluate(overlayInit);
-  await d.caption('03 · Письмо с подтверждением');
+  await d.caption('04 · Письмо с подтверждением');
   await page.mouse.move(d.x, d.y);
   await d.hold(2200);
   const confirm = page.locator('a[href*="/auth/confirm"]').first();
   await d.click(confirm, { before: 700 });
 
-  // 04 — first flight (onboarding)
+  // 05 — setting the app up (onboarding)
   await page.waitForURL(/\/ru\/onboarding/, { timeout: 30_000 });
-  await d.caption('04 · Первый запуск');
+  await d.caption('05 · Настройка');
   await page.getByLabel('Как к вам обращаться').waitFor();
   await d.hold(1500);
   const name = page.getByLabel('Как к вам обращаться');
@@ -257,11 +272,11 @@ try {
   await d.type('Позвонить маме сегодня в 19:00 #семья');
   await d.hold(1400);
   await d.press('Enter', 1800);
-  await d.click(page.getByRole('button', { name: 'Начать полёт' }), { before: 400 });
+  await d.click(page.getByRole('button', { name: 'Открыть задачи' }), { before: 400 });
 
-  // 05 — the new person's Today
+  // 06 — the new person's Today
   await page.waitForURL(/\/ru\/today/, { timeout: 30_000 });
-  await d.caption('05 · Сегодня');
+  await d.caption('06 · Сегодня');
   await d.hold(2500);
   await d.moveTo(page.getByRole('button', { name: 'Открыть «Позвонить маме»' }));
   await d.hold(1800);
@@ -269,9 +284,9 @@ try {
   await page.getByText('Всё сохранено').first().waitFor({ timeout: 30_000 }).catch(() => {});
   await account('Выйти', /Алина/);
 
-  // 06 — a week later: sign in to an account with a planned day
+  // 07 — a week later: sign in to an account with a planned day
   await page.waitForURL(/\/ru\/login/, { timeout: 30_000 });
-  await d.caption('06 · Вход в аккаунт с планами');
+  await d.caption('07 · Вход в аккаунт с планами');
   await d.hold(1600);
   await d.click(page.getByLabel('Почта'));
   await d.type(planned.email, { min: 25, max: 60 });
@@ -281,8 +296,8 @@ try {
   await d.click(page.getByRole('button', { name: 'Войти', exact: true }), { before: 300 });
   await page.waitForURL(/\/ru\/today/, { timeout: 30_000 });
 
-  // 07 — the day at a glance
-  await d.caption('07 · План на день');
+  // 08 — the day at a glance
+  await d.caption('08 · План на день');
   await page.getByRole('button', { name: 'Открыть «Написать главу диплома»' }).waitFor();
   await d.hold(2600);
   await d.moveTo(page.getByText('Выполнено', { exact: true }).first(), { ms: 900 });
@@ -292,15 +307,15 @@ try {
   await d.moveTo(page.getByRole('button', { name: 'Открыть «Прочитать «Интерстеллар: наука за кадром»»' }), { ms: 900 });
   await d.hold(1400);
 
-  // 08 — the smart line
-  await d.caption('08 · Умная строка ввода');
+  // 09 — the smart line
+  await d.caption('09 · Умная строка ввода');
   await d.click(page.getByRole('combobox', { name: 'Новая задача' }));
   await d.type('Отправить счёт клиенту сегодня в 16:00 #работа !высокий');
   await d.hold(2400);
   await d.press('Enter', 2200);
 
-  // 09 — done and undo
-  await d.caption('09 · Выполнение и отмена');
+  // 10 — done and undo
+  await d.caption('10 · Выполнение и отмена');
   await d.click(page.getByRole('checkbox', { name: 'Выполнить «Купить продукты на неделю»' }), { before: 500 });
   await d.hold(1600);
   await d.click(page.getByRole('button', { name: 'Отменить' }).first(), { before: 400 });
@@ -308,8 +323,8 @@ try {
   await d.click(page.getByRole('checkbox', { name: 'Выполнить «Отправить отчёт по кварталу»' }), { before: 500 });
   await d.hold(2600);
 
-  // 10 — the task card
-  await d.caption('10 · Карточка задачи');
+  // 11 — the task card
+  await d.caption('11 · Карточка задачи');
   await d.click(page.getByRole('button', { name: 'Открыть «Написать главу диплома»' }));
   await d.hold(2200);
   await d.click(page.getByRole('button', { name: /\+10/ }).first(), { before: 400 });
@@ -324,8 +339,8 @@ try {
   await d.press('Enter', 1500);
   await d.press('Escape', 1200);
 
-  // 11 — task types
-  await d.caption('11 · Привычки и счётчики');
+  // 12 — task types
+  await d.caption('12 · Привычки и счётчики');
   await goTo('Входящие');
   await page.waitForURL(/\/ru\/inbox/);
   await d.hold(1400);
@@ -342,8 +357,8 @@ try {
   await d.hold(2000);
   await d.press('Escape', 900);
 
-  // 12 — sections
-  await d.caption('12 · Разделы');
+  // 13 — sections
+  await d.caption('13 · Разделы');
   for (const [label, url] of [
     ['Завтра', /\/ru\/tomorrow/],
     ['Неделя', /\/ru\/week/],
@@ -356,14 +371,14 @@ try {
     await d.hold(1900);
   }
 
-  // 13 — profile
-  await d.caption('13 · Профиль');
+  // 14 — profile
+  await d.caption('14 · Профиль');
   await account('Профиль', /Алина Орлова/);
   await page.waitForURL(/\/ru\/profile/);
   await d.hold(3200);
 
-  // 14 — settings: accent and language
-  await d.caption('14 · Настройки');
+  // 15 — settings: accent and language
+  await d.caption('15 · Настройки');
   await account('Настройки', /Алина Орлова/);
   await page.waitForURL(/\/ru\/settings/);
   await d.hold(1200);
@@ -389,8 +404,8 @@ try {
   await page.waitForURL(/\/ru\/settings\/language/);
   await d.hold(1500);
 
-  // 15 — sign out
-  await d.caption('15 · Выход');
+  // 16 — sign out
+  await d.caption('16 · Выход');
   await account('Выйти', /Алина Орлова/);
   await page.waitForURL(/\/ru\/login/, { timeout: 30_000 });
   await d.hold(2000);
@@ -399,6 +414,10 @@ try {
 } finally {
   await rec?.stop();
   console.log(`${device}: ${((Date.now() - started) / 1000).toFixed(0)} s of film${rec ? `, ${rec.seconds.toFixed(1)} s written to ${out}` : ''}`);
+  if (rec && soundtrack) {
+    const { sounds, kinds } = await soundtrack.mix(page, rec, out);
+    console.log(`sound: ${sounds} sounds (${kinds} kinds) under the picture`);
+  }
   if (errors.length) console.log('page errors:', errors);
   await browser.close();
 }

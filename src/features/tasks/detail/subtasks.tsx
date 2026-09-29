@@ -18,6 +18,7 @@ import { cn } from '@/lib/utils/cn';
 import type { PlannerPrefs } from '../data/hooks';
 import type { TaskActions } from '../data/use-task-actions';
 import { dueTone, relativeDay } from '../format';
+import { sound } from '@/sound/engine';
 
 const toneClass = { overdue: 'text-danger', today: 'text-fg-2', soon: 'text-warning', later: 'text-fg-3' } as const;
 
@@ -156,7 +157,17 @@ export function Subtasks({
         )}
       </h3>
       {children.length > 0 && (
-        <DndContext sensors={sensors} collisionDetection={closestCenter} modifiers={[restrictToVerticalAxis, restrictToParentElement]} onDragEnd={onDragEnd}>
+        <DndContext
+          sensors={sensors}
+          collisionDetection={closestCenter}
+          modifiers={[restrictToVerticalAxis, restrictToParentElement]}
+          onDragStart={() => sound.play('dragPickup')}
+          onDragOver={() => sound.play('dragOver')}
+          onDragEnd={(event) => {
+            sound.play('dragDrop');
+            onDragEnd(event);
+          }}
+        >
           <SortableContext items={children.map((c) => c.id)} strategy={verticalListSortingStrategy}>
             <ul className="-mx-1 flex flex-col">
               {children.map((child) => (

@@ -3,6 +3,7 @@
 import { Switch as S } from 'radix-ui';
 import { forwardRef, useId, type ComponentPropsWithoutRef, type ReactNode } from 'react';
 import { cn } from '@/lib/utils/cn';
+import { sound } from '@/sound/engine';
 
 interface SwitchProps extends ComponentPropsWithoutRef<typeof S.Root> {
   label?: ReactNode;
@@ -10,7 +11,7 @@ interface SwitchProps extends ComponentPropsWithoutRef<typeof S.Root> {
 }
 
 export const Switch = forwardRef<HTMLButtonElement, SwitchProps>(function Switch(
-  { label, description, className, id: idProp, ...props },
+  { label, description, className, id: idProp, onCheckedChange, ...props },
   ref,
 ) {
   const autoId = useId();
@@ -27,6 +28,11 @@ export const Switch = forwardRef<HTMLButtonElement, SwitchProps>(function Switch
         !label && className,
       )}
       {...props}
+      onCheckedChange={(checked) => {
+        onCheckedChange?.(checked);
+        // After the handler: a switch that turns sound on is heard.
+        sound.play(checked ? 'toggleOn' : 'toggleOff');
+      }}
     >
       <S.Thumb
         className={cn(

@@ -30,6 +30,7 @@ import type { PlannerPrefs } from '../data/hooks';
 import type { TaskActions } from '../data/use-task-actions';
 import type { RowModel } from './row-model';
 import { TaskRowItem } from './task-row';
+import { sound } from '@/sound/engine';
 
 export interface TaskListProps {
   rows: RowModel[];
@@ -148,7 +149,17 @@ export function TaskList(props: TaskListProps) {
   };
 
   return (
-    <DndContext sensors={sensors} collisionDetection={closestCenter} modifiers={[restrictToVerticalAxis, restrictToParentElement]} onDragEnd={onDragEnd}>
+    <DndContext
+      sensors={sensors}
+      collisionDetection={closestCenter}
+      modifiers={[restrictToVerticalAxis, restrictToParentElement]}
+      onDragStart={() => sound.play('dragPickup')}
+      onDragOver={() => sound.play('dragOver')}
+      onDragEnd={(event) => {
+        sound.play('dragDrop');
+        onDragEnd(event);
+      }}
+    >
       <SortableContext items={rows.map((r) => r.task.id)} strategy={verticalListSortingStrategy}>
         {list}
       </SortableContext>

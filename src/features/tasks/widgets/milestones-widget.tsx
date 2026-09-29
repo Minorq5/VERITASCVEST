@@ -56,8 +56,9 @@ export function MilestonesWidget({ task, parts, actions, readOnly }: WidgetProps
     const { inverse } = await repo.update('task_milestones', m.id, { done_at: doneNow ? new Date().toISOString() : null });
     actions.record(t('toast.changed'), inverse);
     if (doneNow) {
-      sound.play('success');
       const remaining = list.filter((x) => x.id !== m.id && !x.done_at).length;
+      // Each stage climbs the scale; the last one completes the task with its own sound.
+      if (remaining > 0) sound.play('progressStep', { value: 1 - remaining / list.length });
       if (remaining === 0 && !task.completed_at) await actions.complete(task, { auto: true });
     }
   };

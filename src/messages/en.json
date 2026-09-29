@@ -606,7 +606,14 @@
       "motionHint": "Animations become gentle fades. The system setting is always respected.",
       "qualityHint": "Affects 3D scenes and the background. Saved for this device.",
       "accentHint": "The colour of light in the interface. Saved to your account for every device.",
-      "comfort": "Comfort"
+      "comfort": "Comfort",
+      "intro": "Intro on entry",
+      "introHint": "The flight to the black hole: in full the first time, then short, once per session.",
+      "introModes": {
+        "auto": "As designed",
+        "short": "Short",
+        "off": "Off"
+      }
     },
     "sound": {
       "enabled": "Sounds",
@@ -1430,5 +1437,11 @@
       "help": "This cheat sheet",
       "soon": "The full set arrives together with the command palette."
     }
+  },
+  "intro": {
+    "label": "Intro",
+    "skip": "Skip",
+    "soundOn": "Sound on",
+    "soundOff": "Sound off"
   }
 }

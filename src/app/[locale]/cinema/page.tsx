@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { setRequestLocale } from 'next-intl/server';
 import { CinemaStill } from '@/features/cinema/black-hole/cinema-still';
+import { IntroFrames } from '@/features/cinema/intro/intro-frames';
 import { introViews, sceneViews, type IntroShot, type SceneName } from '@/features/cinema/black-hole/presets';
 import { designPageEnabled } from '@/lib/site';
 
@@ -13,6 +14,8 @@ export default async function CinemaPage({ params, searchParams }: PageProps<'/[
   const { locale } = await params;
   setRequestLocale(locale as 'ru' | 'en' | 'bg');
   const query = await searchParams;
+  // /cinema?intro=frames: the page the intro film is rendered from.
+  if (query.intro === 'frames') return <IntroFrames />;
   const name = String(query.shot);
   const shot: IntroShot | SceneName = name in introViews || name in sceneViews ? (name as IntroShot | SceneName) : 'horizon';
   const samples = query.samples === '1' ? 1 : 4;

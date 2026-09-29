@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { ProgressRing } from '@/components/ui/progress';
 import { Slider } from '@/components/ui/slider';
 import type { TaskRow } from '@/lib/db/types';
+import { sound } from '@/sound/engine';
 import { typeMeta } from '../shared/type-meta';
 import { WidgetCard, type WidgetProps } from './shared';
 
@@ -21,6 +22,7 @@ export function PercentWidget({ task, actions, readOnly }: WidgetProps) {
     const clamped = Math.min(100, Math.max(0, Math.round(next)));
     setDraft(null);
     if (clamped === stored) return;
+    sound.play('progressStep', { value: clamped / 100 });
     await actions.update(task.id, { progress_current: clamped } as Partial<TaskRow>);
     if (clamped >= 100 && !task.completed_at) await actions.complete({ ...task, progress_current: clamped }, { auto: true });
   };

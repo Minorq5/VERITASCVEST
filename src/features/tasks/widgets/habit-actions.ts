@@ -13,6 +13,6 @@ export async function markHabitDay(
   label: string,
 ) {
   const inverse = await setHabitDay(actions.ctx, task.id, date, status);
-  if (status === 'done') sound.play('success');
+  if (status === 'done') sound.play('completeMedium');
   actions.record(label, inverse);
 }

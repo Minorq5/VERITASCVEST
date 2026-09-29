@@ -72,15 +72,25 @@ export function BlackHoleScene({
     // The GPU is asked for a context only once the scene is actually on screen
     // (a hidden or scrolled-away scene costs nothing).
     let live: LiveScene | null | undefined;
-    const seen = new IntersectionObserver(([entry]) => {
-      const visible = Boolean(entry?.isIntersecting);
+    let onScreen = false;
+    const html = document.documentElement;
+    // While the intro plays, the GPU is all its own.
+    const update = () => {
+      const visible = onScreen && !html.hasAttribute('data-intro');
       if (visible && live === undefined)
         live = startLive(box, { level, scene, position: [px, py], speed, sway });
       live?.setVisible(visible);
+    };
+    const seen = new IntersectionObserver(([entry]) => {
+      onScreen = Boolean(entry?.isIntersecting);
+      update();
     });
     seen.observe(box);
+    const intro = new MutationObserver(update);
+    intro.observe(html, { attributes: true, attributeFilter: ['data-intro'] });
     return () => {
       seen.disconnect();
+      intro.disconnect();
       live?.dispose();
     };
   }, [level, lessMotion, scene, px, py, speed, sway]);

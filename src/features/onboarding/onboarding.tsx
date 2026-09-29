@@ -255,7 +255,6 @@ export function Onboarding() {
                         setSoundOn(on);
                         if (on) {
                           sound.configure({ enabled: true });
-                          sound.play('toggleOn');
                         }
                       }}
                     />

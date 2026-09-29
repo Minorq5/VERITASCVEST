@@ -9,6 +9,7 @@ import { ProgressRing } from '@/components/ui/progress';
 import type { TaskRow } from '@/lib/db/types';
 import { readTypeConfig } from '@/lib/domain/task-types';
 import { useLessMotion } from '@/lib/hooks/use-less-motion';
+import { sound } from '@/sound/engine';
 import { formatNumber } from '../format';
 import { typeMeta } from '../shared/type-meta';
 import { NumberInput, WidgetCard, type WidgetProps } from './shared';
@@ -94,13 +95,16 @@ export function NumericWidget({ task, parts, progress, prefs, actions, readOnly 
   const afterChange = async (next: number) => {
     if (target != null && next >= target && !task.completed_at) await actions.complete(task, { auto: true });
   };
+  const tick = (next: number) => sound.play('progressStep', { value: target ? next / target : 0.5 });
   const add = async (delta: number) => {
     if (!Number.isFinite(delta) || delta === 0) return;
+    tick(current + delta);
     await actions.addEvent(task.id, 'delta', delta);
     await afterChange(current + delta);
   };
   const set = async (value: number) => {
     if (!Number.isFinite(value)) return;
+    tick(value);
     await actions.addEvent(task.id, 'set', value);
     await afterChange(value);
   };

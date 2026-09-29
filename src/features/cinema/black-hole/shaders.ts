@@ -157,7 +157,8 @@ vec3 trace(vec2 frag) {
     float r = length(pos);
     if (r < 1.0) return col; // swallowed: the shadow
     if (r > escape && dot(pos, vel) > 0.0) break;
-    float dt = clamp(mix(0.025, 0.075, smoothstep(2.0, 14.0, r)) * r * uStep, 0.02, 12.0);
+    // Steps grow with distance (bending falls off as 1/r²), so a camera thousands of radii away stays cheap.
+    float dt = max(mix(0.025, 0.075, smoothstep(2.0, 14.0, r)) * r * uStep, 0.02);
     vec3 a1 = accel(pos, h2);
     vec3 midPos = pos + vel * dt * 0.5;
     vec3 midVel = vel + a1 * dt * 0.5;
@@ -244,6 +245,7 @@ uniform vec2 uRes;
 uniform float uExposure;
 uniform float uBloom;
 uniform float uFade;       // 0 = black, 1 = full frame
+uniform float uStreak;     // 0..1: light smeared toward the centre, as when the camera rushes forward
 
 vec3 aces(vec3 x) {
   return clamp((x * (2.51 * x + 0.03)) / (x * (2.43 * x + 0.59) + 0.14), 0.0, 1.0);
@@ -255,9 +257,24 @@ float hash12(vec2 p) {
   return fract((p3.x + p3.y) * p3.z);
 }
 
+vec3 streaked(vec2 uv) {
+  if (uStreak <= 0.0) return texture(uHdr, uv).rgb;
+  // Samples along the ray from the centre: a zoom blur, strongest at the edges.
+  vec2 toCentre = uv - 0.5;
+  vec3 sum = vec3(0.0);
+  float total = 0.0;
+  for (int i = 0; i < 16; i++) {
+    float k = float(i) / 15.0;
+    float w = 1.0 - k * 0.6;
+    sum += texture(uHdr, 0.5 + toCentre * (1.0 - uStreak * 0.18 * k)).rgb * w;
+    total += w;
+  }
+  return sum / total;
+}
+
 void main() {
   vec2 uv = gl_FragCoord.xy / uRes;
-  vec3 c = texture(uHdr, uv).rgb;
+  vec3 c = streaked(uv);
   c += (texture(uBloomA, uv).rgb * 0.6 + texture(uBloomB, uv).rgb * 0.9) * uBloom;
   c *= uExposure;
   vec2 v = uv - 0.5;

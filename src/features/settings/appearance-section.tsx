@@ -2,11 +2,12 @@
 
 import { useTranslations } from 'next-intl';
 import { ColorSwatches } from '@/components/ui/color-swatches';
+import { Segmented } from '@/components/ui/segmented';
 import { Switch } from '@/components/ui/switch';
 import { QualityChoice } from '@/features/account/quality-choice';
 import { useUpdateSettings } from '@/features/account/queries';
 import { accentPalette } from '@/design/palette';
-import { accents, type Accent } from '@/lib/device';
+import { accents, introModes, type Accent, type IntroMode } from '@/lib/device';
 import { useRecommendedQuality } from '@/lib/graphics/use-recommended-quality';
 import { useFinePointer } from '@/lib/hooks/use-media-query';
 import { useDeviceSettings } from '@/stores/device-settings';
@@ -64,6 +65,20 @@ export function AppearanceSection() {
             onCheckedChange={(on) => device.set('motion', on ? 'reduced' : 'system')}
           />
         </SettingRow>
+        <SettingRow
+          stack
+          label={t('settings.appearance.intro')}
+          description={t('settings.appearance.introHint')}
+          control={
+            <Segmented<IntroMode>
+              size="sm"
+              label={t('settings.appearance.intro')}
+              value={device.intro}
+              onValueChange={(intro) => device.set('intro', intro)}
+              options={introModes.map((mode) => ({ value: mode, label: t(`settings.appearance.introModes.${mode}`) }))}
+            />
+          }
+        />
         {finePointer && (
           <SettingRow>
             <Switch

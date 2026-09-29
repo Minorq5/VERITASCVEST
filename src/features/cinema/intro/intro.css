@@ -1,0 +1,46 @@
+/*
+ * The intro's cover and openings. Scene compositing, so it lives with the 3D
+ * code (outside the UI bans): the circular opening is a mask, not decoration.
+ */
+
+/* Until the intro draws its first frame, a black cover hides the page. If the
+   script never runs, the cover lets go after 12 s. */
+#vt-intro-cover {
+  display: none;
+}
+html[data-intro]:not([data-intro-live]) #vt-intro-cover {
+  display: block;
+  position: fixed;
+  inset: 0;
+  z-index: 2147483500;
+  background: #020203;
+  animation: vt-intro-release 0.3s 12s forwards;
+}
+@keyframes vt-intro-release {
+  to {
+    opacity: 0;
+    visibility: hidden;
+  }
+}
+html[data-intro] {
+  overflow: hidden;
+}
+
+/* The page opens in a circle from the centre. */
+.vt-intro {
+  --r: calc(var(--reveal) * 150vmax);
+  mask-image: radial-gradient(circle at 50% 50%, transparent var(--r), #000 calc(var(--r) + 1px));
+  transition: opacity 400ms ease;
+}
+/* The light opening from the centre over the last scene. */
+.vt-intro-stage {
+  --l: calc(var(--light) * 95vmax);
+  mask-image: radial-gradient(circle at 50% 50%, #000 var(--l), transparent calc(var(--l) + 2px));
+}
+.vt-intro[data-mode='still'] .vt-intro-stage,
+.vt-intro[data-mode='still'] .vt-intro-controls {
+  display: none;
+}
+.vt-intro-controls {
+  opacity: calc(1 - var(--reveal) * 4);
+}

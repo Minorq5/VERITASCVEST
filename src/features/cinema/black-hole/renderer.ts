@@ -26,6 +26,8 @@ export interface BlackHoleView {
   time: number;
   /** 0 = black frame, 1 = full. */
   fade: number;
+  /** 0..1: light smeared toward the centre (the rush before the horizon). */
+  streak?: number;
   /** How much wider a portrait screen looks (1 = same vertical angle as on desktop). */
   portraitFit: number;
 }
@@ -265,6 +267,7 @@ export class BlackHoleRenderer {
     gl.uniform1f(c.u('uExposure'), view.exposure);
     gl.uniform1f(c.u('uBloom'), view.bloom);
     gl.uniform1f(c.u('uFade'), view.fade);
+    gl.uniform1f(c.u('uStreak'), view.streak ?? 0);
     gl.drawArrays(gl.TRIANGLES, 0, 3);
     gl.activeTexture(gl.TEXTURE0);
   }

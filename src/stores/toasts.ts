@@ -1,6 +1,7 @@
 'use client';
 
 import { create } from 'zustand';
+import { sound } from '@/sound/engine';
 
 export type ToastTone = 'info' | 'success' | 'warning' | 'error';
 
@@ -61,7 +62,10 @@ export const toast = {
   info: (title: string, options?: Options) => push('info', title, options),
   success: (title: string, options?: Options) => push('success', title, options),
   warning: (title: string, options?: Options) => push('warning', title, options),
-  error: (title: string, options?: Options) => push('error', title, { duration: 8000, ...options }),
+  error: (title: string, options?: Options) => {
+    sound.play('error');
+    return push('error', title, { duration: 8000, ...options });
+  },
   /** Action completed with a way back. The action label is usually "Undo". */
   undo: (title: string, undoLabel: string, onUndo: () => void, options?: Options) =>
     useToasts.getState().push({

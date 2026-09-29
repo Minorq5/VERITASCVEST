@@ -25,6 +25,7 @@ export class Recorder {
     this.origin = 0;
     this.paused = 0;
     this.pausedAt = 0;
+    this.pauses = [];
     this.queue = Promise.resolve();
   }
 
@@ -91,8 +92,20 @@ export class Recorder {
   resume() {
     if (this.pausedAt) {
       this.paused += Date.now() - this.pausedAt;
+      this.pauses.push([this.pausedAt, Date.now()]);
       this.pausedAt = 0;
     }
+  }
+
+  /** Where a wall-clock moment (ms) lands in the film, in seconds; null if the film was paused then. */
+  videoTime(wall) {
+    if (!this.origin || wall < this.origin) return null;
+    let skipped = 0;
+    for (const [from, to] of this.pauses) {
+      if (wall >= from && wall < to) return null;
+      if (wall >= to) skipped += to - from;
+    }
+    return (wall - this.origin - skipped) / 1000;
   }
 
   get seconds() {

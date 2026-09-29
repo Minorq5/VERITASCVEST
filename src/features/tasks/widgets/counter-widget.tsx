@@ -11,6 +11,7 @@ import { counterHistory } from '@/lib/domain/progress';
 import { readTypeConfig } from '@/lib/domain/task-types';
 import { useLessMotion } from '@/lib/hooks/use-less-motion';
 import { cn } from '@/lib/utils/cn';
+import { sound } from '@/sound/engine';
 import { formatNumber, formatShortDate } from '../format';
 import { typeMeta } from '../shared/type-meta';
 import { RollingNumber } from './numeric-widget';
@@ -51,7 +52,10 @@ export function CounterWidget({ task, parts, progress, prefs, today, now, action
         <button
           type="button"
           disabled={readOnly || current <= 0}
-          onClick={() => void actions.addEvent(task.id, 'delta', -config.step)}
+          onClick={() => {
+            sound.play('counterDown');
+            void actions.addEvent(task.id, 'delta', -config.step);
+          }}
           aria-label={t('widgets.counter.minus', { step })}
           className="focus-ring inline-flex size-12 shrink-0 items-center justify-center rounded-md border border-line-strong text-fg-2 transition-colors hover-ok:bg-surface-3 disabled:opacity-40"
         >
@@ -70,7 +74,10 @@ export function CounterWidget({ task, parts, progress, prefs, today, now, action
         <button
           type="button"
           disabled={readOnly}
-          onClick={() => void actions.addEvent(task.id, 'delta', config.step)}
+          onClick={() => {
+            sound.play('counterUp');
+            void actions.addEvent(task.id, 'delta', config.step);
+          }}
           aria-label={t('widgets.counter.plus', { step })}
           className="focus-ring inline-flex size-12 shrink-0 items-center justify-center rounded-md bg-accent text-accent-ink transition-colors hover-ok:bg-accent-hi disabled:opacity-40"
         >

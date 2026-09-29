@@ -5,6 +5,7 @@ import { useTranslations } from 'next-intl';
 import { Dialog as D } from 'radix-ui';
 import type { ReactNode } from 'react';
 import { cn } from '@/lib/utils/cn';
+import { sound } from '@/sound/engine';
 
 interface DialogProps {
   open?: boolean;
@@ -43,6 +44,8 @@ export function Dialog({
           )}
         >
           <D.Content
+            onOpenAutoFocus={() => sound.play('panelOpen')}
+            onCloseAutoFocus={() => sound.play('panelClose')}
             className={cn(
               'dialog-anim relative w-full rounded-xl border border-line-strong bg-surface-1 p-6 outline-none',
               widths[size],
