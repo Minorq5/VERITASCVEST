@@ -33,7 +33,7 @@ function When({ at, prefs, today }: { at: string; prefs: PlannerPrefs; today: Is
   const t = useTranslations('tasks');
   const date = new Date(at);
   return (
-    <time dateTime={at} className="text-xs text-fg-3">
+    <time dateTime={at} className="font-mono text-[0.6875rem] tracking-[0.04em] text-fg-3 uppercase">
       {relativeDay(todayIn(prefs.timeZone, date), today, prefs.locale, t)}, {formatClock(date, prefs.locale, prefs.hour12, prefs.timeZone)}
     </time>
   );
@@ -120,7 +120,7 @@ function Comments({ task, parts, prefs, today, actions, readOnly }: Props) {
             placeholder={t('placeholder')}
             aria-label={t('placeholder')}
             aria-describedby={`comment-hint-${task.id}`}
-            className="focus-ring min-h-10 min-w-0 flex-1 resize-none rounded-md border border-line-strong bg-surface-2 px-3 py-2 text-base text-fg placeholder:text-fg-4"
+            className="focus-ring min-h-10 min-w-0 flex-1 resize-none rounded-sm border border-line-strong bg-surface-1 px-3 py-2 text-base text-fg placeholder:text-fg-4 focus-visible:border-blue"
           />
           <IconButton type="submit" variant="primary" label={t('send')} icon={<SendHorizontal />} disabled={!body.trim()} />
         </form>
@@ -184,7 +184,7 @@ function HistoryTab({ task, prefs, today, actions }: Props) {
   };
 
   if (!online) return <p className="text-sm text-fg-3">{t('offline')}</p>;
-  if (query.isPending) return <Skeleton className="h-24 rounded-lg" />;
+  if (query.isPending) return <Skeleton className="h-24" />;
   if (query.isError)
     return (
       <div className="flex items-center gap-3 text-sm text-fg-3">
@@ -211,7 +211,7 @@ function HistoryTab({ task, prefs, today, actions }: Props) {
           <li key={row.id} className="relative">
             <span
               aria-hidden
-              className="absolute top-1.5 -left-5 size-[11px] rounded-full border-2 border-surface-2"
+              className="absolute top-1.5 -left-5 size-[11px] rounded-full border-2 border-surface-1"
               style={{ background: row.action === 'conflict' ? 'var(--color-warning)' : row.action === 'completed' ? 'var(--color-success)' : 'var(--color-fg-4)' }}
             />
             <div className="flex flex-wrap items-baseline gap-x-2">
@@ -233,7 +233,7 @@ function HistoryTab({ task, prefs, today, actions }: Props) {
               </ul>
             )}
             {fields.map((f) => (
-              <div key={f.field} className="mt-1.5 rounded-md border border-warning/25 bg-warning/8 px-2.5 py-2 text-xs">
+              <div key={f.field} className="mt-1.5 rounded-sm border border-warning/40 bg-warning/8 px-2.5 py-2 text-xs">
                 <p className="flex items-center gap-1.5 text-fg-2">
                   <GitMerge aria-hidden className="size-3.5 text-warning" />
                   {t('conflictKept', { value: show(f.kept) })}

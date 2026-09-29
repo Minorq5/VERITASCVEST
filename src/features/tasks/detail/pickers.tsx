@@ -131,7 +131,7 @@ function SearchList({
             choose(active);
           }
         }}
-        className="focus-ring h-9 rounded-md border border-line-strong bg-surface-2 px-2.5 text-base text-fg placeholder:text-fg-3"
+        className="focus-ring h-8 rounded-sm border border-line-strong bg-surface-1 px-2.5 text-base text-fg placeholder:text-fg-3"
       />
       <ul role="listbox" className="max-h-64 overflow-y-auto">
         {found.map((o, i) => (
@@ -140,7 +140,7 @@ function SearchList({
               type="button"
               onMouseEnter={() => setActive(i)}
               onClick={() => choose(i)}
-              className={cn('flex h-9 w-full items-center gap-2.5 rounded-sm px-2.5 text-left text-base', i === active ? 'bg-surface-4 text-fg' : 'text-fg-2')}
+              className={cn('flex h-8 w-full items-center gap-2.5 rounded-xs px-2.5 text-left text-base', i === active ? 'bg-surface-4 text-fg' : 'text-fg-2')}
             >
               <span aria-hidden className="size-2.5 shrink-0 rounded-full" style={{ background: swatchVar(o.color) }} />
               <span className="flex-1 truncate">{o.name}</span>
@@ -155,7 +155,7 @@ function SearchList({
               onMouseEnter={() => setActive(found.length)}
               onClick={() => choose(found.length)}
               className={cn(
-                'flex h-9 w-full items-center gap-2.5 rounded-sm px-2.5 text-left text-base',
+                'flex h-8 w-full items-center gap-2.5 rounded-xs px-2.5 text-left text-base',
                 active === found.length ? 'bg-surface-4 text-fg' : 'text-fg-2',
               )}
             >
@@ -213,7 +213,7 @@ export function ProjectPicker({
               onPick(null);
               setOpen(false);
             }}
-            className="mt-1 flex h-9 w-full items-center gap-2 rounded-sm px-2.5 text-sm text-fg-2 hover-ok:bg-surface-4"
+            className="mt-1 flex h-8 w-full items-center gap-2 rounded-xs px-2.5 text-sm text-fg-2 hover-ok:bg-surface-4"
           >
             <X aria-hidden className="size-4" />
             {t('noProject')}
@@ -242,11 +242,10 @@ export function TagsPicker({
       {selected.map((tag) => (
         <span
           key={tag.id}
-          className="inline-flex h-7 items-center gap-1 rounded-full border pr-1 pl-2.5 text-sm"
+          className="inline-flex h-6 items-center gap-1 rounded-xs border pr-0.5 pl-2 font-mono text-xs"
           style={{
             color: swatchVar(tag.color),
-            borderColor: `color-mix(in oklab, ${swatchVar(tag.color)} 35%, transparent)`,
-            background: `color-mix(in oklab, ${swatchVar(tag.color)} 10%, transparent)`,
+            borderColor: `color-mix(in oklab, ${swatchVar(tag.color)} 45%, transparent)`,
           }}
         >
           #{tag.name}
@@ -254,7 +253,7 @@ export function TagsPicker({
             type="button"
             aria-label={t('removeTag', { name: tag.name })}
             onClick={() => onToggle(tag)}
-            className="focus-ring inline-flex size-5 items-center justify-center rounded-full opacity-70 hover-ok:bg-surface-5 hover-ok:opacity-100"
+            className="focus-ring inline-flex size-5 items-center justify-center rounded-xs opacity-70 hover-ok:bg-surface-4 hover-ok:opacity-100"
           >
             <X aria-hidden className="size-3" />
           </button>
@@ -320,7 +319,7 @@ export function EstimatePicker({ value, onChange }: { value: number | null; onCh
               e.stopPropagation();
               if (e.key === 'Enter' && Number(custom) > 0) onChange(Math.round(Number(custom)));
             }}
-            className="focus-ring h-8 w-full rounded-md border border-line-strong bg-surface-2 px-2 font-mono text-sm text-fg"
+            className="focus-ring h-8 w-full rounded-sm border border-line-strong bg-surface-1 px-2 font-mono text-sm text-fg"
           />
         </div>
         {value && (
@@ -352,14 +351,14 @@ export function RemindersPicker({ value, hasDue, onChange }: { value: unknown; h
     <div className="flex w-full flex-col items-start gap-1.5 py-1">
       <div className="flex flex-wrap items-center gap-1.5">
         {reminders.map((r) => (
-          <span key={r.before} className="inline-flex h-7 items-center gap-1 rounded-full border border-line-strong bg-surface-3 pr-1 pl-2.5 text-sm text-fg-2">
+          <span key={r.before} className="inline-flex h-6 items-center gap-1 rounded-xs border border-line-strong bg-surface-2 pr-0.5 pl-2 font-mono text-xs text-fg-2">
             <Bell aria-hidden className="size-3.5 text-fg-3" />
             {label(r)}
             <button
               type="button"
               aria-label={t('detail.removeReminder')}
               onClick={() => onChange(reminders.filter((x) => x.before !== r.before))}
-              className="focus-ring inline-flex size-5 items-center justify-center rounded-full text-fg-3 hover-ok:bg-surface-5 hover-ok:text-fg"
+              className="focus-ring inline-flex size-5 items-center justify-center rounded-xs text-fg-3 hover-ok:bg-surface-4 hover-ok:text-fg"
             >
               <X aria-hidden className="size-3" />
             </button>

@@ -10,6 +10,7 @@ import {
   CornerLeftUp,
   Ellipsis,
   Flag,
+  FolderClosed,
   Hourglass,
   LayoutTemplate,
   Link2,
@@ -203,7 +204,7 @@ export function TaskDetail({ id, onClose }: { id: string; onClose: () => void })
     if (readOnly) return null;
     if (type === 'habit' || type === 'counter' || type === 'abstain') {
       return (
-        <span className="mt-1.5 inline-flex size-7 shrink-0 items-center justify-center rounded-full" style={{ color: typeMeta[type].color }}>
+        <span className="mt-1.5 inline-flex size-7 shrink-0 items-center justify-center" style={{ color: typeMeta[type].color }}>
           <Icon aria-hidden className="size-5" />
         </span>
       );
@@ -233,9 +234,9 @@ export function TaskDetail({ id, onClose }: { id: string; onClose: () => void })
             <button
               type="button"
               disabled={readOnly}
-              className="focus-ring inline-flex h-8 items-center gap-1.5 rounded-full border border-line-strong px-2.5 text-sm text-fg-2 transition-colors hover-ok:bg-surface-4 hover-ok:text-fg disabled:opacity-60"
+              className="focus-ring inline-flex h-7 items-center gap-1.5 rounded-sm border border-line-strong px-2 font-mono text-[0.6875rem] tracking-[0.06em] text-fg-2 uppercase transition-colors hover-ok:border-line-bright hover-ok:text-fg disabled:opacity-60"
             >
-              <Icon aria-hidden className="size-4" style={{ color: typeMeta[type].color }} />
+              <Icon aria-hidden className="size-3.5" style={{ color: typeMeta[type].color }} />
               {t(`types.${type}.name`)}
               {!readOnly && <ChevronDown aria-hidden className="size-3.5 text-fg-3" />}
             </button>
@@ -289,7 +290,7 @@ export function TaskDetail({ id, onClose }: { id: string; onClose: () => void })
 
       <div className="flex-1 overflow-y-auto overscroll-contain px-4 pt-4 pb-[max(2rem,env(safe-area-inset-bottom))] sm:px-5">
         {readOnly && task.deleted_at && (
-          <div className="mb-4 flex flex-wrap items-center gap-3 rounded-lg border border-warning/30 bg-warning/10 px-3 py-2.5 text-sm text-fg">
+          <div className="mb-4 flex flex-wrap items-center gap-3 rounded-md border border-warning/40 bg-warning/8 px-3 py-2 text-sm text-fg">
             <Trash2 aria-hidden className="size-4 text-warning" />
             <span className="flex-1">
               {t('detail.inTrash')} · {t('trash.daysLeft', { days: trashDaysLeft(task.deleted_at, now) })}
@@ -304,7 +305,7 @@ export function TaskDetail({ id, onClose }: { id: string; onClose: () => void })
           <button
             type="button"
             onClick={() => open(parent.id)}
-            className="focus-ring mb-2 inline-flex max-w-full items-center gap-1.5 rounded-sm text-sm text-fg-3 hover-ok:text-fg"
+            className="focus-ring mb-2 inline-flex max-w-full items-center gap-1.5 rounded-xs text-sm text-fg-3 hover-ok:text-fg"
           >
             <CornerLeftUp aria-hidden className="size-3.5 shrink-0" />
             <span className="truncate">{t('detail.parent', { title: parent.title })}</span>
@@ -324,7 +325,7 @@ export function TaskDetail({ id, onClose }: { id: string; onClose: () => void })
           </div>
         )}
 
-        <div className={cn('mt-5 flex flex-col gap-0.5', readOnly && 'pointer-events-none opacity-70')}>
+        <div className={cn('mt-5 flex flex-col divide-y divide-line border-y border-line', readOnly && 'pointer-events-none opacity-70')}>
           <h3 className="sr-only">{t('detail.properties')}</h3>
           <PropertyRow icon={<CalendarDays />} label={t('detail.due')}>
             <DateField
@@ -356,7 +357,7 @@ export function TaskDetail({ id, onClose }: { id: string; onClose: () => void })
           <PropertyRow icon={<CircleDot />} label={t('status.label')}>
             <StatusPicker value={status?.id ?? null} statuses={catalog.statuses} onChange={(statusId) => void setStatus(statusId)} />
           </PropertyRow>
-          <PropertyRow icon={<span className="size-3 rounded-full border border-current" />} label={t('detail.project')}>
+          <PropertyRow icon={<FolderClosed />} label={t('detail.project')}>
             <ProjectPicker
               value={task.project_id}
               projects={catalog.projects}
@@ -381,7 +382,7 @@ export function TaskDetail({ id, onClose }: { id: string; onClose: () => void })
           <PropertyRow icon={<Hourglass />} label={t('detail.estimate')}>
             <EstimatePicker value={task.estimate_minutes} onChange={(estimate_minutes) => update({ estimate_minutes })} />
           </PropertyRow>
-          <PropertyRow icon={<Bell />} label={t('detail.reminders')} className="items-start [&>span]:mt-2.5">
+          <PropertyRow icon={<Bell />} label={t('detail.reminders')} className="items-start [&>span]:mt-3">
             <RemindersPicker value={task.reminders} hasDue={Boolean(task.due_date)} onChange={(next: Reminder[]) => update({ reminders: next as never })} />
           </PropertyRow>
           <PropertyRow icon={<Palette />} label={t('detail.appearance')}>
@@ -390,7 +391,7 @@ export function TaskDetail({ id, onClose }: { id: string; onClose: () => void })
         </div>
 
         <section className="mt-6">
-          <h3 className="mb-2 text-xs font-semibold tracking-[0.08em] text-fg-3 uppercase">{t('detail.description')}</h3>
+          <h3 className="label-mono mb-2">{t('detail.description')}</h3>
           {readOnly ? (
             <p className="text-base whitespace-pre-wrap text-fg-2">{task.description_text || '—'}</p>
           ) : (
@@ -416,7 +417,7 @@ export function TaskDetail({ id, onClose }: { id: string; onClose: () => void })
           <DetailTabs task={task} parts={parts} prefs={prefs} today={today} actions={actions} readOnly={readOnly} />
         </div>
 
-        <p className="mt-6 text-xs text-fg-3">
+        <p className="mt-6 font-mono text-[0.6875rem] tracking-[0.04em] text-fg-4 uppercase">
           {t('detail.created', { date: formatLongDate(todayIn(prefs.timeZone, new Date(task.created_at)), prefs.locale, today) })}
           {task.completed_at &&
             ` · ${t('detail.completedAt', { date: formatLongDate(todayIn(prefs.timeZone, new Date(task.completed_at)), prefs.locale, today) })}`}

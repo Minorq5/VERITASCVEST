@@ -163,25 +163,23 @@ export function TimeWidget({ task, parts, prefs, now, today, actions, readOnly }
     <WidgetCard accent={BLUE}>
       <div className="flex flex-col items-center gap-5 sm:flex-row">
         <OrbitDial ratio={ratio}>
-          <span className="font-mono text-2xl font-semibold text-fg tabular">{center}</span>
-          {phaseName && <span className="text-xs text-fg-2">{phaseName}</span>}
+          <span className="font-mono text-2xl text-fg tabular">{center}</span>
+          {phaseName && <span className="label-mono mt-0.5 text-fg-2">{phaseName}</span>}
           {running && pomodoro && running.pomodoro_index && (
-            <span className="text-[11px] text-fg-3">{t('widgets.time.cycleOf', { n: running.pomodoro_index, total: pomodoro.cycles })}</span>
+            <span className="font-mono text-[11px] text-fg-3">{t('widgets.time.cycleOf', { n: running.pomodoro_index, total: pomodoro.cycles })}</span>
           )}
         </OrbitDial>
         <div className="flex w-full min-w-0 flex-1 flex-col gap-3">
           <div className="flex flex-wrap gap-x-6 gap-y-2">
             <div>
-              <p className="text-xs text-fg-3">{t('widgets.time.tracked')}</p>
+              <p className="label-mono">{t('widgets.time.tracked')}</p>
               <p className="font-mono text-lg text-fg tabular">{formatDuration(tracked / 60, t)}</p>
             </div>
             {goal != null && (
               <div>
-                <p className="text-xs text-fg-3">{tracked >= goalSeconds! ? ' ' : t('widgets.time.goal')}</p>
+                <p className="label-mono">{tracked >= goalSeconds! ? t('widgets.time.over') : t('widgets.time.left')}</p>
                 <p className={cn('font-mono text-lg tabular', tracked >= goalSeconds! ? 'text-success' : 'text-fg-2')}>
-                  {tracked >= goalSeconds!
-                    ? t('widgets.time.over', { value: formatDuration((tracked - goalSeconds!) / 60, t) })
-                    : t('widgets.time.left', { value: formatDuration((goalSeconds! - tracked) / 60, t) })}
+                  {formatDuration(Math.abs(tracked - goalSeconds!) / 60, t)}
                 </p>
               </div>
             )}
@@ -261,7 +259,7 @@ export function TimeWidget({ task, parts, prefs, now, today, actions, readOnly }
       )}
 
       <div className="mt-4 border-t border-line pt-4">
-        <p className="mb-2 text-xs font-semibold tracking-[0.08em] text-fg-3 uppercase">{t('widgets.time.sessions')}</p>
+        <p className="label-mono mb-2">{t('widgets.time.sessions')}</p>
         {sessions.length === 0 ? (
           <p className="text-sm text-fg-3">{t('widgets.time.noSessions')}</p>
         ) : (
@@ -308,7 +306,7 @@ export function TimeWidget({ task, parts, prefs, now, today, actions, readOnly }
               onChange={(e) => setManual(e.target.value)}
               placeholder={t('widgets.time.sessionMinutes')}
               aria-label={t('widgets.time.sessionMinutes')}
-              className="focus-ring h-8 w-28 rounded-md border border-line-strong bg-surface-2 px-2.5 font-mono text-sm text-fg placeholder:font-sans placeholder:text-fg-4"
+              className="focus-ring h-8 w-28 rounded-sm border border-line-strong bg-surface-2 px-2.5 font-mono text-sm text-fg placeholder:font-sans placeholder:text-fg-4"
             />
             <Button size="sm" variant="ghost" icon={<Plus />} type="submit" disabled={!(Number(manual) > 0)}>
               {t('widgets.time.addSession')}

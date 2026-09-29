@@ -83,18 +83,18 @@ export function Calendar({ value, onChange, today, weekStart, locale, labels, ma
           type="button"
           aria-label={labels.previous}
           onClick={() => setMonth(addMonths(month, -1))}
-          className="focus-ring inline-flex size-8 items-center justify-center rounded-md text-fg-2 hover-ok:bg-surface-4 hover-ok:text-fg"
+          className="focus-ring inline-flex size-8 items-center justify-center rounded-sm text-fg-2 hover-ok:bg-surface-3 hover-ok:text-fg"
         >
           <ChevronLeft aria-hidden className="size-4" />
         </button>
-        <span className="text-base font-medium text-fg first-letter:uppercase" aria-live="polite">
+        <span className="text-sm font-medium text-fg first-letter:uppercase" aria-live="polite">
           {title}
         </span>
         <button
           type="button"
           aria-label={labels.next}
           onClick={() => setMonth(addMonths(month, 1))}
-          className="focus-ring inline-flex size-8 items-center justify-center rounded-md text-fg-2 hover-ok:bg-surface-4 hover-ok:text-fg"
+          className="focus-ring inline-flex size-8 items-center justify-center rounded-sm text-fg-2 hover-ok:bg-surface-3 hover-ok:text-fg"
         >
           <ChevronRight aria-hidden className="size-4" />
         </button>
@@ -102,7 +102,7 @@ export function Calendar({ value, onChange, today, weekStart, locale, labels, ma
       <div role="grid" aria-label={title} ref={grid} onKeyDown={onKeyDown} onFocus={() => (focusWithin.current = true)} onBlur={() => (focusWithin.current = false)}>
         <div role="row" className="grid grid-cols-7">
           {weekdays.map((name) => (
-            <span key={name} role="columnheader" className="py-1 text-center text-xs text-fg-3 first-letter:uppercase">
+            <span key={name} role="columnheader" className="py-1 text-center font-mono text-[0.6875rem] tracking-[0.06em] text-fg-4 uppercase">
               {name.replace('.', '')}
             </span>
           ))}
@@ -127,20 +127,20 @@ export function Calendar({ value, onChange, today, weekStart, locale, labels, ma
                     aria-label={fmt(locale, { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }).format(noon(day))}
                     aria-current={isToday ? 'date' : undefined}
                     className={cn(
-                      'focus-ring relative inline-flex size-9 items-center justify-center rounded-full font-mono text-sm tabular transition-colors duration-150',
+                      'focus-ring relative inline-flex size-9 items-center justify-center rounded-sm font-mono text-sm tabular transition-colors duration-150',
                       selected
-                        ? 'bg-accent font-semibold text-accent-ink'
+                        ? 'bg-accent font-medium text-accent-ink'
                         : isToday
-                          ? 'text-accent ring-1 ring-[color-mix(in_oklab,var(--accent)_55%,transparent)] hover-ok:bg-surface-4'
+                          ? 'text-accent ring-1 ring-[color-mix(in_oklab,var(--accent)_55%,transparent)] ring-inset hover-ok:bg-surface-3'
                           : inMonth
                             ? past
-                              ? 'text-fg-3 hover-ok:bg-surface-4 hover-ok:text-fg'
-                              : 'text-fg hover-ok:bg-surface-4'
-                            : 'text-fg-4 hover-ok:bg-surface-4',
+                              ? 'text-fg-3 hover-ok:bg-surface-3 hover-ok:text-fg'
+                              : 'text-fg hover-ok:bg-surface-3'
+                            : 'text-fg-4 hover-ok:bg-surface-3',
                     )}
                   >
                     {parts(day).d}
-                    {marked?.has(day) && !selected && <span aria-hidden className="absolute bottom-1 size-1 rounded-full bg-accent" />}
+                    {marked?.has(day) && !selected && <span aria-hidden className="absolute bottom-1 h-px w-2 bg-accent" />}
                   </button>
                 </span>
               );

@@ -110,7 +110,7 @@ export function NumericWidget({ task, parts, progress, prefs, actions, readOnly 
       <div className="flex items-center gap-5">
         <ProgressRing value={progress.ratio} size={88} color={color} />
         <div className="min-w-0 flex-1">
-          <p className="font-mono text-3xl font-semibold text-fg tabular">
+          <p className="font-mono text-3xl font-medium text-fg tabular">
             <RollingNumber value={current} locale={prefs.locale} />
             {target != null && (
               <span className="text-xl text-fg-3">
@@ -147,7 +147,7 @@ export function NumericWidget({ task, parts, progress, prefs, actions, readOnly 
                 onChange={(e) => setAmount(e.target.value)}
                 placeholder={t('widgets.numeric.amount')}
                 aria-label={t('widgets.numeric.amount')}
-                className="focus-ring h-8 w-36 rounded-md border border-line-strong bg-surface-2 px-2.5 font-mono text-sm text-fg placeholder:font-sans placeholder:text-fg-4"
+                className="focus-ring h-8 w-36 rounded-sm border border-line-strong bg-surface-2 px-2.5 font-mono text-sm text-fg placeholder:font-sans placeholder:text-fg-4"
               />
               <Button size="sm" variant="primary" type="submit" icon={<Plus />} disabled={!Number(amount)}>
                 {t('widgets.numeric.add')}
@@ -175,7 +175,7 @@ export function NumericWidget({ task, parts, progress, prefs, actions, readOnly 
                   const next = e.currentTarget.value.trim() || null;
                   if (next !== (task.progress_unit ?? null)) void actions.update(task.id, { progress_unit: next } as Partial<TaskRow>);
                 }}
-                className="focus-ring h-9 w-28 rounded-md border border-line-strong bg-surface-2 px-2.5 text-sm text-fg placeholder:text-fg-4"
+                className="focus-ring h-9 w-28 rounded-sm border border-line-strong bg-surface-2 px-2.5 text-sm text-fg placeholder:text-fg-4"
               />
             </label>
             <form
@@ -193,7 +193,7 @@ export function NumericWidget({ task, parts, progress, prefs, actions, readOnly 
                 onChange={(e) => setExact(e.target.value)}
                 placeholder={t('widgets.numeric.set')}
                 aria-label={t('widgets.numeric.set')}
-                className="focus-ring h-9 w-32 rounded-md border border-line-strong bg-surface-2 px-2.5 font-mono text-sm text-fg placeholder:font-sans placeholder:text-fg-4"
+                className="focus-ring h-9 w-32 rounded-sm border border-line-strong bg-surface-2 px-2.5 font-mono text-sm text-fg placeholder:font-sans placeholder:text-fg-4"
               />
               <Button size="sm" variant="ghost" type="submit" disabled={exact.trim() === ''}>
                 {t('widgets.numeric.setApply')}

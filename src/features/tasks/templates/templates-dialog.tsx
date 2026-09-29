@@ -26,9 +26,9 @@ function Item({ type, name, text, onPick, onRemove, removeLabel }: { type: strin
       <button
         type="button"
         onClick={onPick}
-        className="focus-ring flex min-w-0 flex-1 items-start gap-3 rounded-md px-2.5 py-2 text-left transition-colors hover-ok:bg-surface-4"
+        className="focus-ring flex min-w-0 flex-1 items-start gap-3 rounded-sm px-2.5 py-2 text-left transition-colors hover-ok:bg-surface-3"
       >
-        <span className="mt-0.5 inline-flex size-8 shrink-0 items-center justify-center rounded-md bg-surface-4" style={{ color: meta.color }}>
+        <span className="mt-0.5 inline-flex size-8 shrink-0 items-center justify-center rounded-sm border border-line-strong" style={{ color: meta.color }}>
           <Icon aria-hidden className="size-4" />
         </span>
         <span className="min-w-0">
@@ -92,9 +92,9 @@ export function TemplatesButton({ scope }: { scope: NonNullable<ListScope> }) {
         </Button>
       }
     >
-      <div className="flex flex-col gap-5">
+      <div className="-mx-2.5 flex flex-col gap-5">
         <section>
-          <h3 className="mb-1 px-2.5 text-xs font-semibold tracking-[0.08em] text-fg-3 uppercase">{t('templates.mine')}</h3>
+          <h3 className="label-mono mb-1 px-2.5">{t('templates.mine')}</h3>
           {mine.length === 0 ? (
             <p className="px-2.5 text-sm text-fg-3">{t('templates.empty')}</p>
           ) : (
@@ -116,7 +116,7 @@ export function TemplatesButton({ scope }: { scope: NonNullable<ListScope> }) {
           )}
         </section>
         <section>
-          <h3 className="mb-1 px-2.5 text-xs font-semibold tracking-[0.08em] text-fg-3 uppercase">{t('templates.builtIn')}</h3>
+          <h3 className="label-mono mb-1 px-2.5">{t('templates.builtIn')}</h3>
           <ul className="grid gap-0.5 sm:grid-cols-2">
             {builtInKeys.map((key) => (
               <Item

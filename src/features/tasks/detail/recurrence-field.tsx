@@ -179,7 +179,7 @@ function RecurrenceEditor({
             value={interval}
             onChange={(e) => setEvery(Number(e.target.value))}
             aria-label={t('recurrence.every')}
-            className="focus-ring h-11 w-20 rounded-md border border-line-strong bg-surface-2 px-3 font-mono text-base text-fg"
+            className="focus-ring h-9 w-20 rounded-sm border border-line-strong bg-surface-2 px-3 font-mono text-base text-fg focus-visible:border-blue"
           />
           <Select value={freq} onValueChange={(v) => setFreq(v as Freq)} aria-label={t('recurrence.label')} className="w-40">
             {(['daily', 'weekly', 'monthly', 'yearly'] as const).map((f) => (
@@ -192,7 +192,7 @@ function RecurrenceEditor({
 
         {!completion && freq === 'weekly' && (
           <fieldset>
-            <legend className="mb-2 text-sm text-fg-3">{t('recurrence.onDays')}</legend>
+            <legend className="label-mono mb-2">{t('recurrence.onDays')}</legend>
             <div className="flex flex-wrap gap-1.5">
               {order.map((d) => {
                 const on = days.includes(d);
@@ -203,8 +203,8 @@ function RecurrenceEditor({
                     aria-pressed={on}
                     onClick={() => setDays(on ? days.filter((x) => x !== d) : [...days, d])}
                     className={cn(
-                      'focus-ring inline-flex h-10 min-w-11 items-center justify-center rounded-md border px-2 text-sm transition-colors first-letter:uppercase',
-                      on ? 'border-accent/50 bg-accent/15 text-fg' : 'border-line-strong text-fg-2 hover-ok:bg-surface-4',
+                      'focus-ring inline-flex h-8 min-w-10 items-center justify-center rounded-sm border px-2 font-mono text-xs tracking-[0.06em] uppercase transition-colors',
+                      on ? 'border-accent bg-surface-3 text-fg' : 'border-line-strong text-fg-3 hover-ok:bg-surface-2 hover-ok:text-fg-2',
                     )}
                   >
                     {names[d]?.replace('.', '')}
@@ -217,7 +217,7 @@ function RecurrenceEditor({
 
         {!completion && freq === 'monthly' && (
           <fieldset>
-            <legend className="mb-2 text-sm text-fg-3">{t('recurrence.monthBy')}</legend>
+            <legend className="label-mono mb-2">{t('recurrence.monthBy')}</legend>
             <RadioGroup value={monthBy} onValueChange={(v) => setMonthBy(v as typeof monthBy)}>
               <RadioItem value="day" label={t('recurrence.byMonthDay')} description={`${a.d}`} />
               <RadioItem value="nth" label={t('recurrence.byNth')} description={nthLabel} />
@@ -227,7 +227,7 @@ function RecurrenceEditor({
         )}
 
         <fieldset>
-          <legend className="mb-2 text-sm text-fg-3">{t('recurrence.ends')}</legend>
+          <legend className="label-mono mb-2">{t('recurrence.ends')}</legend>
           <RadioGroup value={ends} onValueChange={(v) => setEnds(v as typeof ends)}>
             <RadioItem value="never" label={t('recurrence.endsNever')} />
             <div className="flex flex-wrap items-center gap-3">
@@ -239,7 +239,7 @@ function RecurrenceEditor({
                   min={anchor}
                   onChange={(e) => e.target.value && setUntil(e.target.value)}
                   aria-label={t('recurrence.endsOn')}
-                  className="focus-ring h-9 rounded-md border border-line-strong bg-surface-2 px-2.5 font-mono text-sm text-fg [color-scheme:dark]"
+                  className="focus-ring h-9 rounded-sm border border-line-strong bg-surface-2 px-2.5 font-mono text-sm text-fg [color-scheme:dark]"
                 />
               )}
             </div>
@@ -253,7 +253,7 @@ function RecurrenceEditor({
                   value={count}
                   onChange={(e) => setCount(Number(e.target.value))}
                   aria-label={t('recurrence.count')}
-                  className="focus-ring h-9 w-24 rounded-md border border-line-strong bg-surface-2 px-2.5 font-mono text-sm text-fg"
+                  className="focus-ring h-9 w-24 rounded-sm border border-line-strong bg-surface-2 px-2.5 font-mono text-sm text-fg"
                 />
               )}
             </div>
@@ -264,10 +264,10 @@ function RecurrenceEditor({
 
         {preview.length > 0 && (
           <div>
-            <p className="mb-2 text-sm text-fg-3">{t('recurrence.preview')}</p>
+            <p className="label-mono mb-2">{t('recurrence.preview')}</p>
             <ul className="flex flex-wrap gap-1.5">
               {preview.map((d) => (
-                <li key={d} className="rounded-full border border-line-strong bg-surface-3 px-2.5 py-1 font-mono text-xs text-fg-2">
+                <li key={d} className="rounded-xs border border-line-strong bg-surface-2 px-2 py-0.5 font-mono text-xs text-fg-2">
                   {formatShortDate(d, prefs.locale, today)}
                 </li>
               ))}

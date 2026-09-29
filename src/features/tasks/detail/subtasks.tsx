@@ -19,7 +19,7 @@ import type { PlannerPrefs } from '../data/hooks';
 import type { TaskActions } from '../data/use-task-actions';
 import { dueTone, relativeDay } from '../format';
 
-const toneClass = { overdue: 'text-danger', today: 'text-accent', soon: 'text-warning', later: 'text-fg-3' } as const;
+const toneClass = { overdue: 'text-danger', today: 'text-fg-2', soon: 'text-warning', later: 'text-fg-3' } as const;
 
 function Item({
   task,
@@ -44,7 +44,7 @@ function Item({
     <li
       ref={setNodeRef}
       style={{ transform: CSS.Translate.toString(transform), transition }}
-      className={cn('group/sub relative flex items-center gap-2.5 rounded-md py-1.5 pr-1 pl-5', isDragging ? 'z-10 bg-surface-4' : 'hover-ok:bg-surface-3/60')}
+      className={cn('group/sub relative flex min-h-9 items-center gap-2.5 rounded-xs py-1 pr-1 pl-5', isDragging ? 'z-10 bg-surface-3 outline outline-1 outline-line-bright' : 'hover-ok:bg-surface-2')}
     >
       {!readOnly && (
         <button
@@ -65,10 +65,10 @@ function Item({
         label={task.completed_at ? t('row.reopen', { title: task.title }) : t('row.complete', { title: task.title })}
         onCheckedChange={() => void actions.toggle(task)}
       />
-      <button type="button" onClick={() => onOpen(task.id)} className="focus-ring flex min-w-0 flex-1 items-center gap-2 rounded-sm text-left">
+      <button type="button" onClick={() => onOpen(task.id)} className="focus-ring flex min-w-0 flex-1 items-center gap-2 rounded-xs text-left">
         <span className={cn('truncate text-base', task.completed_at ? 'text-fg-3 line-through' : 'text-fg')}>{task.title}</span>
         {task.due_date && !task.completed_at && (
-          <span className={cn('shrink-0 text-xs', toneClass[dueTone(task.due_date, today, task.due_date < today)])}>
+          <span className={cn('shrink-0 font-mono text-[0.6875rem] tracking-[0.06em] uppercase', toneClass[dueTone(task.due_date, today, task.due_date < today)])}>
             {relativeDay(task.due_date, today, prefs.locale, t)}
           </span>
         )}
@@ -147,7 +147,7 @@ export function Subtasks({
 
   return (
     <section aria-labelledby={`subtasks-${parent.id}`}>
-      <h3 id={`subtasks-${parent.id}`} className="mb-2 text-xs font-semibold tracking-[0.08em] text-fg-3 uppercase">
+      <h3 id={`subtasks-${parent.id}`} className="label-mono mb-2">
         {t('detail.subtasks')}
         {children.length > 0 && (
           <span className="ml-2 font-mono tabular">
@@ -190,7 +190,7 @@ export function Subtasks({
             maxLength={500}
             placeholder={t('detail.subtaskPlaceholder')}
             aria-label={t('detail.addSubtask')}
-            className="h-9 min-w-0 flex-1 rounded-md bg-transparent px-1 text-base text-fg outline-none placeholder:text-fg-4 focus-visible:bg-surface-3"
+            className="h-9 min-w-0 flex-1 rounded-xs bg-transparent px-1 text-base text-fg outline-none placeholder:text-fg-4 focus-visible:bg-surface-2"
           />
           {title.trim() && (
             <Button size="sm" type="submit">

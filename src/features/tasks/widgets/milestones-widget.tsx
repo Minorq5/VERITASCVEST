@@ -85,7 +85,7 @@ export function MilestonesWidget({ task, parts, actions, readOnly }: WidgetProps
         (chain ? (
           <p className="mb-3 text-sm text-fg-2">{nextIndex === -1 ? t('widgets.chain.finished') : `${t('widgets.chain.next')}: ${list[nextIndex]!.title}`}</p>
         ) : (
-          <div className="mb-4 flex h-3 w-full gap-0.5 overflow-hidden rounded-full" aria-hidden>
+          <div className="mb-4 flex h-1.5 w-full gap-0.5 overflow-hidden" aria-hidden>
             {list.map((m, i) => (
               <motion.span
                 key={m.id}
@@ -145,7 +145,7 @@ export function MilestonesWidget({ task, parts, actions, readOnly }: WidgetProps
                         const w = Math.max(0, Math.min(100, Number(e.currentTarget.value)));
                         if (Number.isFinite(w) && w !== Number(m.weight)) void setWeight(m, w);
                       }}
-                      className="focus-ring h-8 w-16 rounded-md border border-line-strong bg-surface-2 px-2 text-right font-mono text-sm text-fg"
+                      className="focus-ring h-8 w-16 rounded-sm border border-line-strong bg-surface-2 px-2 text-right font-mono text-sm text-fg"
                     />
                     %
                   </label>
@@ -192,7 +192,7 @@ export function MilestonesWidget({ task, parts, actions, readOnly }: WidgetProps
             maxLength={200}
             placeholder={chain ? t('widgets.chain.placeholder') : t('widgets.stages.placeholder')}
             aria-label={chain ? t('widgets.chain.add') : t('widgets.stages.add')}
-            className="focus-ring h-9 min-w-0 flex-1 rounded-md border border-line-strong bg-surface-2 px-2.5 text-base text-fg placeholder:text-fg-4"
+            className="focus-ring h-9 min-w-0 flex-1 rounded-sm border border-line-strong bg-surface-2 px-2.5 text-base text-fg placeholder:text-fg-4"
           />
           <Button size="sm" type="submit" icon={<Plus />} disabled={!title.trim()}>
             {chain ? t('widgets.chain.add') : t('widgets.stages.add')}

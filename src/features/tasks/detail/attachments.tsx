@@ -85,12 +85,12 @@ function Thumb({ attachment, onOpen }: { attachment: AttachmentRow; onOpen: () =
     <button
       type="button"
       onClick={onOpen}
-      className="focus-ring group/thumb relative aspect-square overflow-hidden rounded-lg border border-line bg-surface-3"
+      className="focus-ring group/thumb relative aspect-square overflow-hidden rounded-sm border border-line-strong bg-surface-2"
       aria-label={attachment.file_name}
     >
       {url ? (
         // eslint-disable-next-line @next/next/no-img-element -- private signed URL, not optimisable
-        <img src={url} alt="" className="size-full object-cover transition-transform duration-300 group-hover/thumb:scale-105" loading="lazy" />
+        <img src={url} alt="" className="size-full object-cover transition-opacity duration-200 group-hover/thumb:opacity-85" loading="lazy" />
       ) : (
         <span className="flex size-full items-center justify-center">
           <Spinner className="size-4" />
@@ -269,10 +269,10 @@ export function Attachments({ task, attachments, readOnly, actions }: { task: Ta
       }}
       onDragLeave={() => setDragging(false)}
       onDrop={onDrop}
-      className={cn('relative rounded-lg transition-colors', dragging && 'bg-accent/8 ring-2 ring-accent/40 ring-offset-4 ring-offset-transparent')}
+      className={cn('relative rounded-md transition-colors', dragging && 'bg-surface-2 outline outline-1 outline-offset-4 outline-blue')}
     >
       <div className="mb-2 flex items-center justify-between gap-2">
-        <h3 id={`att-${task.id}`} className="text-xs font-semibold tracking-[0.08em] text-fg-3 uppercase">
+        <h3 id={`att-${task.id}`} className="label-mono">
           {t('title')}
           {attachments.length > 0 && <span className="ml-2 font-mono tabular">{attachments.length}</span>}
         </h3>
@@ -305,7 +305,7 @@ export function Attachments({ task, attachments, readOnly, actions }: { task: Ta
                   type="button"
                   aria-label={t('remove', { name: a.file_name })}
                   onClick={() => void remove(a)}
-                  className="focus-ring absolute top-1 right-1 inline-flex size-7 items-center justify-center rounded-full bg-[rgb(3_5_10/0.7)] text-fg opacity-0 transition-opacity group-hover/att:opacity-100 focus-visible:opacity-100 [@media(hover:none)]:opacity-100"
+                  className="focus-ring absolute top-1 right-1 inline-flex size-7 items-center justify-center rounded-sm bg-surface-1 text-fg opacity-0 transition-opacity group-hover/att:opacity-100 focus-visible:opacity-100 [@media(hover:none)]:opacity-100"
                 >
                   <Trash2 aria-hidden className="size-3.5" />
                 </button>
@@ -318,7 +318,7 @@ export function Attachments({ task, attachments, readOnly, actions }: { task: Ta
       {files.length > 0 && (
         <ul className={cn('flex flex-col gap-1', images.length > 0 && 'mt-2')}>
           {files.map((a) => (
-            <li key={a.id} className="group/file flex items-center gap-2.5 rounded-md border border-line bg-surface-3/60 px-2.5 py-2">
+            <li key={a.id} className="group/file flex items-center gap-2.5 rounded-sm border border-line-strong bg-surface-2 px-2.5 py-1.5">
               <FileText aria-hidden className="size-4 shrink-0 text-fg-3" />
               <button
                 type="button"
@@ -327,7 +327,7 @@ export function Attachments({ task, attachments, readOnly, actions }: { task: Ta
                   if (url) window.open(url, '_blank', 'noopener');
                 }}
                 aria-label={t('open', { name: a.file_name })}
-                className="focus-ring min-w-0 flex-1 truncate rounded-sm text-left text-sm text-fg hover-ok:underline"
+                className="focus-ring min-w-0 flex-1 truncate rounded-xs text-left text-sm text-fg hover-ok:text-blue"
               >
                 {a.file_name}
               </button>
@@ -359,7 +359,7 @@ export function Attachments({ task, attachments, readOnly, actions }: { task: Ta
       )}
 
       {attachments.length === 0 && uploading.length === 0 && !readOnly && (
-        <p className="rounded-lg border border-dashed border-line-strong px-3 py-4 text-center text-sm text-fg-3">{dragging ? t('drop') : t('empty')}</p>
+        <p className="rounded-sm border border-dashed border-line-strong px-3 py-3 text-sm text-fg-3">{dragging ? t('drop') : t('empty')}</p>
       )}
 
       {gallery !== null && images.length > 0 && (

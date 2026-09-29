@@ -69,7 +69,7 @@ export function NumberInput({
         if (e.key === 'Enter') e.currentTarget.blur();
       }}
       className={cn(
-        'focus-ring h-9 w-24 rounded-md border border-line-strong bg-surface-2 px-2.5 font-mono text-sm text-fg tabular placeholder:text-fg-4',
+        'focus-ring h-8 w-24 rounded-sm border border-line-strong bg-surface-2 px-2.5 font-mono text-sm text-fg tabular placeholder:text-fg-4 focus-visible:border-blue',
         className,
       )}
     />
@@ -79,8 +79,8 @@ export function NumberInput({
 export function Stat({ label, value, className }: { label: string; value: ReactNode; className?: string }) {
   return (
     <div className={cn('flex flex-col', className)}>
-      <span className="text-xs text-fg-3">{label}</span>
-      <span className="font-mono text-lg font-medium text-fg tabular">{value}</span>
+      <span className="label-mono">{label}</span>
+      <span className="mt-0.5 font-mono text-lg text-fg tabular">{value}</span>
     </div>
   );
 }

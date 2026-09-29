@@ -93,9 +93,36 @@ for (const kind of only) {
     await settle(page);
     await shot(page, dir, name);
   }
+  for (const [name, url] of [
+    ['tomorrow', '/ru/tomorrow'],
+    ['week', '/ru/week'],
+    ['overdue', '/ru/overdue'],
+  ]) {
+    if (screens && !screens.has(name)) continue;
+    await page.goto(`${BASE}${url}`);
+    await settle(page);
+    await shot(page, dir, name);
+  }
+  if (!screens || screens.has('project')) {
+    await page.goto(`${BASE}/ru/today`);
+    await settle(page, 1500);
+    const link = page.getByRole('link', { name: /Запуск сайта/ }).first();
+    if (kind === 'phone') {
+      await page.getByRole('button', { name: 'Ещё', exact: true }).click();
+      await settle(page, 800);
+      await page.getByRole('dialog').getByRole('link', { name: /Запуск сайта/ }).click();
+    } else await link.click();
+    await page.waitForURL(/\/ru\/projects\//);
+    await settle(page);
+    await shot(page, dir, 'project');
+  }
   for (const [name, title, list] of [
+    ['task-normal', 'Отправить отчёт по кварталу', 'inbox'],
+    ['task-numeric', 'Прочитать «Интерстеллар: наука за кадром»', 'inbox'],
     ['task-percent', 'Написать главу диплома', 'inbox'],
     ['task-habit', 'Медитация', 'inbox'],
+    ['task-counter', 'Вода', 'inbox'],
+    ['task-time', 'Пробежка в парке', 'inbox'],
     ['task-stages', 'Запуск лендинга', 'week'],
   ]) {
     if (screens && !screens.has(name)) continue;
@@ -104,6 +131,46 @@ for (const kind of only) {
     await page.getByRole('button', { name: `Открыть «${title}»` }).click();
     await settle(page, 2000);
     await shot(page, dir, name);
+  }
+  // Pickers and dialogs over the working app
+  if (!screens || screens.has('date-picker')) {
+    await page.goto(`${BASE}/ru/inbox`);
+    await settle(page, 2000);
+    await page.getByRole('button', { name: 'Открыть «Написать главу диплома»' }).click();
+    await settle(page, 1500);
+    await page.getByRole('button', { name: /^Сегодня/ }).last().click();
+    await settle(page, 1200);
+    await shot(page, dir, 'date-picker');
+    await page.keyboard.press('Escape');
+  }
+  if (!screens || screens.has('templates')) {
+    await page.goto(`${BASE}/ru/today`);
+    await settle(page, 2000);
+    await page.getByRole('button', { name: /Из шаблона/ }).first().click();
+    await settle(page, 1200);
+    await shot(page, dir, 'templates');
+    await page.keyboard.press('Escape');
+  }
+  if (!screens || screens.has('bulk')) {
+    await page.goto(`${BASE}/ru/today`);
+    await settle(page, 2000);
+    await page.getByRole('button', { name: /Выбрать несколько/ }).first().click();
+    await settle(page, 600);
+    for (const title of ['Купить продукты на неделю', 'Созвон с командой дизайна']) {
+      await page.getByRole('checkbox', { name: `Выбрать «${title}»` }).click();
+    }
+    await settle(page, 1200);
+    await shot(page, dir, 'bulk');
+  }
+  if (!screens || screens.has('quick-add')) {
+    await page.goto(`${BASE}/ru/inbox`);
+    await settle(page, 2000);
+    if (kind === 'phone') await page.getByRole('button', { name: 'Новая задача' }).last().click();
+    else await page.keyboard.press('n');
+    await settle(page, 800);
+    await page.keyboard.type('Сходить в зал завтра в 18:00 #спорт !высокий');
+    await settle(page, 1200);
+    await shot(page, dir, 'quick-add');
   }
   await ctx.close();
 }

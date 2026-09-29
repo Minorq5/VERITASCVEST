@@ -42,7 +42,7 @@ export function CollabWidget({ task, parts, progress, prefs, today, actions, rea
       <div className="flex items-center gap-5">
         <ProgressRing value={target ? Math.min(1, total / target) : 0} size={88} color={progress.reached ? 'var(--color-success)' : color} />
         <div className="min-w-0 flex-1">
-          <p className="font-mono text-3xl font-semibold text-fg tabular">
+          <p className="font-mono text-3xl font-medium text-fg tabular">
             <RollingNumber value={total} locale={prefs.locale} />
             {target != null && <span className="text-xl text-fg-3"> / {formatNumber(target, prefs.locale)}</span>}
             {task.progress_unit && <span className="ml-2 font-sans text-base font-normal text-fg-2">{task.progress_unit}</span>}
@@ -52,7 +52,7 @@ export function CollabWidget({ task, parts, progress, prefs, today, actions, rea
           </p>
         </div>
         {!readOnly && (
-          <label className="flex flex-col gap-1 text-xs text-fg-3">
+          <label className="label-mono flex flex-col gap-1">
             {t('widgets.numeric.target')}
             <NumberInput value={target} min={0} label={t('widgets.numeric.target')} onCommit={(v) => void actions.update(task.id, { progress_target: v && v > 0 ? v : null } as Partial<TaskRow>)} className="w-24" />
           </label>
@@ -75,7 +75,7 @@ export function CollabWidget({ task, parts, progress, prefs, today, actions, rea
             onChange={(e) => setAmount(e.target.value)}
             placeholder={t('widgets.collab.amount')}
             aria-label={t('widgets.collab.amount')}
-            className="focus-ring h-9 w-28 rounded-md border border-line-strong bg-surface-2 px-2.5 font-mono text-sm text-fg placeholder:font-sans placeholder:text-fg-4"
+            className="focus-ring h-9 w-28 rounded-sm border border-line-strong bg-surface-2 px-2.5 font-mono text-sm text-fg placeholder:font-sans placeholder:text-fg-4"
           />
           <input
             value={note}
@@ -83,7 +83,7 @@ export function CollabWidget({ task, parts, progress, prefs, today, actions, rea
             onChange={(e) => setNote(e.target.value)}
             placeholder={t('widgets.collab.notePlaceholder')}
             aria-label={t('widgets.collab.note')}
-            className="focus-ring h-9 min-w-0 flex-1 rounded-md border border-line-strong bg-surface-2 px-2.5 text-sm text-fg placeholder:text-fg-4"
+            className="focus-ring h-9 min-w-0 flex-1 rounded-sm border border-line-strong bg-surface-2 px-2.5 text-sm text-fg placeholder:text-fg-4"
           />
           <Button size="sm" variant="primary" type="submit" icon={<Plus />} disabled={!(Number(amount) > 0)}>
             {t('widgets.collab.contribute')}
@@ -92,7 +92,7 @@ export function CollabWidget({ task, parts, progress, prefs, today, actions, rea
       )}
 
       <div className="mt-4 border-t border-line pt-3">
-        <p className="mb-2 text-xs font-semibold tracking-[0.08em] text-fg-3 uppercase">{t('widgets.collab.contributions')}</p>
+        <p className="label-mono mb-2">{t('widgets.collab.contributions')}</p>
         {contributions.length === 0 ? (
           <p className="text-sm text-fg-3">{t('widgets.collab.empty')}</p>
         ) : (
@@ -147,7 +147,7 @@ export function AbstainWidget({ task, parts, progress, prefs, today, actions, re
     <WidgetCard accent={color}>
       <div className="flex flex-wrap items-center gap-5">
         <ProgressRing value={goal ? Math.min(1, days / goal) : days > 0 ? 1 : 0} size={96} color={color}>
-          <span className="font-mono text-2xl font-semibold text-fg tabular">{days}</span>
+          <span className="font-mono text-2xl text-fg tabular">{days}</span>
         </ProgressRing>
         <div className="min-w-0 flex-1">
           <p className="text-lg font-medium text-fg">{t('widgets.abstain.days', { n: days })}</p>
@@ -160,7 +160,7 @@ export function AbstainWidget({ task, parts, progress, prefs, today, actions, re
         <div className="flex gap-6">
           <Stat label={t('widgets.abstain.record')} value={t('widgets.habit.days', { n: detail?.record ?? 0 })} />
           {!readOnly && (
-            <label className="flex flex-col gap-1 text-xs text-fg-3">
+            <label className="label-mono flex flex-col gap-1">
               {t('widgets.abstain.goal')}
               <NumberInput value={goal} min={0} max={100000} label={t('widgets.abstain.goal')} onCommit={(v) => void actions.update(task.id, { progress_target: v && v > 0 ? Math.round(v) : null } as Partial<TaskRow>)} className="w-20" />
             </label>
@@ -174,7 +174,7 @@ export function AbstainWidget({ task, parts, progress, prefs, today, actions, re
           <span
             key={d}
             title={formatShortDate(d, prefs.locale, today)}
-            className="h-6 flex-1 rounded-sm"
+            className="h-5 flex-1 rounded-xs"
             style={{
               background: d < startDay ? 'var(--color-surface-3)' : relapseDays.has(d) ? 'var(--color-danger)' : `color-mix(in oklab, ${color} 55%, transparent)`,
               opacity: d < startDay ? 0.4 : 1,
@@ -199,14 +199,14 @@ export function AbstainWidget({ task, parts, progress, prefs, today, actions, re
                 const start = new Date(`${e.target.value}T00:00:00`).toISOString();
                 void actions.update(task.id, { type_config: { ...(task.type_config as object), start } } as Partial<TaskRow>);
               }}
-              className="focus-ring h-9 rounded-md border border-line-strong bg-surface-2 px-2.5 font-mono text-sm text-fg [color-scheme:dark]"
+              className="focus-ring h-9 rounded-sm border border-line-strong bg-surface-2 px-2.5 font-mono text-sm text-fg [color-scheme:dark]"
             />
           </label>
         </div>
       )}
 
       <div className="mt-4 border-t border-line pt-3">
-        <p className="mb-2 text-xs font-semibold tracking-[0.08em] text-fg-3 uppercase">{t('widgets.abstain.relapses')}</p>
+        <p className="label-mono mb-2">{t('widgets.abstain.relapses')}</p>
         {relapses.length === 0 ? (
           <p className="text-sm text-fg-3">{t('widgets.abstain.noRelapses')}</p>
         ) : (

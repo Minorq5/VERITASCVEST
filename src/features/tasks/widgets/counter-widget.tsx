@@ -58,7 +58,7 @@ export function CounterWidget({ task, parts, progress, prefs, today, now, action
           <Minus aria-hidden className="size-5" />
         </button>
         <div className="min-w-0 text-center">
-          <p className={cn('font-mono text-5xl font-medium tabular', over ? 'text-danger' : 'text-fg')}>
+          <p className={cn('font-mono text-5xl tabular', over ? 'text-danger' : 'text-fg')}>
             <RollingNumber value={current} locale={prefs.locale} />
             {target != null && <span className="text-2xl text-fg-3"> / {formatNumber(target, prefs.locale)}</span>}
           </p>
@@ -131,7 +131,7 @@ export function CounterWidget({ task, parts, progress, prefs, today, now, action
           </label>
           <div className="flex items-center gap-2">
             <span>{t('widgets.counter.period')}</span>
-            <Select value={config.period} onValueChange={(v) => setConfig({ period: v as typeof config.period })} aria-label={t('widgets.counter.period')} className="h-9 w-44">
+            <Select value={config.period} onValueChange={(v) => setConfig({ period: v as typeof config.period })} aria-label={t('widgets.counter.period')} className="h-8 w-44">
               {(['day', 'week', 'month', 'none'] as const).map((p) => (
                 <SelectItem key={p} value={p}>
                   {t(`widgets.counter.periods.${p}`)}
@@ -144,15 +144,21 @@ export function CounterWidget({ task, parts, progress, prefs, today, now, action
 
       {history.length > 0 && (
         <div className="mt-4">
-          <p className="mb-2 text-xs text-fg-3">{t('widgets.counter.history')}</p>
+          <p className="label-mono mb-2">{t('widgets.counter.history')}</p>
           <ol className="flex items-end gap-1.5">
             {[...history].reverse().map((h) => (
               <li key={h.from} className="flex flex-1 flex-col items-center gap-1" title={`${formatShortDate(h.from, prefs.locale, today)}: ${formatNumber(h.total, prefs.locale)}`}>
+                {/* An empty period is a hairline, not a short bar: zero must not read as "some". */}
                 <span
                   className="w-full"
                   style={{
-                    height: `${Math.max(3, (h.total / historyMax) * 40)}px`,
-                    background: limit && target != null && h.total > target ? 'var(--color-danger)' : `color-mix(in oklab, ${AMBER} 70%, transparent)`,
+                    height: h.total > 0 ? `${Math.max(3, (h.total / historyMax) * 40)}px` : '1px',
+                    background:
+                      h.total <= 0
+                        ? 'var(--color-line-strong)'
+                        : limit && target != null && h.total > target
+                          ? 'var(--color-danger)'
+                          : `color-mix(in oklab, ${AMBER} 70%, transparent)`,
                   }}
                 />
                 <span className="font-mono text-[10px] text-fg-3 tabular">{formatNumber(h.total, prefs.locale)}</span>

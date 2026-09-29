@@ -63,7 +63,7 @@ export function HabitWidget({ task, parts, progress, prefs, today, actions, read
           {detail && <p className="text-sm text-fg-3">{t('widgets.habit.thisWeek', { done: detail.done, required: detail.required })}</p>}
         </div>
         {detail && (
-          <div className="flex gap-6">
+          <div className="flex gap-6 max-sm:w-full max-sm:border-t max-sm:border-line max-sm:pt-3">
             <Stat
               label={t('widgets.habit.streak')}
               value={
@@ -79,13 +79,14 @@ export function HabitWidget({ task, parts, progress, prefs, today, actions, read
       </div>
 
       {!readOnly && (
-        <div className="mt-4 flex flex-wrap gap-2">
-          <Button size="sm" variant="ghost" icon={<SkipForward />} disabled={todayStatus === 'skip'} onClick={() => mark(today, 'skip')}>
+        <div className="-mx-2 mt-3 flex flex-wrap items-center gap-1">
+          <Button size="sm" variant="ghost" className="px-2" icon={<SkipForward />} disabled={todayStatus === 'skip'} onClick={() => mark(today, 'skip')}>
             {t('widgets.habit.skip')}
           </Button>
           <Button
             size="sm"
             variant="ghost"
+            className="px-2"
             icon={<Snowflake style={{ color: ICE }} />}
             disabled={freezeUsed || todayStatus === 'freeze'}
             title={freezeUsed ? t('widgets.habit.freezeUsed') : t('widgets.habit.freezeHint')}
@@ -93,14 +94,14 @@ export function HabitWidget({ task, parts, progress, prefs, today, actions, read
           >
             {t('widgets.habit.freeze')}
           </Button>
-          <span className="self-center text-xs text-fg-3">{freezeUsed ? t('widgets.habit.freezeUsed') : t('widgets.habit.freezeHint')}</span>
+          <span className="basis-full px-2 text-xs text-fg-3">{freezeUsed ? t('widgets.habit.freezeUsed') : t('widgets.habit.freezeHint')}</span>
         </div>
       )}
 
       {!readOnly && (
         <div className="mt-4 flex flex-col gap-3 border-t border-line pt-4">
           <div className="flex flex-wrap items-center gap-3">
-            <span className="text-sm text-fg-3">{t('widgets.habit.schedule')}</span>
+            <span className="label-mono">{t('widgets.habit.schedule')}</span>
             <Segmented
               size="sm"
               label={t('widgets.habit.schedule')}
@@ -128,10 +129,9 @@ export function HabitWidget({ task, parts, progress, prefs, today, actions, read
                       if (days.length) setSchedule({ kind: 'days', days: days.sort() });
                     }}
                     className={cn(
-                      'focus-ring inline-flex h-9 min-w-10 items-center justify-center rounded-md border px-2 text-sm transition-colors first-letter:uppercase',
-                      on ? 'border-[color-mix(in_oklab,var(--c)_50%,transparent)] bg-[color-mix(in_oklab,var(--c)_14%,transparent)] text-fg' : 'border-line-strong text-fg-3 hover-ok:bg-surface-4',
+                      'focus-ring inline-flex h-8 min-w-10 items-center justify-center rounded-sm border px-2 font-mono text-xs tracking-[0.06em] uppercase transition-colors',
+                      on ? 'border-accent bg-surface-3 text-fg' : 'border-line-strong text-fg-3 hover-ok:bg-surface-2 hover-ok:text-fg-2',
                     )}
-                    style={{ ['--c' as string]: CORAL }}
                   >
                     {names[d]?.replace('.', '')}
                   </button>
@@ -148,7 +148,7 @@ export function HabitWidget({ task, parts, progress, prefs, today, actions, read
       )}
 
       <div className="mt-4 border-t border-line pt-4">
-        <p className="mb-2 text-xs font-semibold tracking-[0.08em] text-fg-3 uppercase">{t('widgets.habit.year')}</p>
+        <p className="label-mono mb-2">{t('widgets.habit.year')}</p>
         <div className="no-scrollbar overflow-x-auto" dir="rtl">
           <div className="inline-grid grid-flow-col grid-rows-7 gap-[3px]" dir="ltr">
             {Array.from({ length: 53 * 7 }, (_, i) => {
@@ -167,9 +167,9 @@ export function HabitWidget({ task, parts, progress, prefs, today, actions, read
                   title={label}
                   onClick={() => mark(date, status === 'done' ? null : 'done')}
                   className={cn('size-2.5 rounded-[1px] sm:size-3', date === today && 'ring-1 ring-fg-2')}
+                  // Days before the habit started stay as a faint grid, so the year still reads as a year.
                   style={{
-                    background: status ? cellColor[status] : before ? 'transparent' : scheduled ? 'var(--color-surface-4)' : 'var(--color-surface-3)',
-                    opacity: before ? 0.25 : 1,
+                    background: status ? cellColor[status] : before ? 'var(--color-surface-2)' : scheduled ? 'var(--color-surface-4)' : 'var(--color-surface-3)',
                   }}
                 />
               );

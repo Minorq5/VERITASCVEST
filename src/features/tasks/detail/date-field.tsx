@@ -11,7 +11,7 @@ import type { PlannerPrefs } from '../data/hooks';
 import { dueTone, formatTime, nextWeekStart, relativeDay, thisWeekend } from '../format';
 import { valueButton } from './property-row';
 
-const toneClass = { overdue: 'text-danger', today: 'text-accent', soon: 'text-warning', later: 'text-fg' } as const;
+const toneClass = { overdue: 'text-danger', today: 'text-fg', soon: 'text-warning', later: 'text-fg' } as const;
 
 /** A date with an optional time, picked from quick choices or the calendar. */
 export function DateField({
@@ -75,8 +75,8 @@ export function DateField({
               type="button"
               onClick={() => pick(value)}
               className={cn(
-                'focus-ring flex h-9 items-center gap-2 rounded-md border px-2.5 text-sm transition-colors [&_svg]:size-4',
-                date === value ? 'border-accent/50 bg-accent/12 text-fg' : 'border-line-strong text-fg-2 hover-ok:bg-surface-4 hover-ok:text-fg',
+                'focus-ring flex h-8 items-center gap-2 rounded-sm border px-2.5 text-sm transition-colors [&_svg]:size-4 [&_svg]:text-fg-3',
+                date === value ? 'border-accent bg-surface-3 text-fg' : 'border-line-strong text-fg-2 hover-ok:bg-surface-3 hover-ok:text-fg',
               )}
             >
               {ic}
@@ -105,7 +105,7 @@ export function DateField({
             onBlur={() => {
               if (date && draftTime !== (time?.slice(0, 5) ?? '')) onChange(date, draftTime ? `${draftTime}:00` : null);
             }}
-            className="focus-ring h-9 flex-1 rounded-md border border-line-strong bg-surface-2 px-2.5 font-mono text-sm text-fg [color-scheme:dark]"
+            className="focus-ring h-8 flex-1 rounded-sm border border-line-strong bg-surface-1 px-2.5 font-mono text-sm text-fg [color-scheme:dark]"
           />
           {draftTime && (
             <button
@@ -115,7 +115,7 @@ export function DateField({
                 setDraftTime('');
                 if (date) onChange(date, null);
               }}
-              className="focus-ring inline-flex size-9 items-center justify-center rounded-md text-fg-3 hover-ok:bg-surface-4 hover-ok:text-fg"
+              className="focus-ring inline-flex size-8 items-center justify-center rounded-sm text-fg-3 hover-ok:bg-surface-3 hover-ok:text-fg"
             >
               <X aria-hidden className="size-4" />
             </button>
@@ -125,7 +125,7 @@ export function DateField({
           <button
             type="button"
             onClick={() => pick(null)}
-            className="focus-ring mt-2 flex h-9 w-full items-center justify-center gap-2 rounded-md text-sm text-fg-2 hover-ok:bg-surface-4 hover-ok:text-fg"
+            className="focus-ring mt-2 flex h-8 w-full items-center gap-2 rounded-sm px-2.5 text-sm text-fg-2 hover-ok:bg-surface-3 hover-ok:text-fg"
           >
             <CalendarX2 aria-hidden className="size-4" />
             {t('dates.clear')}

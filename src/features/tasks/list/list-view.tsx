@@ -173,9 +173,10 @@ export function TaskListView({ scope, title }: { scope: Scope; title: string }) 
     if (section === 'today') return formatLongDate(today, prefs.locale, today);
     if (section === 'tomorrow') return formatLongDate(addDays(today, 1), prefs.locale, today);
     if (section === 'week') return `${formatShortDate(today, prefs.locale, today)} — ${formatShortDate(addDays(today, 6), prefs.locale, today)}`;
-    if (section === 'trash') return t('trash.hint');
     return null;
   })();
+  // A sentence, not a label: it goes under the title in plain text.
+  const hint = section === 'trash' ? t('trash.hint') : null;
 
   const note = (row: RowModel) => {
     if (section === 'trash' && row.task.deleted_at) {
@@ -202,6 +203,7 @@ export function TaskListView({ scope, title }: { scope: Scope; title: string }) 
         <div className="min-w-0">
           {subtitle && <p className="label-mono mb-2">{subtitle}</p>}
           <h1 className="font-display text-3xl font-medium text-fg">{title}</h1>
+          {hint && <p className="mt-1.5 text-sm text-fg-3">{hint}</p>}
         </div>
         <div className="flex items-center gap-1">
           {showQuickAdd && <TemplatesButton scope={scope} />}

@@ -58,8 +58,8 @@ function Toolbar({ editor }: { editor: Editor }) {
           onMouseDown={(e) => e.preventDefault()}
           onClick={run}
           className={cn(
-            'focus-ring inline-flex size-8 items-center justify-center rounded-sm transition-colors',
-            on ? 'bg-accent/15 text-accent' : 'text-fg-3 hover-ok:bg-surface-4 hover-ok:text-fg',
+            'focus-ring inline-flex size-7 items-center justify-center rounded-xs transition-colors',
+            on ? 'bg-surface-4 text-fg' : 'text-fg-3 hover-ok:bg-surface-3 hover-ok:text-fg',
           )}
         >
           <Icon aria-hidden className="size-4" />
@@ -123,7 +123,7 @@ export default function DescriptionEditor({ value, placeholder, label, onSave }:
   );
 
   return (
-    <div className="overflow-hidden rounded-lg border border-line-strong bg-surface-2/60 transition-[border-color,box-shadow] focus-within:border-[color-mix(in_oklab,var(--accent)_55%,transparent)]">
+    <div className="overflow-hidden rounded-md border border-line-strong bg-surface-1 transition-[border-color] focus-within:border-blue">
       {editor && <Toolbar editor={editor} />}
       <EditorContent editor={editor} />
     </div>
