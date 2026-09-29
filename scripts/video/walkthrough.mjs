@@ -144,7 +144,14 @@ const context = await browser.newContext({
 });
 await context.addInitScript(overlayInit);
 // The intro plays for automated browsers only when asked to.
-await context.addInitScript(() => localStorage.setItem('vt:intro-force', '1'));
+await context.addInitScript(() => {
+  // about:blank has no storage; the site's pages do.
+  try {
+    localStorage.setItem('vt:intro-force', '1');
+  } catch {
+    /* not a site page */
+  }
+});
 const soundtrack = dry ? null : new Soundtrack(context);
 await soundtrack?.attach();
 const page = await context.newPage();
@@ -411,6 +418,10 @@ try {
   await d.hold(2000);
   await d.caption('');
   await d.hold(1200);
+} catch (error) {
+  // Where the scenario broke, for the one fixing it.
+  await page.screenshot({ path: out.replace(/\.mp4$/, '') + '-failure.png' }).catch(() => {});
+  throw error;
 } finally {
   await rec?.stop();
   console.log(`${device}: ${((Date.now() - started) / 1000).toFixed(0)} s of film${rec ? `, ${rec.seconds.toFixed(1)} s written to ${out}` : ''}`);

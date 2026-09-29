@@ -54,3 +54,6 @@ next-env.d.ts
 
 # Sound renders for listening (scripts/sound/render-sounds.mjs): only the compilation is kept
 docs/review/v2/sounds/*.wav
+
+# Soundtrack mixes of the walkthrough videos (the .mp4 carries the sound)
+docs/review/v2/video/*.wav

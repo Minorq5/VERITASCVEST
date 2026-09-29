@@ -229,7 +229,9 @@ function IntroPlayer({ variant }: { variant: IntroVariant }) {
     const portrait = window.innerHeight > window.innerWidth;
     const big = Math.max(window.innerWidth, window.innerHeight) * (window.devicePixelRatio || 1) > 1500;
     const video = document.createElement('video');
-    video.src = `/cinema/intro-${portrait ? 'portrait' : 'landscape'}-${big ? 1080 : 720}.mp4`;
+    const film = `/cinema/intro-${portrait ? 'portrait' : 'landscape'}-${big ? 1080 : 720}`;
+    // VP9 plays in every browser build (open Chromium builds have no H.264); the rest get H.264.
+    video.src = video.canPlayType('video/webm; codecs="vp9"') ? `${film}.webm` : `${film}.mp4`;
     video.muted = true;
     video.playsInline = true;
     video.preload = 'auto';
@@ -267,8 +269,9 @@ function IntroPlayer({ variant }: { variant: IntroVariant }) {
     video.addEventListener('playing', startFilm, { once: true });
     video.addEventListener('error', fail, { once: true });
     void video.play().catch(fail);
-    // No film in time (offline, blocked): the mark alone, as with less motion.
-    timers.push(window.setTimeout(fail, 2500));
+    // No film in time (offline, blocked, a very slow line): the mark alone,
+    // as with less motion. Its first second is darkness anyway.
+    timers.push(window.setTimeout(fail, 5000));
     return () => {
       clearTimers();
       cancelAnimationFrame(raf);
