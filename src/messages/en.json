@@ -1,0 +1,267 @@
+{
+  "meta": {
+    "title": "Veritas Tasks — tasks that glow",
+    "titleTemplate": "{title} · Veritas Tasks",
+    "description": "A planner where tasks become stars, projects become planets and shared goals with friends become constellations. Works offline, on phone and desktop."
+  },
+  "common": {
+    "appName": "Veritas Tasks",
+    "save": "Save",
+    "cancel": "Cancel",
+    "close": "Close",
+    "delete": "Delete",
+    "undo": "Undo",
+    "retry": "Try again",
+    "back": "Back",
+    "next": "Next",
+    "done": "Done",
+    "copy": "Copy",
+    "copied": "Copied",
+    "search": "Search",
+    "loading": "Loading…",
+    "more": "More",
+    "create": "Create",
+    "edit": "Edit",
+    "open": "Open",
+    "clear": "Clear",
+    "optional": "optional",
+    "on": "On",
+    "off": "Off"
+  },
+  "locale": {
+    "label": "Language",
+    "switchTo": "Switch language to {language}"
+  },
+  "a11y": {
+    "skipToContent": "Skip to content",
+    "closeDialog": "Close dialog",
+    "dismissNotification": "Dismiss notification",
+    "notifications": "Notifications",
+    "showPassword": "Show password",
+    "hidePassword": "Hide password",
+    "progress": "Progress: {value}%",
+    "loading": "Loading",
+    "logo": "Veritas Tasks — home",
+    "dragHandle": "Drag down to close"
+  },
+  "home": {
+    "eyebrow": "A planner from the next orbit",
+    "title": "Every task is a star.",
+    "lead": "Tasks, habits and projects turn into constellations. Share goals with friends, earn experience and watch your galaxy grow.",
+    "start": "Get started",
+    "signIn": "Sign in",
+    "pillars": {
+      "offline": "Works without internet",
+      "languages": "Русский · English · Български",
+      "devices": "Phone and desktop"
+    },
+    "titleAccent": "Build your sky."
+  },
+  "errors": {
+    "notFoundCode": "404",
+    "notFoundTitle": "You drifted beyond the galaxy",
+    "notFoundText": "This page is not on our star map. The link may be outdated or the address may contain a typo.",
+    "backHome": "Return to orbit",
+    "errorTitle": "Something went wrong",
+    "errorText": "We have logged the error. Please try again — that usually helps.",
+    "errorDigest": "Error code: {digest}",
+    "retry": "Try again"
+  },
+  "toast": {
+    "undoIn": "You can undo for {seconds} more s",
+    "undone": "Action undone"
+  },
+  "accent": {
+    "label": "Accent colour",
+    "cyan": "Cyan",
+    "ice": "Ice",
+    "aurora": "Aurora",
+    "nebula": "Nebula",
+    "plasma": "Plasma",
+    "solar": "Solar wind"
+  },
+  "quality": {
+    "label": "Graphics quality",
+    "auto": "Auto",
+    "ultra": "Ultra",
+    "high": "High",
+    "low": "Low",
+    "off": "Off"
+  },
+  "password": {
+    "strength": {
+      "label": "Password strength",
+      "empty": "Enter a password",
+      "weak": "Weak",
+      "fair": "Fair",
+      "good": "Good",
+      "strong": "Strong"
+    }
+  },
+  "design": {
+    "title": "“Orbit” design system",
+    "lead": "Every token, component and state of Veritas Tasks on a single page. Visible in development mode only.",
+    "nav": "Sections",
+    "sections": {
+      "brand": "Logo",
+      "color": "Colour",
+      "type": "Typography",
+      "fonts": "Font comparison",
+      "spacing": "Grid and spacing",
+      "radius": "Corner radii",
+      "depth": "Depth, glass and glow",
+      "motion": "Motion",
+      "icons": "Icons",
+      "buttons": "Buttons",
+      "inputs": "Inputs",
+      "choice": "Choice and toggles",
+      "overlays": "Menus and popovers",
+      "dialogs": "Dialogs and sheets",
+      "toasts": "Notifications",
+      "identity": "Avatars, badges, chips",
+      "progress": "Progress",
+      "loading": "Loading",
+      "empty": "Empty states",
+      "effects": "Effects"
+    },
+    "tokens": {
+      "surfaces": "Surfaces",
+      "text": "Text",
+      "accents": "Accents",
+      "semantic": "Semantic colours",
+      "priorities": "Priorities",
+      "swatches": "Project colours",
+      "contrast": "Contrast {ratio}:1"
+    },
+    "typeSamples": {
+      "display": "A supernova in your plans",
+      "h1": "In orbit today",
+      "h2": "Project “Moving house”",
+      "body": "Tasks, habits and projects turn into constellations. Every action responds instantly — even without internet.",
+      "small": "Due tomorrow at 18:00 · 3 subtasks",
+      "mono": "25:00",
+      "bulgarian": "Всяка задача е звезда. Подреди своето небе и ѝ дай светлина.",
+      "pangram": "Sphinx of black quartz, judge my vow.",
+      "word": "Orbit"
+    },
+    "fontCompare": {
+      "chosen": "Approved",
+      "alternative": "Alternative",
+      "headingPair": "Headings",
+      "textPair": "Text",
+      "monoPair": "Numbers"
+    },
+    "motionSamples": {
+      "instant": "Instant · 100 ms",
+      "fast": "Fast · 200 ms",
+      "base": "Base · 300 ms",
+      "slow": "Slow · 500 ms",
+      "cinematic": "Cinematic · 1–3 s",
+      "replay": "Replay"
+    },
+    "buttons": {
+      "primary": "Create task",
+      "secondary": "Snooze",
+      "ghost": "Details",
+      "danger": "Delete",
+      "loading": "Saving",
+      "disabled": "Unavailable",
+      "magnetic": "Magnetic button"
+    },
+    "inputs": {
+      "title": "Title",
+      "titlePlaceholder": "For example: read 30 pages",
+      "hint": "You can add a date and a tag right in the title",
+      "email": "Email",
+      "emailError": "Looks like there is a typo in the address",
+      "username": "Username",
+      "usernameOk": "Available",
+      "password": "Password",
+      "description": "Description",
+      "descriptionPlaceholder": "What should not be forgotten?",
+      "disabled": "Field unavailable",
+      "search": "Search tasks, projects, people"
+    },
+    "choice": {
+      "checkbox": "Remind me an hour before",
+      "checkboxDisabled": "Unavailable option",
+      "star": "Complete task",
+      "radioLabel": "Repeat",
+      "radioDaily": "Every day",
+      "radioWeekdays": "On weekdays",
+      "radioCustom": "Custom rule",
+      "switchSound": "Interface sounds",
+      "switchAmbient": "Space ambience",
+      "slider": "Progress",
+      "segmentedLabel": "View",
+      "list": "List",
+      "board": "Board",
+      "calendar": "Calendar",
+      "galaxy": "Galaxy"
+    },
+    "overlays": {
+      "menu": "Actions",
+      "menuEdit": "Edit",
+      "menuDuplicate": "Duplicate",
+      "menuMove": "Move to project",
+      "menuPriority": "Priority",
+      "menuDelete": "Delete",
+      "tooltip": "Tooltip with a shortcut",
+      "popover": "Popover",
+      "popoverText": "Panels appear where you clicked and leave the same way.",
+      "select": "Priority",
+      "critical": "Critical",
+      "high": "High",
+      "medium": "Medium",
+      "low": "Low"
+    },
+    "dialogs": {
+      "open": "Open dialog",
+      "title": "Delete project “Moving house”?",
+      "text": "The project’s tasks will go to the trash. You can restore them within 30 days.",
+      "confirm": "Delete project",
+      "sheet": "Open sheet",
+      "sheetTitle": "Quick actions",
+      "sheetText": "On phones, dialogs become bottom sheets you can swipe away."
+    },
+    "toasts": {
+      "info": "Show notification",
+      "success": "Task completed",
+      "successDetail": "+15 XP · 7-day streak",
+      "undo": "Delete with undo",
+      "undoText": "Task moved to trash",
+      "error": "Show error",
+      "errorText": "Could not save. We will check the connection and retry.",
+      "warning": "Show warning",
+      "warningText": "Deadline in 30 minutes"
+    },
+    "identity": {
+      "online": "online",
+      "badges": "Badges",
+      "chips": "Chips",
+      "chipSport": "sport",
+      "chipHome": "home",
+      "chipWork": "work",
+      "kbd": "Keys"
+    },
+    "progress": {
+      "ring": "Progress ring",
+      "bar": "Progress bar",
+      "tasks": "{count, plural, one {# task} other {# tasks}}"
+    },
+    "empty": {
+      "title": "Nothing here yet",
+      "text": "The astronaut is waiting for your first task. Press N and a new star will light up.",
+      "action": "Create task"
+    },
+    "effects": {
+      "cursor": "Custom cursor",
+      "cursorHint": "Desktop only. Can be turned off in settings.",
+      "spotlight": "Spotlight under the cursor",
+      "spotlightText": "A soft light follows the pointer and shows where you are.",
+      "grain": "Film grain over the background",
+      "reduced": "Reduced motion",
+      "reducedHint": "Animations become gentle cross-fades."
+    }
+  }
+}

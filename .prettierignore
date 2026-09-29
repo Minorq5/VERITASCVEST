@@ -1,0 +1,10 @@
+node_modules
+.next
+out
+coverage
+review
+demo
+public
+package-lock.json
+supabase/.temp
+*.md
