@@ -77,9 +77,9 @@ select throws_ok(
 
 -- bob's rows are invisible, so updates silently touch nothing
 update public.profiles set display_name = 'pwned' where id = (select id from ids where name = 'bob');
-update public.user_settings set accent = 'plasma' where user_id = (select id from ids where name = 'bob');
+update public.user_settings set accent = 'white' where user_id = (select id from ids where name = 'bob');
 
-select lives_ok($$ update public.user_settings set accent = 'nebula', week_start = 1 $$, 'alice changes her settings');
+select lives_ok($$ update public.user_settings set accent = 'blue', week_start = 1 $$, 'alice changes her settings');
 select throws_ok($$ update public.user_settings set accent = 'neon' $$, '23514', null, 'unknown accent is rejected');
 select throws_ok($$ update public.user_settings set timezone = 'Mars/Olympus' $$, '22023', 'invalid_timezone',
   'unknown time zone is rejected');

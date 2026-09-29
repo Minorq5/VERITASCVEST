@@ -128,15 +128,15 @@ test('settings: language and accent follow the account', async ({ page }) => {
   await expect(page.getByRole('heading', { level: 2, name: /Language/ })).toBeVisible();
 
   await page.goto('/en/settings/appearance');
-  await page.getByRole('radio', { name: 'Nebula' }).click();
-  await expect(page.locator('html')).toHaveAttribute('data-accent', 'nebula');
+  await page.getByRole('radio', { name: 'Blue' }).click();
+  await expect(page.locator('html')).toHaveAttribute('data-accent', 'blue');
 
   // A fresh device: preferences arrive from the account.
   await page.context().clearCookies();
   await page.evaluate(() => localStorage.clear());
   await signIn(page, account.email, account.password);
   await expect(page).toHaveURL(/\/en\/profile$/);
-  await expect(page.locator('html')).toHaveAttribute('data-accent', 'nebula');
+  await expect(page.locator('html')).toHaveAttribute('data-accent', 'blue');
 });
 
 test('sign out on this device', async ({ page }) => {
