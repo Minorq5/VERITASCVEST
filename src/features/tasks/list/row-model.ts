@@ -15,6 +15,8 @@ export interface RowContext {
   now: Date;
   timeZone: string;
   weekStart: number;
+  /** On a project's page its own name is left out of the rows. */
+  hideProjectId?: string;
 }
 
 export interface RowModel {
@@ -88,7 +90,7 @@ export function buildRow(task: TaskRow, rc: RowContext): RowModel {
     task,
     type,
     priorityKey: priority && !priority.deleted_at ? (priority.system_key ?? null) : null,
-    project: project && !project.deleted_at ? project : null,
+    project: project && !project.deleted_at && project.id !== rc.hideProjectId ? project : null,
     tags,
     progress,
     overdue: isOverdue(task, { today: rc.today, now: rc.now }),

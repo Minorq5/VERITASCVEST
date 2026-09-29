@@ -47,13 +47,14 @@ export interface ServerTask {
   deleted_at: string | null;
   due_date: string | null;
   parent_id: string | null;
+  project_id: string | null;
   priority: { system_key: string | null } | null;
 }
 
 /** The account's tasks as the server has them. */
 export const serverTasks = (userId: string) =>
   adminRows<ServerTask>(
-    `tasks?owner_id=eq.${userId}&select=id,title,completed_at,deleted_at,due_date,parent_id,priority:priorities(system_key)&order=created_at`,
+    `tasks?owner_id=eq.${userId}&select=id,title,completed_at,deleted_at,due_date,parent_id,project_id,priority:priorities(system_key)&order=created_at`,
   );
 
 /** A second device: a phone with its own storage, signed in to the same account. */

@@ -66,6 +66,17 @@ export function useTasks(): TaskRow[] | undefined {
   return useLiveQuery(async () => (await db.tasks.toArray()) as unknown as TaskRow[], [db]);
 }
 
+/** Tasks the sections show: everything except tasks of archived projects. */
+export function useVisibleTasks(): TaskRow[] | undefined {
+  const tasks = useTasks();
+  const catalog = useCatalog();
+  return useMemo(() => {
+    if (!tasks || !catalog) return undefined;
+    const hidden = catalog.hiddenProjectIds;
+    return hidden.size ? tasks.filter((t) => !t.project_id || !hidden.has(t.project_id)) : tasks;
+  }, [tasks, catalog]);
+}
+
 export function useTask(id: string | null | undefined): TaskRow | null | undefined {
   const { db } = useSync();
   return useLiveQuery(async () => (id ? (((await db.tasks.get(id)) as TaskRow | undefined) ?? null) : null), [db, id]);
@@ -87,6 +98,32 @@ export interface Catalog {
   tagById: Map<string, TagRow>;
   /** 1 (critical) … 4 (low); tasks without a priority sort after them. */
   rankOf: (priorityId: string | null) => number;
+  /** Archived projects (alive), newest first. */
+  archivedProjects: ProjectRow[];
+  /** Every project that is not deleted, archived ones and what is inside them included. */
+  allProjects: ProjectRow[];
+  /** Archived projects and everything inside them: their tasks stay out of the sections. */
+  hiddenProjectIds: ReadonlySet<string>;
+}
+
+/** Archived projects and all their subprojects. */
+export function hiddenProjects(projects: readonly ProjectRow[]): Set<string> {
+  const hidden = new Set<string>();
+  const byParent = new Map<string, ProjectRow[]>();
+  for (const p of projects) {
+    if (!p.parent_id) continue;
+    const list = byParent.get(p.parent_id) ?? [];
+    list.push(p);
+    byParent.set(p.parent_id, list);
+  }
+  const stack = projects.filter((p) => p.archived_at && !p.deleted_at).map((p) => p.id);
+  while (stack.length) {
+    const id = stack.pop()!;
+    if (hidden.has(id)) continue;
+    hidden.add(id);
+    for (const child of byParent.get(id) ?? []) stack.push(child.id);
+  }
+  return hidden;
 }
 
 const byId = <T extends { id: string }>(rows: readonly T[]) => new Map(rows.map((r) => [r.id, r]));
@@ -115,12 +152,15 @@ export function useCatalog(): Catalog | undefined {
     if (!data) return undefined;
     const priorities = alive(data.priorities).sort((a, b) => a.rank - b.rank);
     const priorityById = byId(data.priorities);
+    const allProjects = alive(data.projects).sort((a, b) =>
+      a.sort_key < b.sort_key ? -1 : a.sort_key > b.sort_key ? 1 : a.name.localeCompare(b.name),
+    );
+    // A subproject of an archived project goes to the archive with it.
+    const hidden = hiddenProjects(allProjects);
     return {
       statuses: alive(data.statuses).sort((a, b) => (a.sort_key < b.sort_key ? -1 : 1)),
       priorities,
-      projects: alive(data.projects)
-        .filter((p) => !p.archived_at)
-        .sort((a, b) => (a.sort_key < b.sort_key ? -1 : a.sort_key > b.sort_key ? 1 : a.name.localeCompare(b.name))),
+      projects: allProjects.filter((p) => !hidden.has(p.id)),
       tags: alive(data.tags).sort((a, b) => a.name.localeCompare(b.name)),
       templates: alive(data.templates).sort((a, b) => a.name.localeCompare(b.name)),
       statusById: byId(data.statuses),
@@ -129,6 +169,9 @@ export function useCatalog(): Catalog | undefined {
       projectById: byId(data.projects),
       tagById: byId(data.tags),
       rankOf: (id) => (id ? (priorityById.get(id)?.rank ?? 5) : 5),
+      archivedProjects: allProjects.filter((p) => p.archived_at).sort((a, b) => (a.archived_at! < b.archived_at! ? 1 : -1)),
+      allProjects,
+      hiddenProjectIds: hidden,
     };
   }, [data]);
 }

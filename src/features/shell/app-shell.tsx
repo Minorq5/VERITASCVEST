@@ -4,12 +4,16 @@ import { motion } from 'motion/react';
 import { Plus } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useSearchParams } from 'next/navigation';
-import { Suspense, type ReactNode } from 'react';
+import { Suspense, useMemo, useState, type ReactNode } from 'react';
 import { LogoLockup } from '@/components/brand/logo';
 import { SpaceBackdrop } from '@/components/effects/space-backdrop';
 import { Avatar } from '@/components/ui/avatar';
+import { IconButton } from '@/components/ui/icon-button';
 import { Kbd } from '@/components/ui/kbd';
 import { useProfile } from '@/features/account/queries';
+import { Planet } from '@/features/cinema/planet/planet';
+import { ProjectDialog } from '@/features/projects/project-dialog';
+import { projectForest, type ProjectNode } from '@/features/projects/stats';
 import { SyncBadge, SyncIndicator } from '@/features/sync/sync-indicator';
 import { useCatalog, useTasks } from '@/features/tasks/data/hooks';
 import { useTrashSweep } from '@/features/tasks/data/use-trash-sweep';
@@ -18,7 +22,7 @@ import { QuickAddDialog } from '@/features/tasks/quick-add/quick-add-dialog';
 import { useQuickAdd } from '@/features/tasks/quick-add/store';
 import { Link, usePathname } from '@/i18n/navigation';
 import { APP_HOME } from '@/lib/config/routes';
-import { swatchVar } from '@/lib/color/swatches';
+import type { ProjectRow } from '@/lib/db/types';
 import type { Section } from '@/lib/domain/sections';
 import { spring } from '@/lib/motion/tokens';
 import { avatarUrl } from '@/lib/supabase/client';
@@ -81,11 +85,56 @@ function SidebarLink({
   );
 }
 
+/** Projects as a tree under their heading; "+" creates one, the heading opens the overview. */
+function SidebarProjects({ counts }: { counts: Map<string, number> }) {
+  const t = useTranslations();
+  const pathname = usePathname();
+  const catalog = useCatalog();
+  const [creating, setCreating] = useState(false);
+  const forest = useMemo(() => (catalog ? projectForest(catalog.projects) : []), [catalog]);
+
+  const render = (nodes: ProjectNode<ProjectRow>[]): ReactNode =>
+    nodes.map(({ project, children, depth }) => {
+      const href = `/projects/${project.id}`;
+      return (
+        <li key={project.id}>
+          <div style={{ paddingLeft: Math.min(depth, 3) * 14 }}>
+            <SidebarLink
+              href={href}
+              active={isActive(pathname, href)}
+              icon={<Planet seed={project.planet_seed} color={project.color} size={16} />}
+              trailing={<NavCount value={counts.get(project.id) ?? 0} kind="muted" />}
+            >
+              {project.name}
+            </SidebarLink>
+          </div>
+          {children.length > 0 && <ul className="flex flex-col gap-0.5">{render(children)}</ul>}
+        </li>
+      );
+    });
+
+  return (
+    <div className="mt-6">
+      <div className="flex h-7 items-center justify-between pr-1 pl-3">
+        <Link
+          href="/projects"
+          aria-current={pathname === '/projects' ? 'page' : undefined}
+          className={cn('label-mono focus-ring rounded-xs transition-colors hover-ok:text-fg', pathname === '/projects' && 'text-fg')}
+        >
+          {t('nav.projects')}
+        </Link>
+        <IconButton size="sm" label={t('projects.new')} icon={<Plus />} onClick={() => setCreating(true)} />
+      </div>
+      <ul className="mt-1 flex flex-col gap-0.5">{render(forest)}</ul>
+      {creating && <ProjectDialog onClose={() => setCreating(false)} />}
+    </div>
+  );
+}
+
 function Sidebar() {
   const t = useTranslations();
   const pathname = usePathname();
   const counts = useSectionCounts();
-  const catalog = useCatalog();
   const tasks = useTasks();
   const openQuickAdd = useQuickAdd((s) => s.setOpen);
 
@@ -139,34 +188,7 @@ function Sidebar() {
           })}
         </ul>
 
-        {catalog && catalog.projects.length > 0 && (
-          <div className="mt-6">
-            <h2 className="label-mono px-3 pb-2">{t('nav.projects')}</h2>
-            <ul className="flex flex-col gap-0.5">
-              {catalog.projects.map((project) => {
-                const href = `/projects/${project.id}`;
-                return (
-                  <li key={project.id}>
-                    <SidebarLink
-                      href={href}
-                      active={isActive(pathname, href)}
-                      icon={
-                        <span
-                          aria-hidden
-                          className="mx-[5px] size-1.5 shrink-0 rounded-full"
-                          style={{ background: swatchVar(project.color) }}
-                        />
-                      }
-                      trailing={<NavCount value={projectCounts.get(project.id) ?? 0} kind="muted" />}
-                    >
-                      {project.name}
-                    </SidebarLink>
-                  </li>
-                );
-              })}
-            </ul>
-          </div>
-        )}
+        <SidebarProjects counts={projectCounts} />
       </nav>
       <div className="border-t border-line px-3 pt-3">
         <SyncIndicator />

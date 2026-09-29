@@ -124,6 +124,11 @@ for (const kind of only) {
     await settle(page);
     await shot(page, dir, name);
   }
+  if (!screens || screens.has('projects')) {
+    await page.goto(`${BASE}/ru/projects`);
+    await settle(page);
+    await shot(page, dir, 'projects');
+  }
   if (!screens || screens.has('project')) {
     await page.goto(`${BASE}/ru/today`);
     await settle(page, 1500);
@@ -137,13 +142,31 @@ for (const kind of only) {
     await settle(page);
     await shot(page, dir, 'project');
   }
+  if (!screens || screens.has('project-dialog')) {
+    await page.goto(`${BASE}/ru/projects`);
+    await settle(page, 1500);
+    await page.getByRole('button', { name: 'Новый проект' }).first().click();
+    await settle(page, 800);
+    await page.getByLabel('Название').fill('Телескоп на даче');
+    await settle(page, 1000);
+    await shot(page, dir, 'project-dialog');
+    await page.keyboard.press('Escape');
+  }
+  if (kind === 'phone' && (!screens || screens.has('more'))) {
+    await page.goto(`${BASE}/ru/today`);
+    await settle(page, 1500);
+    await page.getByRole('button', { name: 'Ещё', exact: true }).click();
+    await settle(page, 1200);
+    await shot(page, dir, 'more');
+    await page.keyboard.press('Escape');
+  }
   for (const [name, title, list] of [
     ['task-normal', 'Отправить отчёт по кварталу', 'inbox'],
     ['task-numeric', 'Прочитать «Интерстеллар: наука за кадром»', 'inbox'],
     ['task-percent', 'Написать главу диплома', 'inbox'],
     ['task-habit', 'Медитация', 'inbox'],
     ['task-counter', 'Вода', 'inbox'],
-    ['task-time', 'Пробежка в парке', 'inbox'],
+    ['task-time', 'Пробежка в парке', 'today'],
     ['task-stages', 'Запуск лендинга', 'week'],
   ]) {
     if (screens && !screens.has(name)) continue;

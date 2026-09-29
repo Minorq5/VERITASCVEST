@@ -1444,5 +1444,60 @@
     "skip": "Skip",
     "soundOn": "Sound on",
     "soundOff": "Sound off"
+  },
+  "projects": {
+    "title": "Projects",
+    "count": "{count, plural, one {# project} other {# projects}}",
+    "new": "New project",
+    "all": "All projects",
+    "empty": {
+      "title": "No projects yet",
+      "text": "A project gathers the tasks of one goal: a renovation, a course, a site launch. Create the first one — it gets its own planet."
+    },
+    "archive": "Archive",
+    "archivedCount": "{count, plural, one {# archived project} other {# archived projects}}",
+    "open": "{count, plural, one {# task} other {# tasks}}",
+    "overdue": "{count, plural, one {# overdue} other {# overdue}}",
+    "progress": "{done} of {total} done",
+    "noTasks": "No tasks yet",
+    "subprojects": "Subprojects",
+    "partOf": "Part of «{name}»",
+    "planet": "Planet of the project «{name}»",
+    "archivedBanner": "This project is archived: its tasks are not shown in the sections.",
+    "form": {
+      "createTitle": "New project",
+      "createSubTitle": "New subproject",
+      "editTitle": "Project settings",
+      "name": "Name",
+      "namePlaceholder": "For example, Kitchen renovation",
+      "nameRequired": "Give the project a name",
+      "description": "Description",
+      "descriptionPlaceholder": "Why this project exists and what matters in it",
+      "color": "Planet colour",
+      "parent": "Inside project",
+      "noParent": "A project of its own",
+      "create": "Create project",
+      "save": "Save"
+    },
+    "actions": {
+      "more": "Project actions",
+      "settings": "Project settings",
+      "addSub": "Add subproject",
+      "archive": "Archive",
+      "unarchive": "Restore from archive",
+      "delete": "Delete project"
+    },
+    "toast": {
+      "created": "Project created",
+      "saved": "Project saved",
+      "archived": "Project archived",
+      "unarchived": "Project is active again",
+      "deleted": "Project deleted, its tasks are in the inbox"
+    },
+    "confirmDelete": {
+      "title": "Delete the project «{name}»?",
+      "text": "{count, plural, =0 {It has no tasks.} one {# task will move to the inbox.} other {# tasks will move to the inbox.}} Its subprojects are deleted with it.",
+      "confirm": "Delete project"
+    }
   }
 }

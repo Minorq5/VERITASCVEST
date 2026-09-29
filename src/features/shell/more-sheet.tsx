@@ -1,13 +1,14 @@
 'use client';
 
-import { Ellipsis, LogOut, Settings2 } from 'lucide-react';
+import { Ellipsis, LogOut, Orbit, Settings2 } from 'lucide-react';
 import { useTranslations } from 'next-intl';
-import { useState } from 'react';
+import { useState, type ReactNode } from 'react';
 import { AstronautIcon } from '@/components/brand/icons';
 import { Sheet } from '@/components/ui/sheet';
+import { Planet } from '@/features/cinema/planet/planet';
+import { projectForest } from '@/features/projects/stats';
 import { useCatalog } from '@/features/tasks/data/hooks';
 import { Link, usePathname } from '@/i18n/navigation';
-import { swatchVar } from '@/lib/color/swatches';
 import type { Section } from '@/lib/domain/sections';
 import { cn } from '@/lib/utils/cn';
 import { isActive, phoneTabs, phoneTabsAfter, sectionItems } from './nav';
@@ -26,7 +27,7 @@ export function MoreSheet({ counts }: { counts: Record<Section, number> | null }
   const rest = sectionItems.filter((i) => !phoneTabs.includes(i.section) && !phoneTabsAfter.includes(i.section));
   const inside =
     rest.some((i) => isActive(pathname, i.href)) ||
-    pathname.startsWith('/projects/') ||
+    pathname.startsWith('/projects') ||
     pathname.startsWith('/settings') ||
     pathname.startsWith('/profile');
   const close = () => setOpen(false);
@@ -79,26 +80,29 @@ export function MoreSheet({ counts }: { counts: Record<Section, number> | null }
             );
           })}
 
-          {catalog && catalog.projects.length > 0 && (
-            <>
-              <h2 className="label-mono mt-4 px-3 pb-1">{t('nav.projects')}</h2>
-              {catalog.projects.map((project) => {
-                const href = `/projects/${project.id}`;
-                return (
-                  <Link
-                    key={project.id}
-                    href={href}
-                    onClick={close}
-                    aria-current={isActive(pathname, href) ? 'page' : undefined}
-                    className={rowClass}
-                  >
-                    <span aria-hidden className="mx-1.5 size-2 rounded-full" style={{ background: swatchVar(project.color) }} />
-                    <span className="flex-1 truncate">{project.name}</span>
-                  </Link>
-                );
-              })}
-            </>
-          )}
+          <h2 className="label-mono mt-4 px-3 pb-1">{t('nav.projects')}</h2>
+          <Link href="/projects" onClick={close} aria-current={pathname === '/projects' ? 'page' : undefined} className={rowClass}>
+            <Orbit aria-hidden className="size-4 text-fg-3" />
+            <span className="flex-1">{t('projects.all')}</span>
+          </Link>
+          {catalog &&
+            projectForest(catalog.projects).flatMap(function flat(node): ReactNode[] {
+              const href = `/projects/${node.project.id}`;
+              return [
+                <Link
+                  key={node.project.id}
+                  href={href}
+                  onClick={close}
+                  aria-current={isActive(pathname, href) ? 'page' : undefined}
+                  className={rowClass}
+                  style={{ paddingLeft: 12 + Math.min(node.depth, 3) * 16 }}
+                >
+                  <Planet seed={node.project.planet_seed} color={node.project.color} size={16} />
+                  <span className="flex-1 truncate">{node.project.name}</span>
+                </Link>,
+                ...node.children.flatMap(flat),
+              ];
+            })}
 
           <div className="my-3 h-px bg-line" />
           <Link href="/profile" onClick={close} aria-current={isActive(pathname, '/profile') ? 'page' : undefined} className={rowClass}>

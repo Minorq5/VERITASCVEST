@@ -105,8 +105,15 @@ async function seedTasks(owner, email, password) {
   ];
   for (const t of tagRows) out.push(['tags', t]);
   const tagId = Object.fromEntries(tagRows.map((t) => [t.name, t.id]));
-  const project = { id: randomUUID(), owner_id: owner, name: 'Запуск сайта', color: 'amber', sort_key: 'a0' };
-  out.push(['projects', project]);
+  // A small universe of projects: one with subprojects, two plain ones and one archived.
+  const planet = (name, color, sortKey, seed, extra = {}) => ({ id: randomUUID(), owner_id: owner, name, color, sort_key: sortKey, planet_seed: seed, ...extra });
+  const project = planet('Запуск сайта', 'amber', 'a0', 20260417, { description: 'Лендинг, тексты и первые пользователи к концу месяца.' });
+  const design = planet('Дизайн', 'blue', 'a0', 771, { parent_id: project.id });
+  const copy = planet('Тексты', 'sand', 'a1', 90210, { parent_id: project.id });
+  const home = planet('Дом', 'ice', 'a1', 4242);
+  const health = planet('Здоровье', 'gold', 'a2', 31337, { description: 'Сон, бег и вода — каждый день понемногу.' });
+  const trip = planet('Поездка в Карелию', 'rust', 'a3', 555, { archived_at: hoursAgo(240) });
+  for (const p of [project, design, copy, home, health, trip]) out.push(['projects', p]);
 
   let order = 0;
   const task = (title, extra = {}) => ({
@@ -122,10 +129,10 @@ async function seedTasks(owner, email, password) {
   const rows = {
     report: task('Отправить отчёт по кварталу', { due_date: moscowDate(-1), due_time: '18:00', priority_id: prio.high }),
     call: task('Созвон с командой дизайна', { due_date: today, due_time: '11:00', priority_id: prio.medium, estimate_minutes: 30 }),
-    groceries: task('Купить продукты на неделю', { due_date: today }),
+    groceries: task('Купить продукты на неделю', { due_date: today, project_id: home.id }),
     thesis: task('Написать главу диплома', { type: 'percent', due_date: today, progress_current: 60, priority_id: prio.critical }),
     book: task('Прочитать «Интерстеллар: наука за кадром»', { type: 'numeric', due_date: today, progress_target: 300, progress_unit: 'страниц' }),
-    run: task('Пробежка в парке', { type: 'time', due_date: today, due_time: '19:30', progress_target: 45 }),
+    run: task('Пробежка в парке', { type: 'time', due_date: today, due_time: '19:30', progress_target: 45, project_id: health.id }),
     water: task('Вода', { type: 'counter', progress_target: 8, progress_unit: 'стаканов', type_config: { period: 'day', mode: 'goal', step: 1 } }),
     meditation: task('Медитация', { type: 'habit', type_config: { schedule: { kind: 'days', days: [0, 1, 2, 3, 4, 5, 6] }, start: moscowDate(-20) } }),
     launch: task('Запуск лендинга', { type: 'stages', due_date: moscowDate(3), project_id: project.id, priority_id: prio.high }),
@@ -136,6 +143,15 @@ async function seedTasks(owner, email, password) {
     }),
     letters: task('Ответить на письма', { due_date: today, completed_at: hoursAgo(2), status_id: status.done }),
     idea: task('Старая идея для блога', { deleted_at: hoursAgo(30) }),
+    mockup: task('Макет главной страницы', { project_id: design.id, completed_at: hoursAgo(30), status_id: status.done }),
+    icons: task('Иконки для разделов', { project_id: design.id, due_date: moscowDate(2), priority_id: prio.medium }),
+    contrast: task('Проверить контраст текста', { project_id: design.id }),
+    heroText: task('Текст для первого экрана', { project_id: copy.id, completed_at: hoursAgo(20), status_id: status.done }),
+    faq: task('Ответы на частые вопросы', { project_id: copy.id, due_date: moscowDate(5) }),
+    domain: task('Подключить домен', { project_id: project.id, completed_at: hoursAgo(50), status_id: status.done }),
+    tap: task('Починить кран на кухне', { project_id: home.id, due_date: moscowDate(-2), priority_id: prio.high }),
+    sleep: task('Ложиться до полуночи', { project_id: health.id }),
+    tickets: task('Купить билеты на поезд', { project_id: trip.id, completed_at: hoursAgo(260), status_id: status.done }),
   };
   for (const row of Object.values(rows)) out.push(['tasks', row]);
 

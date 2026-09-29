@@ -3,7 +3,7 @@
 import { ListChecks, Trash2 } from 'lucide-react';
 import { motion } from 'motion/react';
 import { useTranslations } from 'next-intl';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState, type ReactNode } from 'react';
 import { Button } from '@/components/ui/button';
 import { EmptyState } from '@/components/ui/empty-state';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -50,7 +50,18 @@ function ListSkeleton() {
   );
 }
 
-export function TaskListView({ scope, title }: { scope: Scope; title: string }) {
+export interface ListChrome {
+  /** Next to the title (a project's planet). */
+  lead?: ReactNode;
+  /** A line above the title instead of the default one. */
+  eyebrow?: ReactNode;
+  /** Buttons at the right of the header, before the list's own. */
+  actions?: ReactNode;
+  /** Between the header and the list (subprojects, a notice). */
+  below?: ReactNode;
+}
+
+export function TaskListView({ scope, title, chrome }: { scope: Scope; title: string; chrome?: ListChrome }) {
   const t = useTranslations('tasks');
   const tasks = useTasks();
   const catalog = useCatalog();
@@ -87,14 +98,22 @@ export function TaskListView({ scope, title }: { scope: Scope; title: string }) 
       now,
       timeZone: prefs.timeZone,
       weekStart: prefs.weekStart,
+      hideProjectId: scope.kind === 'project' ? scope.projectId : undefined,
     };
-  }, [tasks, catalog, index, today, now, prefs.timeZone, prefs.weekStart]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- scope is identified by its key
+  }, [tasks, catalog, index, today, now, prefs.timeZone, prefs.weekStart, key]);
+
+  // Sections leave out tasks of archived projects; a project's own page shows them.
+  const listTasks = useMemo(() => {
+    if (!tasks || !catalog || scope.kind !== 'section' || catalog.hiddenProjectIds.size === 0) return tasks;
+    return tasks.filter((t) => !t.project_id || !catalog.hiddenProjectIds.has(t.project_id));
+  }, [tasks, catalog, scope.kind]);
 
   const groups = useMemo(() => {
-    if (!rc || !tasks || !completions) return null;
+    if (!rc || !listTasks || !completions) return null;
     return buildGroups({
       scope,
-      tasks,
+      tasks: listTasks,
       completions,
       lingering,
       rc,
@@ -102,7 +121,7 @@ export function TaskListView({ scope, title }: { scope: Scope; title: string }) 
       overdueTitle: t('summary.overdue'),
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps -- scope is identified by its key
-  }, [rc, tasks, completions, lingering, key, today, prefs.locale, t]);
+  }, [rc, listTasks, completions, lingering, key, today, prefs.locale, t]);
 
   const orderedIds = useMemo(() => groups?.flatMap((g) => g.rows.map((r) => r.task.id)) ?? [], [groups]);
   const rowsById = useMemo(() => new Map(groups?.flatMap((g) => g.rows.map((r) => [r.task.id, r] as const)) ?? []), [groups]);
@@ -200,12 +219,16 @@ export function TaskListView({ scope, title }: { scope: Scope; title: string }) 
   return (
     <div className="flex flex-col gap-5">
       <header className="flex flex-wrap items-end justify-between gap-x-4 gap-y-3 border-b border-line pb-4">
-        <div className="min-w-0">
-          {subtitle && <p className="label-mono mb-2">{subtitle}</p>}
-          <h1 className="font-display text-3xl font-medium text-fg">{title}</h1>
-          {hint && <p className="mt-1.5 text-sm text-fg-3">{hint}</p>}
+        <div className="flex min-w-0 items-center gap-4">
+          {chrome?.lead}
+          <div className="min-w-0">
+            {chrome?.eyebrow ?? (subtitle && <p className="label-mono mb-2">{subtitle}</p>)}
+            <h1 className="font-display text-3xl font-medium break-words text-fg">{title}</h1>
+            {hint && <p className="mt-1.5 text-sm text-fg-3">{hint}</p>}
+          </div>
         </div>
         <div className="flex items-center gap-1">
+          {chrome?.actions}
           {showQuickAdd && <TemplatesButton scope={scope} />}
           {section === 'trash' && trashIds.length > 0 && (
             <Button size="sm" variant="danger" icon={<Trash2 />} onClick={() => setPurge(trashIds)}>
@@ -229,8 +252,10 @@ export function TaskListView({ scope, title }: { scope: Scope; title: string }) 
         </div>
       </header>
 
+      {chrome?.below}
+
       {section === 'today' && rc && tasks && completions && (
-        <TodaySummary tasks={tasks} completions={completions} rc={rc} actions={actions} prefs={prefs} />
+        <TodaySummary tasks={listTasks ?? tasks} completions={completions} rc={rc} actions={actions} prefs={prefs} />
       )}
 
       {showQuickAdd && <QuickAdd scope={scope} />}
