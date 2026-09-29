@@ -71,14 +71,15 @@ export interface TaskRowProps {
 
 const toneClass = {
   overdue: 'text-danger',
-  today: 'text-accent',
+  today: 'text-fg-2',
   soon: 'text-warning',
   later: 'text-fg-3',
 } as const;
 
-function Meta({ icon, children, className, label }: { icon: ReactNode; children?: ReactNode; className?: string; label?: string }) {
+/** One reading in the mono line under the title. */
+function Meta({ icon, children, className, label }: { icon?: ReactNode; children?: ReactNode; className?: string; label?: string }) {
   return (
-    <span className={cn('inline-flex items-center gap-1 whitespace-nowrap [&_svg]:size-3.5 [&_svg]:shrink-0', className)} aria-label={label}>
+    <span className={cn('inline-flex items-center gap-1 whitespace-nowrap [&_svg]:size-3 [&_svg]:shrink-0', className)} aria-label={label}>
       {icon}
       {children}
     </span>
@@ -108,7 +109,7 @@ function ProgressBadge({ model, prefs }: { model: RowModel; prefs: PlannerPrefs 
     case 'habit':
       label = (
         <span className="inline-flex items-center gap-0.5 text-[color:var(--color-amber)]">
-          <Flame aria-hidden className="size-3.5" />
+          <Flame aria-hidden className="size-3" />
           {p.detail.streak}
         </span>
       );
@@ -127,9 +128,9 @@ function ProgressBadge({ model, prefs }: { model: RowModel; prefs: PlannerPrefs 
   const ringColor = over ? 'var(--color-danger)' : p.reached ? 'var(--color-success)' : undefined;
   const showRing = p.detail.kind !== 'abstain';
   return (
-    <span className="flex shrink-0 items-center gap-2 pt-0.5">
-      <span className={cn('font-mono text-sm tabular', over ? 'text-danger' : 'text-fg-2')}>{label}</span>
-      {showRing && <ProgressRing value={Math.min(1, p.ratio)} size={22} stroke={2.5} showValue={false} color={ringColor} />}
+    <span className="flex shrink-0 items-center gap-2 pt-px">
+      <span className={cn('font-mono text-xs tabular', over ? 'text-danger' : 'text-fg-2')}>{label}</span>
+      {showRing && <ProgressRing value={Math.min(1, p.ratio)} size={18} showValue={false} color={ringColor} />}
     </span>
   );
 }
@@ -141,7 +142,7 @@ function Leading({ model, prefs, actions, lingering, today }: Pick<TaskRowProps,
   const nextLabel = (date: IsoDate) => relativeDay(date, today, prefs.locale, t);
 
   if (task.deleted_at) {
-    return <HorizonCheck checked={Boolean(task.completed_at)} onCheckedChange={() => undefined} disabled label={task.title} color={color} className="mt-0.5" />;
+    return <HorizonCheck checked={Boolean(task.completed_at)} onCheckedChange={() => undefined} disabled label={task.title} color={color} />;
   }
   if (model.type === 'habit' && model.progress?.detail.kind === 'habit') {
     const d = model.progress.detail;
@@ -152,7 +153,7 @@ function Leading({ model, prefs, actions, lingering, today }: Pick<TaskRowProps,
         onCheckedChange={() => void markHabitDay(actions, task, today, done ? null : 'done', t('toast.changed'))}
         label={done ? t('widgets.habit.undo') : t('widgets.habit.markDone')}
         color="var(--color-amber)"
-        className={cn('mt-0.5', !d.scheduledToday && !done && 'opacity-60')}
+        className={cn(!d.scheduledToday && !done && 'opacity-60')}
       />
     );
   }
@@ -163,9 +164,9 @@ function Leading({ model, prefs, actions, lingering, today }: Pick<TaskRowProps,
         type="button"
         aria-label={t('widgets.counter.plus', { step: formatNumber(config.step, prefs.locale) })}
         onClick={() => void actions.addEvent(task.id, 'delta', config.step)}
-        className="focus-ring mt-0.5 inline-flex size-[22px] shrink-0 items-center justify-center rounded-full border-[1.75px] border-[color:var(--color-swatch-amber)] text-[color:var(--color-swatch-amber)] transition-[transform,background-color] hover-ok:bg-[color-mix(in_oklab,var(--color-swatch-amber)_18%,transparent)] motion-ok:active:scale-90"
+        className="focus-ring inline-flex size-5 shrink-0 items-center justify-center rounded-full border-[1.5px] border-[color:var(--color-swatch-gold)] text-[color:var(--color-swatch-gold)] transition-colors hover-ok:bg-[color-mix(in_oklab,var(--color-swatch-gold)_16%,transparent)]"
       >
-        <Plus aria-hidden className="size-3.5" strokeWidth={2.6} />
+        <Plus aria-hidden className="size-3" strokeWidth={2} />
       </button>
     );
   }
@@ -173,9 +174,9 @@ function Leading({ model, prefs, actions, lingering, today }: Pick<TaskRowProps,
     return (
       <span
         aria-hidden
-        className="mt-0.5 inline-flex size-[22px] shrink-0 items-center justify-center rounded-full border-[1.75px] border-[color:var(--color-swatch-steel)]"
+        className="inline-flex size-5 shrink-0 items-center justify-center rounded-full border-[1.5px] border-[color:var(--color-swatch-steel)]"
       >
-        <span className="size-1.5 rounded-full bg-[color:var(--color-swatch-steel)]" />
+        <span className="size-1 rounded-full bg-[color:var(--color-swatch-steel)]" />
       </span>
     );
   }
@@ -186,7 +187,6 @@ function Leading({ model, prefs, actions, lingering, today }: Pick<TaskRowProps,
       onCheckedChange={() => void actions.toggle(task, nextLabel)}
       label={task.completed_at ? t('row.reopen', { title: task.title }) : t('row.complete', { title: task.title })}
       color={color}
-      className="mt-0.5"
     />
   );
 }
@@ -204,8 +204,8 @@ function RowMenu({ model, actions, today, prefs, onOpen }: Pick<TaskRowProps, 'm
           type="button"
           aria-label={t('row.more')}
           className={cn(
-            'focus-ring inline-flex size-8 shrink-0 items-center justify-center rounded-md text-fg-3 transition-[opacity,color,background-color]',
-            'hover-ok:bg-surface-4 hover-ok:text-fg data-[state=open]:bg-surface-4 data-[state=open]:text-fg',
+            'focus-ring -my-1 inline-flex size-7 shrink-0 items-center justify-center rounded-sm text-fg-3 transition-[opacity,color,background-color]',
+            'hover-ok:bg-surface-3 hover-ok:text-fg data-[state=open]:bg-surface-3 data-[state=open]:text-fg',
             'pointer-fine:opacity-0 pointer-fine:group-hover/row:opacity-100 pointer-fine:group-focus-within/row:opacity-100 pointer-fine:data-[state=open]:opacity-100',
           )}
         >
@@ -299,19 +299,18 @@ function TaskRowView(props: TaskRowProps) {
         task.due_time ? formatTime(task.due_time, prefs.locale, prefs.hour12) : null,
       ]
         .filter(Boolean)
-        .join(', ')
+        .join(' ')
     : '';
 
   return (
     <div
       data-task-id={task.id}
       className={cn(
-        'group/row relative flex items-start gap-3 px-3 py-2.5 transition-colors duration-150 sm:px-4',
-        active ? 'bg-accent/8' : 'hover-ok:bg-surface-3/50',
-        selected && 'bg-accent/12',
+        'group/row relative flex min-h-11 items-start gap-3 px-3 py-2.5 transition-colors duration-90 sm:px-4',
+        active || selected ? 'bg-surface-2' : 'hover-ok:bg-surface-2/60',
       )}
     >
-      {active && <span aria-hidden className="absolute inset-y-2 left-0 w-0.5 rounded-full bg-accent" />}
+      {(active || selected) && <span aria-hidden className="absolute inset-y-0 left-0 w-0.5 bg-blue" />}
       {dragHandle}
       {(selecting || selected) && (
         <Checkbox
@@ -321,7 +320,9 @@ function TaskRowView(props: TaskRowProps) {
           className="mt-0.5"
         />
       )}
-      <Leading model={model} prefs={prefs} actions={props.actions} lingering={lingering} today={today} />
+      <span className="flex h-5 items-center">
+        <Leading model={model} prefs={prefs} actions={props.actions} lingering={lingering} today={today} />
+      </span>
 
       <button
         type="button"
@@ -333,31 +334,31 @@ function TaskRowView(props: TaskRowProps) {
           }
           onOpen(task.id);
         }}
-        className="focus-ring -my-1 min-w-0 flex-1 rounded-sm py-1 text-left"
+        className="focus-ring -my-1 min-w-0 flex-1 rounded-xs py-1 text-left"
         aria-label={t('row.open', { title: task.title })}
       >
         <span
           className={cn(
-            'block text-base leading-snug break-words transition-colors duration-300',
-            done ? 'text-fg-3 line-through decoration-fg-3/60' : 'text-fg',
+            'block text-base break-words transition-colors duration-200',
+            done ? 'text-fg-3 line-through decoration-fg-4' : 'text-fg',
           )}
         >
           {task.title}
         </span>
-        <span className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-fg-3 empty:hidden">
+        <span className="mt-1 flex flex-wrap items-center gap-x-2.5 gap-y-1 font-mono text-[0.6875rem] leading-4 tracking-[0.02em] text-fg-3 empty:hidden">
           {model.parentTitle && (
             <Meta icon={<CornerDownRight aria-hidden />} className="max-w-48">
               <span className="truncate">{model.parentTitle}</span>
             </Meta>
           )}
           {dueLabel && variant !== 'trash' && (
-            <Meta icon={<CalendarDays aria-hidden />} className={tone ? toneClass[tone] : undefined} label={model.overdue ? t('row.overdue') : undefined}>
+            <Meta className={cn('tracking-[0.06em] uppercase', tone ? toneClass[tone] : undefined)} label={model.overdue ? t('row.overdue') : undefined}>
               {dueLabel}
             </Meta>
           )}
           {task.recurrence != null && <Meta icon={<Repeat aria-hidden />} label={t('row.repeats')} />}
           {running && (
-            <Meta icon={<span className="size-1.5 animate-pulse rounded-full bg-accent" />} className="text-accent">
+            <Meta icon={<span className="size-1.5 rounded-full bg-blue motion-ok:animate-pulse" />} className="tracking-[0.06em] text-blue uppercase">
               {t('row.running')}
             </Meta>
           )}
@@ -372,7 +373,7 @@ function TaskRowView(props: TaskRowProps) {
             </Meta>
           )}
           {model.project && (
-            <Meta icon={<span aria-hidden className="size-2 rounded-full" style={{ background: swatchVar(model.project.color) }} />} className="max-w-40">
+            <Meta icon={<span aria-hidden className="size-1.5 rounded-full" style={{ background: swatchVar(model.project.color) }} />} className="max-w-40 font-sans text-xs tracking-normal">
               <span className="truncate">{model.project.name}</span>
             </Meta>
           )}

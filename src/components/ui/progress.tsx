@@ -62,9 +62,9 @@ export function ProgressRing({
           strokeWidth={stroke}
           strokeLinecap="butt"
           initial={false}
-          animate={{ pathLength: Math.max(clamped, 0.0001) }}
+          // Opacity is animated with the length: as a plain style it kept its first value (0 before data loads).
+          animate={{ pathLength: Math.max(clamped, 0.0001), opacity: clamped > 0 ? 1 : 0 }}
           transition={reduce ? { duration: 0 } : spring.gentle}
-          style={{ opacity: clamped > 0 ? 1 : 0 }}
         />
       </svg>
       <span className="absolute inset-0 flex items-center justify-center">

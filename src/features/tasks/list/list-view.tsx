@@ -198,12 +198,12 @@ export function TaskListView({ scope, title }: { scope: Scope; title: string }) 
 
   return (
     <div className="flex flex-col gap-5">
-      <header className="flex flex-wrap items-end justify-between gap-x-4 gap-y-2">
+      <header className="flex flex-wrap items-end justify-between gap-x-4 gap-y-3 border-b border-line pb-4">
         <div className="min-w-0">
-          <h1 className="font-display text-2xl font-semibold text-fg sm:text-3xl">{title}</h1>
-          {subtitle && <p className="mt-1 text-base text-fg-2 first-letter:uppercase">{subtitle}</p>}
+          {subtitle && <p className="label-mono mb-2">{subtitle}</p>}
+          <h1 className="font-display text-3xl font-medium text-fg">{title}</h1>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-1">
           {showQuickAdd && <TemplatesButton scope={scope} />}
           {section === 'trash' && trashIds.length > 0 && (
             <Button size="sm" variant="danger" icon={<Trash2 />} onClick={() => setPurge(trashIds)}>
@@ -245,16 +245,16 @@ export function TaskListView({ scope, title }: { scope: Scope; title: string }) 
           group.rows.length === 0 ? null : (
             <motion.section key={group.key} layout="position" className="flex flex-col gap-2" aria-label={group.title ?? title}>
               {group.title && (
-                <div className="flex items-center justify-between gap-3 px-1">
-                  <h2 className={cn('text-sm font-semibold', group.tone === 'danger' ? 'text-danger' : 'text-fg-2')}>
+                <div className="flex h-6 items-center justify-between gap-3 px-1">
+                  <h2 className={cn('label-mono', group.tone === 'danger' && 'text-danger')}>
                     {group.title}
-                    <span className="ml-2 font-mono text-xs text-fg-3 tabular">{group.rows.length}</span>
+                    <span className="ml-2 tabular">{group.rows.length}</span>
                   </h2>
                   {group.key === 'overdue' && section === 'today' && (
                     <Button
                       size="sm"
-                      variant="ghost"
-                      className="h-7 px-2 text-accent"
+                      variant="link"
+                      className="h-6 text-sm"
                       onClick={() => void actions.setDue(group.rows.map((r) => r.task.id), today, t('dates.today'))}
                     >
                       {t('summary.moveAllToday')}

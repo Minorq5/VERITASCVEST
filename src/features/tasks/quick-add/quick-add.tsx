@@ -297,10 +297,8 @@ export function QuickAdd({ scope, autoFocus, onCreated, defaultText, className }
     <div className={cn('relative', className)}>
       <div
         className={cn(
-          'bg-surface-1 relative flex items-start gap-2 rounded-xl border px-2 py-2 transition-[border-color,box-shadow] duration-200',
-          focused
-            ? 'border-[color-mix(in_oklab,var(--accent)_55%,transparent)]'
-            : 'border-line-strong hover-ok:border-line-bright',
+          'relative flex items-start gap-2 rounded-lg border bg-surface-1 px-1.5 py-1.5 transition-[border-color] duration-140',
+          focused ? 'border-blue' : 'border-line-strong hover-ok:border-line-bright',
           error && 'border-danger/60',
         )}
       >
@@ -314,9 +312,9 @@ export function QuickAdd({ scope, autoFocus, onCreated, defaultText, className }
             <button
               type="button"
               aria-label={`${t('quickAdd.type')}: ${t(`types.${effectiveType}.name`)}`}
-              className="focus-ring mt-px inline-flex h-9 shrink-0 items-center gap-0.5 rounded-md px-2 text-fg-2 transition-colors hover-ok:bg-surface-4 hover-ok:text-fg"
+              className="focus-ring mt-px inline-flex h-9 shrink-0 items-center gap-0.5 rounded-sm px-2 text-fg-2 transition-colors hover-ok:bg-surface-3 hover-ok:text-fg"
             >
-              <TypeIcon aria-hidden className="size-[18px]" style={{ color: typeMeta[effectiveType].color }} />
+              <TypeIcon aria-hidden className="size-4" style={{ color: typeMeta[effectiveType].color }} />
               <ChevronDown aria-hidden className="size-3.5 text-fg-3" />
             </button>
           }
@@ -395,7 +393,7 @@ export function QuickAdd({ scope, autoFocus, onCreated, defaultText, className }
         <ul
           id={listId}
           role="listbox"
-          className="bg-surface-1 absolute top-full left-12 z-[var(--z-dropdown)] mt-2 w-72 overflow-hidden rounded-lg border border-line-strong p-1.5"
+          className="absolute top-full left-12 z-[var(--z-dropdown)] mt-2 w-72 overflow-hidden rounded-lg border border-line-strong bg-surface-2 p-1"
         >
           {suggestions.map((item, i) => (
             <li
@@ -413,7 +411,7 @@ export function QuickAdd({ scope, autoFocus, onCreated, defaultText, className }
                 i === active ? 'bg-surface-4 text-fg' : 'text-fg-2',
               )}
             >
-              <span aria-hidden className="size-2.5 rounded-full" style={{ background: swatchVar(item.color) }} />
+              <span aria-hidden className="size-2 rounded-full" style={{ background: swatchVar(item.color) }} />
               <span className="flex-1 truncate">
                 {item.id === 'new' ? `${fragment?.sign === '#' ? t('quickAdd.newTag') : t('quickAdd.newProject')}: ` : ''}
                 {fragment?.sign === '#' ? `#${item.name}` : item.name}
@@ -443,14 +441,14 @@ export function QuickAdd({ scope, autoFocus, onCreated, defaultText, className }
                     type="button"
                     onClick={() => setDisabled((prev) => new Set(prev).add(token.key))}
                     aria-label={t('quickAdd.chipOff', { kind, text: token.text })}
-                    className="focus-ring group/chip inline-flex h-7 items-center gap-1.5 rounded-full border pr-1.5 pl-2.5 text-sm transition-colors"
+                    className="focus-ring group/chip inline-flex h-6 items-center gap-1.5 rounded-xs border pr-1 pl-2 text-sm transition-colors"
                     style={{
                       borderColor: `color-mix(in oklab, ${color} 40%, transparent)`,
                       background: `color-mix(in oklab, ${color} 12%, transparent)`,
                       color,
                     }}
                   >
-                    <span className="text-fg-3">{kind}</span>
+                    <span className="font-mono text-[0.6875rem] tracking-[0.06em] text-fg-3 uppercase">{kind}</span>
                     <span className="font-medium">{chipText(token)}</span>
                     <X aria-hidden className="size-3.5 opacity-60 group-hover/chip:opacity-100" />
                   </button>
@@ -462,8 +460,8 @@ export function QuickAdd({ scope, autoFocus, onCreated, defaultText, className }
                   onClick={() => setHintOn((on) => !on)}
                   aria-pressed={hintOn}
                   className={cn(
-                    'focus-ring inline-flex h-7 items-center gap-1.5 rounded-full border px-2.5 text-sm transition-colors',
-                    hintOn ? 'border-accent/50 bg-accent/15 text-accent' : 'border-dashed border-line-bright text-fg-2 hover-ok:text-fg',
+                    'focus-ring inline-flex h-6 items-center gap-1.5 rounded-xs border px-2 text-sm transition-colors',
+                    hintOn ? 'border-accent/60 bg-accent/10 text-accent' : 'border-dashed border-line-bright text-fg-2 hover-ok:text-fg',
                   )}
                 >
                   <Lightbulb aria-hidden className="size-3.5" />
@@ -477,7 +475,7 @@ export function QuickAdd({ scope, autoFocus, onCreated, defaultText, className }
         )}
       </AnimatePresence>
       {focused && visibleTokens.length === 0 && !hint && !error && (
-        <p className="px-2 pt-2 text-xs text-fg-3 max-sm:hidden">{t('quickAdd.syntax')}</p>
+        <p className="px-2 pt-2 font-mono text-[0.6875rem] text-fg-3 max-sm:hidden">{t('quickAdd.syntax')}</p>
       )}
     </div>
   );

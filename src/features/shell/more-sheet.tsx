@@ -14,7 +14,7 @@ import { isActive, phoneTabs, phoneTabsAfter, sectionItems } from './nav';
 import { useSafeSignOut } from './use-safe-sign-out';
 
 const rowClass =
-  'focus-ring flex h-12 items-center gap-3 rounded-md px-3 text-md text-fg transition-colors hover-ok:bg-surface-3 aria-[current=page]:bg-surface-3 aria-[current=page]:text-accent';
+  'focus-ring relative flex h-11 items-center gap-3 rounded-xs px-3 text-md text-fg transition-colors hover-ok:bg-surface-2 aria-[current=page]:bg-surface-2 aria-[current=page]:before:absolute aria-[current=page]:before:inset-y-0 aria-[current=page]:before:left-0 aria-[current=page]:before:w-0.5 aria-[current=page]:before:bg-accent';
 
 /** Phone "More": the lists that do not fit in the bottom bar, projects and the account. */
 export function MoreSheet({ counts }: { counts: Record<Section, number> | null }) {
@@ -42,14 +42,14 @@ export function MoreSheet({ counts }: { counts: Record<Section, number> | null }
           <button
             type="button"
             className={cn(
-              'focus-ring flex flex-1 flex-col items-center justify-center gap-1 rounded-md text-xs font-medium transition-colors',
-              inside ? 'text-accent' : 'text-fg-3',
+              'focus-ring flex flex-1 flex-col items-center justify-center gap-1 rounded-xs font-mono text-[0.625rem] tracking-[0.06em] uppercase transition-colors',
+              inside ? 'text-fg [&_svg]:text-accent' : 'text-fg-3',
             )}
           >
             <span className="relative">
-              <Ellipsis aria-hidden className="size-[22px]" />
+              <Ellipsis aria-hidden className="size-5" />
               {(counts?.overdue ?? 0) > 0 && (
-                <span className="absolute -top-0.5 -right-1 size-2 rounded-full bg-danger" />
+                <span className="absolute -top-0.5 -right-1 size-1.5 rounded-full bg-danger" />
               )}
             </span>
             {t('nav.more')}
@@ -68,7 +68,7 @@ export function MoreSheet({ counts }: { counts: Record<Section, number> | null }
                 aria-current={isActive(pathname, item.href) ? 'page' : undefined}
                 className={rowClass}
               >
-                <Icon aria-hidden className="size-5 text-fg-2" />
+                <Icon aria-hidden className="size-4 text-fg-3" />
                 <span className="flex-1">{t(`nav.${item.section}`)}</span>
                 {item.count && count > 0 && (
                   <span className={cn('font-mono text-sm tabular', item.count === 'alert' ? 'text-danger' : 'text-fg-3')}>
@@ -81,7 +81,7 @@ export function MoreSheet({ counts }: { counts: Record<Section, number> | null }
 
           {catalog && catalog.projects.length > 0 && (
             <>
-              <h2 className="mt-4 px-3 pb-1 text-xs font-semibold tracking-[0.08em] text-fg-3 uppercase">{t('nav.projects')}</h2>
+              <h2 className="label-mono mt-4 px-3 pb-1">{t('nav.projects')}</h2>
               {catalog.projects.map((project) => {
                 const href = `/projects/${project.id}`;
                 return (
@@ -92,7 +92,7 @@ export function MoreSheet({ counts }: { counts: Record<Section, number> | null }
                     aria-current={isActive(pathname, href) ? 'page' : undefined}
                     className={rowClass}
                   >
-                    <span aria-hidden className="mx-1 size-3 rounded-full" style={{ background: swatchVar(project.color) }} />
+                    <span aria-hidden className="mx-1.5 size-2 rounded-full" style={{ background: swatchVar(project.color) }} />
                     <span className="flex-1 truncate">{project.name}</span>
                   </Link>
                 );
@@ -102,11 +102,11 @@ export function MoreSheet({ counts }: { counts: Record<Section, number> | null }
 
           <div className="my-3 h-px bg-line" />
           <Link href="/profile" onClick={close} aria-current={isActive(pathname, '/profile') ? 'page' : undefined} className={rowClass}>
-            <AstronautIcon aria-hidden className="size-5 text-fg-2" />
+            <AstronautIcon aria-hidden className="size-4 text-fg-3" />
             {t('shell.profile')}
           </Link>
           <Link href="/settings" onClick={close} aria-current={isActive(pathname, '/settings') ? 'page' : undefined} className={rowClass}>
-            <Settings2 aria-hidden className="size-5 text-fg-2" />
+            <Settings2 aria-hidden className="size-4 text-fg-3" />
             {t('shell.settings')}
           </Link>
           <button
@@ -117,7 +117,7 @@ export function MoreSheet({ counts }: { counts: Record<Section, number> | null }
               void signOut.request();
             }}
           >
-            <LogOut aria-hidden className="size-5 text-fg-2" />
+            <LogOut aria-hidden className="size-4 text-fg-3" />
             {t('shell.signOut')}
           </button>
         </nav>

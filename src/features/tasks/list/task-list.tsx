@@ -72,7 +72,7 @@ function SortableRow({ id, title, children }: { id: string; title: string; child
     <div
       ref={setNodeRef}
       style={{ transform: CSS.Translate.toString(transform), transition }}
-      className={cn('relative', isDragging && 'z-10 rounded-lg bg-surface-3 ring-1 ring-line-strong')}
+      className={cn('relative', isDragging && 'z-10 bg-surface-3 outline outline-1 outline-line-bright')}
     >
       {children(handle)}
     </div>
@@ -113,10 +113,10 @@ export function TaskList(props: TaskListProps) {
         <motion.li
           key={row.key ?? row.task.id}
           layout={reduce ? false : 'position'}
-          initial={reduce ? { opacity: 0 } : { opacity: 0, y: -6 }}
+          initial={reduce ? { opacity: 0 } : { opacity: 0, y: -4 }}
           animate={{ opacity: 1, y: 0 }}
-          exit={reduce ? { opacity: 0 } : { opacity: 0, height: 0, x: 28, transition: { duration: 0.32, ease: [0.22, 1, 0.36, 1] } }}
-          transition={{ duration: 0.22, ease: [0.22, 1, 0.36, 1] }}
+          exit={reduce ? { opacity: 0 } : { opacity: 0, height: 0, transition: { duration: 0.28, ease: [0.65, 0, 0.35, 1] } }}
+          transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
           className="overflow-hidden border-b border-line last:border-b-0"
         >
           {sortable ? <SortableRow id={row.task.id} title={row.task.title}>{(handle) => renderRow(row, handle)}</SortableRow> : renderRow(row)}
@@ -126,7 +126,7 @@ export function TaskList(props: TaskListProps) {
   );
 
   const list = (
-    <ul aria-label={label} className="bg-surface-1 overflow-hidden rounded-xl border border-line">
+    <ul aria-label={label} className="overflow-hidden rounded-lg border border-line bg-surface-1">
       {items}
     </ul>
   );

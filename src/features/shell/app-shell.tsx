@@ -34,9 +34,9 @@ function NavCount({ value, kind }: { value: number; kind: 'alert' | 'normal' | '
   return (
     <span
       className={cn(
-        'ml-auto inline-flex h-5 min-w-5 items-center justify-center rounded-full px-1.5 font-mono text-xs font-medium tabular',
-        kind === 'alert' && 'bg-danger/15 text-danger',
-        kind === 'normal' && 'bg-surface-4 text-fg-2',
+        'ml-auto inline-flex h-5 min-w-5 items-center justify-end font-mono text-xs tabular',
+        kind === 'alert' && 'text-danger',
+        kind === 'normal' && 'text-fg-2',
         kind === 'muted' && 'text-fg-3',
       )}
     >
@@ -63,15 +63,15 @@ function SidebarLink({
       href={href}
       aria-current={active ? 'page' : undefined}
       className={cn(
-        'focus-ring relative flex h-9 items-center gap-3 rounded-md px-3 text-base transition-colors duration-150',
-        active ? 'bg-surface-3 text-fg' : 'text-fg-2 hover-ok:bg-surface-3/60 hover-ok:text-fg',
+        'focus-ring relative flex h-8 items-center gap-3 rounded-xs px-3 text-base transition-colors duration-90',
+        active ? 'bg-surface-2 text-fg' : 'text-fg-2 hover-ok:bg-surface-2 hover-ok:text-fg',
       )}
     >
       {active && (
         <motion.span
           layoutId="sidebar-active"
           transition={spring.snappy}
-          className="absolute left-0 h-5 w-0.5 rounded-full bg-accent"
+          className="absolute inset-y-0 left-0 w-0.5 bg-accent"
         />
       )}
       {icon}
@@ -98,8 +98,8 @@ function Sidebar() {
 
   return (
     <aside className="bg-surface-1 fixed inset-y-0 left-0 z-[var(--z-sticky)] hidden w-68 flex-col border-r border-line lg:flex">
-      <div className="flex h-16 items-center px-5">
-        <Link href={APP_HOME} className="focus-ring rounded-md">
+      <div className="flex h-14 items-center px-5">
+        <Link href={APP_HOME} className="focus-ring rounded-xs">
           <LogoLockup size="sm" />
         </Link>
       </div>
@@ -108,12 +108,12 @@ function Sidebar() {
           type="button"
           onClick={() => openQuickAdd(true)}
           className={cn(
-            'focus-ring group flex h-10 w-full items-center gap-3 rounded-md border border-line-strong px-3 text-base text-fg bg-surface-1',
-            'transition-[border-color,box-shadow] duration-200 hover-ok:border-[color-mix(in_oklab,var(--accent)_45%,transparent)]',
+            'focus-ring group flex h-9 w-full items-center gap-3 rounded-sm border border-line-strong bg-surface-1 px-3 text-base text-fg',
+            'transition-colors duration-90 hover-ok:border-line-bright hover-ok:bg-surface-2',
           )}
         >
-          <span className="inline-flex size-5 items-center justify-center rounded-full bg-accent text-accent-ink">
-            <Plus aria-hidden className="size-3.5" strokeWidth={2.5} />
+          <span className="inline-flex size-4 items-center justify-center rounded-xs bg-accent text-accent-ink">
+            <Plus aria-hidden className="size-3" strokeWidth={2.5} />
           </span>
           <span className="flex-1 text-left">{t('nav.newTask')}</span>
           <Kbd>N</Kbd>
@@ -129,7 +129,7 @@ function Sidebar() {
                 <SidebarLink
                   href={item.href}
                   active={active}
-                  icon={<Icon aria-hidden className={cn('size-[18px] shrink-0', active && 'text-accent')} />}
+                  icon={<Icon aria-hidden className={cn('size-4 shrink-0', active ? 'text-accent' : 'text-fg-3')} />}
                   trailing={counts && <NavCount value={counts[item.section]} kind={item.count} />}
                 >
                   {t(`nav.${item.section}`)}
@@ -141,7 +141,7 @@ function Sidebar() {
 
         {catalog && catalog.projects.length > 0 && (
           <div className="mt-6">
-            <h2 className="px-3 pb-2 text-xs font-semibold tracking-[0.08em] text-fg-3 uppercase">{t('nav.projects')}</h2>
+            <h2 className="label-mono px-3 pb-2">{t('nav.projects')}</h2>
             <ul className="flex flex-col gap-0.5">
               {catalog.projects.map((project) => {
                 const href = `/projects/${project.id}`;
@@ -153,7 +153,7 @@ function Sidebar() {
                       icon={
                         <span
                           aria-hidden
-                          className="mx-1 size-2 shrink-0 rounded-full"
+                          className="mx-[5px] size-1.5 shrink-0 rounded-full"
                           style={{ background: swatchVar(project.color) }}
                         />
                       }
@@ -188,21 +188,21 @@ function PhoneTab({ section, active, count }: { section: Section; active: boolea
         href={item.href}
         aria-current={active ? 'page' : undefined}
         className={cn(
-          'focus-ring relative flex flex-1 flex-col items-center justify-center gap-1 rounded-md text-xs font-medium transition-colors',
-          active ? 'text-accent' : 'text-fg-3',
+          'focus-ring relative flex flex-1 flex-col items-center justify-center gap-1 rounded-xs font-mono text-[0.625rem] tracking-[0.06em] uppercase transition-colors',
+          active ? 'text-fg' : 'text-fg-3',
         )}
       >
         {active && (
           <motion.span
             layoutId="bottom-active"
             transition={spring.snappy}
-            className="absolute top-0 h-0.5 w-8 rounded-full bg-accent"
+            className="absolute top-0 h-0.5 w-8 bg-accent"
           />
         )}
         <span className="relative">
-          <Icon aria-hidden className="size-[22px]" />
+          <Icon aria-hidden className={cn('size-5', active && 'text-accent')} />
           {count > 0 && item.count === 'normal' && (
-            <span className="absolute -top-1.5 -right-2.5 inline-flex h-4 min-w-4 items-center justify-center rounded-full bg-accent px-1 font-mono text-[10px] font-semibold text-accent-ink">
+            <span className="absolute -top-1.5 -right-3 inline-flex h-4 min-w-4 items-center justify-center rounded-xs border border-line-strong bg-surface-2 px-0.5 font-mono text-[10px] text-fg-2 tabular">
               {count > 99 ? '99+' : count}
             </span>
           )}
@@ -273,11 +273,11 @@ export function AppShell({ children }: { children: ReactNode }) {
 
   return (
     <div className="[--panel-w:28rem] 2xl:[--panel-w:32rem]">
-      <SpaceBackdrop intensity={0.55} />
+      <SpaceBackdrop />
       <Sidebar />
 
       {/* Phone top bar */}
-      <header className="bg-surface-1 sticky top-0 z-[var(--z-sticky)] flex h-14 items-center justify-between border-b border-line px-4 pt-[env(safe-area-inset-top)] lg:hidden">
+      <header className="sticky top-0 z-[var(--z-sticky)] flex h-14 items-center justify-between border-b border-line bg-bg px-4 pt-[env(safe-area-inset-top)] lg:hidden">
         <Link href={APP_HOME} className="focus-ring rounded-md" aria-label="Veritas Tasks">
           <LogoLockup size="sm" />
         </Link>

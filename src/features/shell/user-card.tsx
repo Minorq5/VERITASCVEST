@@ -27,18 +27,18 @@ export function UserCard() {
         <MenuTrigger asChild>
           <button
             type="button"
-            className="group flex w-full items-center gap-3 rounded-lg p-2 text-left focus-ring transition-colors hover-ok:bg-surface-3"
+            className="group flex w-full items-center gap-3 rounded-sm p-2 text-left focus-ring transition-colors hover-ok:bg-surface-2"
           >
-            <Avatar name={profile.display_name} src={avatarUrl(profile.avatar_path)} size={40} />
+            <Avatar name={profile.display_name} src={avatarUrl(profile.avatar_path)} size={32} />
             <span className="flex min-w-0 flex-1 flex-col">
-              <span className="truncate text-base font-medium text-fg">{profile.display_name}</span>
-              <span className="truncate text-sm text-fg-3">
+              <span className="truncate text-base text-fg">{profile.display_name}</span>
+              <span className="truncate font-mono text-[0.6875rem] tracking-[0.04em] text-fg-3 uppercase">
                 {t('profile.level', { level: lp.level })} · {t(`ranks.${lp.rank}`)}{' '}
                 {tierRoman(lp.tier)}
               </span>
               <ProgressBar
                 value={lp.progress}
-                className="mt-1.5 h-1"
+                className="mt-1.5"
                 label={t('profile.toNext', { xp: (lp.nextLevelAt ?? lp.xp) - lp.xp })}
               />
             </span>

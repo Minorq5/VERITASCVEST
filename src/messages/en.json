@@ -668,9 +668,12 @@
       "progress": "{done} of {total} done",
       "allDone": "All done for today",
       "nothing": "Nothing planned for today",
-      "habits": "Today’s habits",
+      "habits": "Habits",
       "overdue": "Overdue",
-      "moveAllToday": "All to today"
+      "moveAllToday": "All to today",
+      "label": "Today at a glance",
+      "done": "Done",
+      "left": "Left"
     },
     "empty": {
       "inbox": {
