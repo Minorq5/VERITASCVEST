@@ -20,6 +20,7 @@
     "db:stop": "bash scripts/dev/supabase-local.sh stop",
     "db:reset": "bash scripts/dev/supabase-local.sh reset",
     "i18n:typograf": "node scripts/i18n/typograf.mjs",
+    "video:walkthrough": "node scripts/video/walkthrough.mjs",
     "test:db": "supabase test db",
     "db:types": "supabase gen types typescript --local > src/lib/supabase/database.types.ts && prettier --write src/lib/supabase/database.types.ts",
     "test:e2e": "playwright test",

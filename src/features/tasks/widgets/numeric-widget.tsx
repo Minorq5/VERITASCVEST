@@ -13,17 +13,28 @@ import { formatNumber } from '../format';
 import { typeMeta } from '../shared/type-meta';
 import { NumberInput, WidgetCard, type WidgetProps } from './shared';
 
-/** A number that rolls to its new value (the odometer). */
+/** Decimal places a number is written with (0 for whole numbers, at most 2). */
+function decimalsOf(n: number) {
+  if (Number.isInteger(n)) return 0;
+  return Math.min(2, (String(n).split('.')[1] ?? '').length);
+}
+
+/**
+ * A number that rolls to its new value (the odometer). Intermediate values keep the precision
+ * of the new value, so a whole counter rolls 5 → 6 → 7, never 6,99.
+ */
 export function RollingNumber({ value, locale }: { value: number; locale: string }) {
   const reduce = useLessMotion();
   const mv = useMotionValue(value);
-  const text = useTransform(mv, (v) => formatNumber(Math.round(v * 100) / 100, locale));
+  // Roll with the precision of where the number is going.
+  const step = 10 ** decimalsOf(value);
+  const text = useTransform(mv, (v) => formatNumber(Math.round(v * step) / step, locale));
   useEffect(() => {
     if (reduce) {
       mv.set(value);
       return;
     }
-    const controls = animate(mv, value, { type: 'spring', stiffness: 140, damping: 22 });
+    const controls = animate(mv, value, { duration: 0.45, ease: [0.16, 1, 0.3, 1] });
     return () => controls.stop();
   }, [value, mv, reduce]);
   return <motion.span>{text}</motion.span>;
