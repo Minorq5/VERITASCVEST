@@ -9,7 +9,7 @@ import { parseQuickAdd, type QuickAddResult, type Token } from '@/lib/domain/qui
 import type { QuickLocale } from '@/lib/domain/quick-add/lexicon';
 import type { TaskRow } from '@/lib/db/types';
 import { inSection } from '@/lib/domain/sections';
-import type { TaskType } from '@/lib/domain/task-types';
+import { ongoingTypes, type TaskType } from '@/lib/domain/task-types';
 import { addDays, timeIn } from '@/lib/time/dates';
 import { useLessMotion } from '@/lib/hooks/use-less-motion';
 import { cn } from '@/lib/utils/cn';
@@ -168,7 +168,9 @@ export function QuickAdd({ scope, autoFocus, onCreated, defaultText, className }
     setBusy(true);
     try {
       const section = scope?.kind === 'section' ? scope.section : null;
-      const fallbackDue = section === 'today' || section === 'week' ? today : section === 'tomorrow' ? addDays(today, 1) : null;
+      // Habits, counters and "quit" goals measure periods: they have no deadline of their own.
+      const ongoing = (ongoingTypes as readonly string[]).includes(effectiveType);
+      const fallbackDue = ongoing ? null : section === 'today' || section === 'week' ? today : section === 'tomorrow' ? addDays(today, 1) : null;
       const dueDate = result.dueDate ?? (result.recurrence ? result.recurrence.anchor : fallbackDue);
       const projectId = result.project
         ? await ensureProject(actions.ctx, result.project)

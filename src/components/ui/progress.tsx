@@ -65,7 +65,7 @@ export function ProgressRing({
           initial={false}
           animate={{ pathLength: Math.max(clamped, 0.0001) }}
           transition={reduce ? { duration: 0 } : spring.gentle}
-          style={{ filter: `drop-shadow(0 0 ${glow}px ${color})` }}
+          style={{ filter: `drop-shadow(0 0 ${glow}px ${color})`, opacity: clamped > 0 ? 1 : 0 }}
         />
       </svg>
       <span className="absolute inset-0 flex items-center justify-center">

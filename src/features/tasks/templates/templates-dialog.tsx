@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button';
 import { IconButton } from '@/components/ui/icon-button';
 import { ResponsiveDialog } from '@/components/ui/responsive-dialog';
 import type { TemplateRow } from '@/lib/db/types';
-import { isTaskType } from '@/lib/domain/task-types';
+import { isTaskType, ongoingTypes } from '@/lib/domain/task-types';
 import { addDays } from '@/lib/time/dates';
 import { toast } from '@/stores/toasts';
 import { useCatalog, useToday } from '../data/hooks';
@@ -53,10 +53,11 @@ export function TemplatesButton({ scope }: { scope: NonNullable<ListScope> }) {
   const { today } = useToday();
   const { open: openTask } = useTaskRoute();
 
-  const where = () => {
+  const where = (payload: TemplatePayload) => {
     const section = scope.kind === 'section' ? scope.section : null;
+    const ongoing = (ongoingTypes as readonly string[]).includes(payload.task.type);
     return {
-      due: section === 'today' || section === 'week' ? today : section === 'tomorrow' ? addDays(today, 1) : null,
+      due: ongoing ? null : section === 'today' || section === 'week' ? today : section === 'tomorrow' ? addDays(today, 1) : null,
       projectId: scope.kind === 'project' ? scope.projectId : null,
       today,
     };
@@ -65,7 +66,7 @@ export function TemplatesButton({ scope }: { scope: NonNullable<ListScope> }) {
   const create = async (payload: TemplatePayload) => {
     setOpen(false);
     try {
-      const { id, inverse } = await applyTemplate(actions.ctx, payload, where());
+      const { id, inverse } = await applyTemplate(actions.ctx, payload, where(payload));
       actions.record(t('templates.created'), inverse, t('templates.created'));
       openTask(id);
     } catch (error) {
