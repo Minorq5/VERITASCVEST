@@ -23,7 +23,9 @@
     "test:db": "supabase test db",
     "db:types": "supabase gen types typescript --local > src/lib/supabase/database.types.ts && prettier --write src/lib/supabase/database.types.ts",
     "test:e2e": "playwright test",
-    "shots:stage2": "tsx scripts/dev/stage2-shots.ts"
+    "shots:stage2": "tsx scripts/dev/stage2-shots.ts",
+    "test:int": "vitest run -c vitest.integration.config.mts",
+    "test:stress": "SYNC_STRESS_RUNS=1500 vitest run tests/unit/sync-property.test.ts"
   },
   "dependencies": {
     "@date-fns/tz": "^1.5.0",

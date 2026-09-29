@@ -1221,9 +1221,9 @@ begin
     elsif private.clock_newer(p_ts, p_mutation, v_clocks -> f) then
       v_apply := v_apply || f;
       v_clocks := jsonb_set(v_clocks, array[f], jsonb_build_array(p_ts, p_mutation));
-      v_conflicts := v_conflicts || jsonb_build_object('field', f, 'kept', v_mine -> f, 'lost', v_cur -> f);
+      v_conflicts := v_conflicts || jsonb_build_object('field', f, 'kept', v_mine -> f, 'lost', v_cur -> f, 'winner', 'mine');
     else
-      v_conflicts := v_conflicts || jsonb_build_object('field', f, 'kept', v_cur -> f, 'lost', v_mine -> f);
+      v_conflicts := v_conflicts || jsonb_build_object('field', f, 'kept', v_cur -> f, 'lost', v_mine -> f, 'winner', 'server');
     end if;
   end loop;
 

@@ -46,8 +46,8 @@ describe('ids and order', () => {
     const first = keyBetween(null, null);
     expect(first).toBe('a0');
     const [k1, k2, k3] = keysBetween(first, null, 3);
-    expect([first, k1, k2, k3].every((k, i, arr) => i === 0 || compareKeys(arr[i - 1]!, k) < 0)).toBe(true);
-    const mid = keyBetween(k1, k2);
+    expect([first, k1!, k2!, k3!].every((k, i, arr) => i === 0 || compareKeys(arr[i - 1]!, k) < 0)).toBe(true);
+    const mid = keyBetween(k1!, k2!);
     expect(compareKeys(k1!, mid) < 0 && compareKeys(mid, k2!) < 0).toBe(true);
     expect(compareKeys(keyForIndex(['a0', 'a1'], 0), 'a0')).toBeLessThan(0);
     expect(compareKeys(keyForIndex(['a0', 'a1'], 2), 'a1')).toBeGreaterThan(0);
