@@ -27,7 +27,7 @@ test('email change: both addresses confirm, then only the new one signs in', asy
   await expect(page.getByText('Неверная почта или пароль')).toBeVisible();
   await page.getByLabel('Почта').fill(next);
   await page.getByRole('button', { name: 'Войти', exact: true }).click();
-  await expect(page).toHaveURL(/\/ru\/profile$/);
+  await expect(page).toHaveURL(/\/ru\/today$/);
 });
 
 test('password change after an old sign-in asks for the code from the email', async ({ page }) => {
@@ -54,7 +54,7 @@ test('password change after an old sign-in asks for the code from the email', as
 
   await page.context().clearCookies();
   await signIn(page, account.email, 'Galaktika77');
-  await expect(page).toHaveURL(/\/ru\/profile$/);
+  await expect(page).toHaveURL(/\/ru\/today$/);
 });
 
 test('the account API refuses strangers: no session, no data', async ({ request }) => {

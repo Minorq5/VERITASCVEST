@@ -85,7 +85,9 @@ describe('design bans (DESIGN_V2 §2)', () => {
   });
 
   it('no decorative gradients outside the 3D scenes', () => {
-    expect(offenders(all(/(?:linear|radial|conic)-gradient|\bbg-(?:gradient|linear|radial|conic)-/g))).toEqual([]);
+    expect(
+      offenders(all(/(?:linear|radial|conic)-gradient|<(?:linear|radial)Gradient\b|create(?:Linear|Radial|Conic)Gradient|\bbg-(?:gradient|linear|radial|conic)-/g)),
+    ).toEqual([]);
   });
 
   it('nothing rounder than 8px (circles only through rounded-full)', () => {

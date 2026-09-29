@@ -2,14 +2,15 @@
 
 import { useEffect, useRef, useState } from 'react';
 import { LogoLockup, LogoMark } from '@/components/brand/logo';
-import { introViews, type IntroShot } from './presets';
+import { introViews, sceneViews, type IntroShot, type SceneName } from './presets';
 import { BlackHoleRenderer } from './renderer';
 
 /**
- * Renders one key frame of the intro with the real shader, supersampled and
- * tiled, for review. Sets data-ready on <body> when the frame is on screen.
+ * Renders one key frame of the intro (or a scene's poster) with the real
+ * shader, supersampled and tiled. Sets data-ready on <body> when the frame is
+ * on screen.
  */
-export function CinemaStill({ shot, samples }: { shot: IntroShot; samples: number }) {
+export function CinemaStill({ shot, samples, step = 1 }: { shot: IntroShot | SceneName; samples: number; step?: number }) {
   const host = useRef<HTMLDivElement>(null);
   const [error, setError] = useState<string | null>(null);
 
@@ -23,8 +24,10 @@ export function CinemaStill({ shot, samples }: { shot: IntroShot; samples: numbe
     const started = performance.now();
     try {
       renderer = new BlackHoleRenderer(el);
+      renderer.step = step;
       renderer.resize(window.innerWidth * window.devicePixelRatio, window.innerHeight * window.devicePixelRatio);
-      void renderer.renderStill(introViews[shot], { samples }).then(() => {
+      const view = shot in introViews ? introViews[shot as IntroShot] : sceneViews[shot as SceneName];
+      void renderer.renderStill(view, { samples }).then(() => {
         if (cancelled) return;
         document.body.dataset.ready = String(Math.round(performance.now() - started));
       });
@@ -38,7 +41,7 @@ export function CinemaStill({ shot, samples }: { shot: IntroShot; samples: numbe
       renderer?.dispose();
       el.remove();
     };
-  }, [shot, samples]);
+  }, [shot, samples, step]);
 
   return (
     <main className="fixed inset-0 bg-void">

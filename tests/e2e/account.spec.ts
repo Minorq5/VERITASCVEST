@@ -2,7 +2,7 @@ import { expect, test } from '@playwright/test';
 import { createAccount, leftovers, signIn, uniqueAccount, userExists } from './support/accounts';
 import { linkFrom, waitForMail } from './support/mailpit';
 
-test('registration: email link → onboarding → profile', async ({ page }) => {
+test('registration: email link → onboarding → planner', async ({ page }) => {
   const account = uniqueAccount();
   const started = Date.now();
   await page.goto('/ru/register');
@@ -18,7 +18,7 @@ test('registration: email link → onboarding → profile', async ({ page }) => 
   await page.goto(linkFrom(mail, '/auth/confirm'));
   await expect(page).toHaveURL(/\/ru\/onboarding/);
 
-  await expect(page.getByRole('heading', { name: /Добро пожаловать на борт/ })).toBeVisible();
+  await expect(page.getByRole('heading', { name: /настроим Veritas под вас/ })).toBeVisible();
   await page.getByLabel('Как к вам обращаться').fill('Капитан Тест');
   await expect(page.getByRole('heading', { name: /Капитан Тест/ })).toBeVisible();
   await page.getByRole('button', { name: 'Далее' }).click();
@@ -28,9 +28,14 @@ test('registration: email link → onboarding → profile', async ({ page }) => 
   await page.getByRole('button', { name: 'Далее' }).click();
 
   await expect(page.getByRole('heading', { name: 'Звук' })).toBeVisible();
-  await page.getByRole('button', { name: 'Начать полёт' }).click();
+  await page.getByRole('button', { name: 'Далее' }).click();
 
-  await expect(page).toHaveURL(/\/ru\/profile$/);
+  await expect(page.getByRole('heading', { name: 'Первая задача' })).toBeVisible();
+  await page.getByRole('button', { name: 'Открыть задачи' }).click();
+
+  // The planner is home; the profile shows what onboarding saved.
+  await expect(page).toHaveURL(/\/ru\/today$/);
+  await page.goto('/ru/profile');
   await expect(page.getByText('Капитан Тест', { exact: true }).filter({ visible: true }).first()).toBeVisible();
   await expect(page.getByText(`@${account.username}`)).toBeVisible();
   await expect(page.getByText(/^VT-[2-9A-HJ-NP-Z]{5}$/)).toBeVisible();
@@ -61,9 +66,9 @@ test('first sign-in goes through onboarding; "Skip" finishes it', async ({ page 
   await signIn(page, account.email, account.password);
   await expect(page).toHaveURL(/\/ru\/onboarding$/);
   await page.getByRole('button', { name: 'Пропустить' }).click();
-  await expect(page).toHaveURL(/\/ru\/profile$/);
+  await expect(page).toHaveURL(/\/ru\/today$/);
   await page.reload();
-  await expect(page).toHaveURL(/\/ru\/profile$/);
+  await expect(page).toHaveURL(/\/ru\/today$/);
 });
 
 test('forgot password → email → new password → sign in with it', async ({ page }) => {
@@ -80,19 +85,19 @@ test('forgot password → email → new password → sign in with it', async ({ 
   await page.getByLabel('Новый пароль').fill('Zvezda2026y');
   await page.getByLabel('Повторите пароль').fill('Zvezda2026y');
   await page.getByRole('button', { name: 'Сохранить пароль' }).click();
-  await expect(page).toHaveURL(/\/ru\/profile$/);
+  await expect(page).toHaveURL(/\/ru\/today$/);
 
   await page.context().clearCookies();
   await signIn(page, account.email, account.password);
   await expect(page.getByText('Неверная почта или пароль')).toBeVisible();
   await page.getByLabel('Пароль', { exact: true }).fill('Zvezda2026y');
   await page.getByRole('button', { name: 'Войти', exact: true }).click();
-  await expect(page).toHaveURL(/\/ru\/profile$/);
+  await expect(page).toHaveURL(/\/ru\/today$/);
 });
 
 test('profile: name, username, bio and avatar are saved', async ({ page }) => {
   const account = await createAccount();
-  await signIn(page, account.email, account.password);
+  await signIn(page, account.email, account.password, '/profile');
   await expect(page).toHaveURL(/\/ru\/profile$/);
 
   await page.getByLabel('Имя', { exact: true }).fill('Вега');
@@ -135,7 +140,7 @@ test('settings: language and accent follow the account', async ({ page }) => {
   await page.context().clearCookies();
   await page.evaluate(() => localStorage.clear());
   await signIn(page, account.email, account.password);
-  await expect(page).toHaveURL(/\/en\/profile$/);
+  await expect(page).toHaveURL(/\/en\/today$/);
   await expect(page.locator('html')).toHaveAttribute('data-accent', 'blue');
 });
 

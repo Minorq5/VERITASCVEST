@@ -52,6 +52,10 @@ for (const kind of only) {
     ['landing', '/ru'],
     ['login', '/ru/login'],
     ['register', '/ru/register'],
+    ['forgot', '/ru/forgot-password'],
+    ['check-email', '/ru/check-email'],
+    ['confirm-invalid', '/ru/auth/confirm'],
+    ['reset', '/ru/reset-password'],
     ['not-found', '/ru/за-горизонтом'],
     ['design', '/ru/design'],
   ]) {
@@ -63,13 +67,18 @@ for (const kind of only) {
   await guest.close();
 
   // Onboarding (a fresh account)
-  if (!screens || screens.has('onboarding')) {
+  if (!screens || [...screens].some((s) => s.startsWith('onboarding'))) {
     const fresh = await createDemoAccount({ tag: 'onb', tasks: false, onboarded: false });
     const ctx = await browser.newContext(options);
     const p = await ctx.newPage();
     await signIn(p, fresh);
     await settle(p);
     await shot(p, dir, 'onboarding');
+    for (const n of [2, 3, 4]) {
+      await p.getByRole('button', { name: 'Далее' }).click();
+      await settle(p, 1200);
+      await shot(p, dir, `onboarding-${n}`);
+    }
     await ctx.close();
   }
 

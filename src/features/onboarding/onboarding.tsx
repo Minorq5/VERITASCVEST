@@ -1,6 +1,6 @@
 'use client';
 
-import { ArrowLeft, ArrowRight, CircleCheckBig, Rocket, Volume2 } from 'lucide-react';
+import { ArrowLeft, ArrowRight, CircleCheckBig, Volume2 } from 'lucide-react';
 import { AnimatePresence, motion } from 'motion/react';
 import { useLocale, useTranslations } from 'next-intl';
 import { useEffect, useId, useState } from 'react';
@@ -13,7 +13,13 @@ import { ChoiceCard, ChoiceCards } from '@/components/ui/choice-cards';
 import { Slider } from '@/components/ui/slider';
 import { Switch } from '@/components/ui/switch';
 import { QualityChoice } from '@/features/account/quality-choice';
-import { useProfile, useSettings, useUpdateProfile, useUpdateSettings } from '@/features/account/queries';
+import { BlackHoleScene } from '@/features/cinema/black-hole/black-hole-scene';
+import {
+  useProfile,
+  useSettings,
+  useUpdateProfile,
+  useUpdateSettings,
+} from '@/features/account/queries';
 import { useSetLocale } from '@/features/account/use-set-locale';
 import { QuickAdd } from '@/features/tasks/quick-add/quick-add';
 import { useRawMessage } from '@/features/tasks/shared/use-words';
@@ -32,8 +38,10 @@ import { toast } from '@/stores/toasts';
 const STEPS = ['welcome', 'graphics', 'sound', 'task'] as const;
 
 /**
- * First flight: language, graphics, sound and the first task, in about a
- * minute. Ends with a small celebration.
+ * First run: language, graphics, sound and the first task, in about a
+ * minute. The same split as sign-in: the steps on a panel on the left, the
+ * black hole on the right, drawn at the graphics level being chosen (on a
+ * phone it shows up on the graphics step). Ends with a small ripple.
  */
 export function Onboarding() {
   const t = useTranslations();
@@ -105,225 +113,272 @@ export function Onboarding() {
   const name = nameValue.trim() || profile?.display_name || '';
 
   return (
-    <div className="relative mx-auto flex min-h-dvh w-full max-w-[560px] flex-col px-4 pt-[max(1rem,env(safe-area-inset-top))] sm:pt-6 sm:pb-10">
-      <header className="flex items-center justify-between">
-        <LogoLockup size="sm" />
-        <Button variant="ghost" size="sm" onClick={() => void finish(true)} disabled={finishing}>
-          {t('onboarding.skip')}
-        </Button>
-      </header>
+    <div className="flex min-h-dvh flex-col lg:grid lg:grid-cols-[34rem_1fr]">
+      <BlackHoleScene
+        scene="auth"
+        quality={quality}
+        speed={0.2}
+        sizes="(min-width: 1024px) 65vw, 100vw"
+        className="sticky top-0 order-2 h-dvh max-lg:hidden"
+      />
+      <div className="relative flex flex-1 flex-col bg-surface-1 px-5 pt-[max(1rem,env(safe-area-inset-top))] sm:px-10 lg:order-1 lg:min-h-dvh lg:border-r lg:border-line lg:px-8 lg:pt-8">
+        <header className="flex items-center justify-between">
+          <LogoLockup size="sm" />
+          <Button variant="ghost" size="sm" onClick={() => void finish(true)} disabled={finishing}>
+            {t('onboarding.skip')}
+          </Button>
+        </header>
 
-      <div className="mt-8 flex items-center gap-3 sm:mt-14">
-        <ol className="flex flex-1 gap-1.5" aria-hidden>
-          {STEPS.map((s, i) => (
-            <li key={s} className="h-1 flex-1 overflow-hidden rounded-full bg-surface-5">
-              <span
-                className={cn(
-                  'block h-full rounded-full bg-accent transition-[width] duration-500 ease-out-expo',
-                  i <= step ? 'w-full' : 'w-0',
-                )}
-              />
-            </li>
-          ))}
-        </ol>
-        <p className="shrink-0 font-mono text-xs text-fg-3 tabular" aria-live="polite">
-          {t('onboarding.stepOf', { current: step + 1, total: STEPS.length })}
-        </p>
-      </div>
+        <div className="mt-8 flex items-center gap-3 lg:mt-14">
+          <ol className="flex flex-1 gap-1" aria-hidden>
+            {STEPS.map((s, i) => (
+              <li key={s} className="h-0.5 flex-1 overflow-hidden bg-surface-5">
+                <span
+                  className={cn(
+                    'block h-full bg-accent transition-[width] duration-500 ease-out-expo',
+                    i <= step ? 'w-full' : 'w-0',
+                  )}
+                />
+              </li>
+            ))}
+          </ol>
+          <p className="shrink-0 label-mono tabular" aria-live="polite">
+            {t('onboarding.stepOf', { current: step + 1, total: STEPS.length })}
+          </p>
+        </div>
 
-      <section
-        aria-labelledby={headingId}
-        className="bg-surface-1 relative mt-5 flex-1 overflow-hidden rounded-2xl border border-line-strong sm:flex-none"
-      >
-        <AnimatePresence mode="wait" initial={false} custom={direction}>
-          <motion.div
-            key={current}
-            custom={direction}
-            initial={{ opacity: 0, x: direction * 28 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: direction * -28 }}
-            transition={{ duration: 0.32, ease: ease.outExpo }}
-            className="p-6 sm:p-8"
-          >
-            {current === 'welcome' && (
-              <>
-                <h1 id={headingId} className="font-display text-xl leading-tight font-semibold text-balance text-fg sm:text-2xl">
-                  {t('onboarding.welcome.title', { name })}
-                </h1>
-                <p className="mt-2 text-base text-fg-2">{t('onboarding.welcome.text')}</p>
-                <p className="eyebrow mt-7 mb-3">{t('onboarding.welcome.language')}</p>
-                <ChoiceCards
-                  value={locale}
-                  aria-label={t('onboarding.welcome.language')}
-                  onValueChange={(next) => {
-                    sound.play('click');
-                    setLocale(next as AppLocale).catch((error: unknown) =>
-                      toast.error(t(`auth.errors.${authErrorKey(error)}`)),
-                    );
-                  }}
-                  disabled={localePending}
-                >
-                  {routing.locales.map((l) => (
-                    <ChoiceCard
-                      key={l}
-                      value={l}
-                      lang={l}
-                      media={
-                        <span className="flex size-10 shrink-0 items-center justify-center rounded-md border border-line bg-surface-3 font-mono text-xs font-semibold tracking-wider text-fg-2 uppercase">
-                          {l}
-                        </span>
-                      }
-                      label={localeNames[l]}
-                    />
-                  ))}
-                </ChoiceCards>
-                <Field label={t('onboarding.welcome.name')} className="mt-6">
-                  <Input
-                    value={nameValue}
-                    onChange={(e) => setNameDraft(e.target.value)}
-                    maxLength={60}
-                    autoComplete="nickname"
-                  />
-                </Field>
-              </>
-            )}
-
-            {current === 'graphics' && (
-              <>
-                <h1 id={headingId} className="font-display text-xl leading-tight font-semibold text-fg sm:text-2xl">
-                  {t('onboarding.graphics.title')}
-                </h1>
-                <p id={graphicsTextId} className="mt-2 text-base text-fg-2">
-                  {t('onboarding.graphics.text', { quality: t(`quality.${recommended ?? 'high'}`) })}
-                </p>
-                <div className="mt-6">
-                  <QualityChoice
-                    value={quality}
-                    recommended={recommended}
-                    describedBy={graphicsTextId}
-                    onChange={(q) => {
+        <section aria-labelledby={headingId} className="relative mt-8 flex-1 lg:flex-none">
+          <AnimatePresence mode="wait" initial={false} custom={direction}>
+            <motion.div
+              key={current}
+              custom={direction}
+              initial={{ opacity: 0, x: direction * 28 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: direction * -28 }}
+              transition={{ duration: 0.28, ease: ease.outExpo }}
+            >
+              {current === 'welcome' && (
+                <>
+                  <h1
+                    id={headingId}
+                    className="font-display text-2xl leading-tight font-medium tracking-[-0.02em] text-balance text-fg sm:text-3xl"
+                  >
+                    {t('onboarding.welcome.title', { name })}
+                  </h1>
+                  <p className="mt-2 text-base text-fg-2">{t('onboarding.welcome.text')}</p>
+                  <p className="mt-8 mb-3 label-mono">{t('onboarding.welcome.language')}</p>
+                  <ChoiceCards
+                    value={locale}
+                    aria-label={t('onboarding.welcome.language')}
+                    onValueChange={(next) => {
                       sound.play('click');
-                      setDevice('quality', q);
+                      setLocale(next as AppLocale).catch((error: unknown) =>
+                        toast.error(t(`auth.errors.${authErrorKey(error)}`)),
+                      );
                     }}
-                  />
-                </div>
-              </>
-            )}
+                    disabled={localePending}
+                  >
+                    {routing.locales.map((l) => (
+                      <ChoiceCard
+                        key={l}
+                        value={l}
+                        lang={l}
+                        media={
+                          <span className="flex size-10 shrink-0 items-center justify-center rounded-sm border border-line bg-surface-2 font-mono text-xs font-medium tracking-wider text-fg-2 uppercase">
+                            {l}
+                          </span>
+                        }
+                        label={localeNames[l]}
+                      />
+                    ))}
+                  </ChoiceCards>
+                  <Field label={t('onboarding.welcome.name')} className="mt-6">
+                    <Input
+                      value={nameValue}
+                      onChange={(e) => setNameDraft(e.target.value)}
+                      maxLength={60}
+                      autoComplete="nickname"
+                    />
+                  </Field>
+                </>
+              )}
 
-            {current === 'sound' && (
-              <>
-                <h1 id={headingId} className="font-display text-xl leading-tight font-semibold text-fg sm:text-2xl">
-                  {t('onboarding.sound.title')}
-                </h1>
-                <p className="mt-2 text-base text-fg-2">{t('onboarding.sound.text')}</p>
-                <div className="mt-7 flex flex-col gap-6">
-                  <Switch
-                    label={t('settings.sound.enabled')}
-                    checked={soundOn}
-                    onCheckedChange={(on) => {
-                      setSoundOn(on);
-                      if (on) {
-                        sound.configure({ enabled: true });
-                        sound.play('toggleOn');
-                      }
-                    }}
+              {current === 'graphics' && (
+                <>
+                  <h1
+                    id={headingId}
+                    className="font-display text-2xl leading-tight font-medium tracking-[-0.02em] text-fg sm:text-3xl"
+                  >
+                    {t('onboarding.graphics.title')}
+                  </h1>
+                  <p id={graphicsTextId} className="mt-2 text-base text-fg-2">
+                    {t('onboarding.graphics.text', {
+                      quality: t(`quality.${recommended ?? 'high'}`),
+                    })}
+                  </p>
+                  {/* On a phone the preview of the level being chosen sits in the step itself. */}
+                  <BlackHoleScene
+                    scene="auth"
+                    quality={quality}
+                    speed={0.2}
+                    sizes="100vw"
+                    className="mt-5 h-36 rounded-sm border border-line lg:hidden"
                   />
-                  <div className={cn('flex flex-col gap-3', !soundOn && 'opacity-45')}>
-                    <span className="text-base text-fg">{t('settings.sound.volume')}</span>
-                    <Slider
-                      label={t('settings.sound.volume')}
-                      min={0}
-                      max={100}
-                      step={5}
-                      disabled={!soundOn}
-                      value={[Math.round(volume * 100)]}
-                      formatValue={(v) => `${v}%`}
-                      onValueChange={([v]) => setVolume((v ?? 80) / 100)}
-                      onValueCommit={() => sound.play('click')}
+                  <div className="mt-6">
+                    <QualityChoice
+                      value={quality}
+                      recommended={recommended}
+                      describedBy={graphicsTextId}
+                      onChange={(q) => {
+                        sound.play('click');
+                        setDevice('quality', q);
+                      }}
                     />
                   </div>
-                  <Button
-                    variant="secondary"
-                    icon={<Volume2 />}
-                    disabled={!soundOn}
-                    onClick={() => {
-                      sound.play('chime');
-                      window.setTimeout(() => sound.play('success'), 420);
-                    }}
-                    className="self-start"
+                </>
+              )}
+
+              {current === 'sound' && (
+                <>
+                  <h1
+                    id={headingId}
+                    className="font-display text-2xl leading-tight font-medium tracking-[-0.02em] text-fg sm:text-3xl"
                   >
-                    {t('onboarding.sound.test')}
-                  </Button>
-                  <p className="text-sm text-fg-3">{t('settings.sound.iosHint')}</p>
-                </div>
-              </>
-            )}
+                    {t('onboarding.sound.title')}
+                  </h1>
+                  <p className="mt-2 text-base text-fg-2">{t('onboarding.sound.text')}</p>
+                  <div className="mt-7 flex flex-col gap-6">
+                    <Switch
+                      label={t('settings.sound.enabled')}
+                      checked={soundOn}
+                      onCheckedChange={(on) => {
+                        setSoundOn(on);
+                        if (on) {
+                          sound.configure({ enabled: true });
+                          sound.play('toggleOn');
+                        }
+                      }}
+                    />
+                    <div className={cn('flex flex-col gap-3', !soundOn && 'opacity-45')}>
+                      <span className="label-mono">{t('settings.sound.volume')}</span>
+                      <Slider
+                        label={t('settings.sound.volume')}
+                        min={0}
+                        max={100}
+                        step={5}
+                        disabled={!soundOn}
+                        value={[Math.round(volume * 100)]}
+                        formatValue={(v) => `${v}%`}
+                        onValueChange={([v]) => setVolume((v ?? 80) / 100)}
+                        onValueCommit={() => sound.play('click')}
+                      />
+                    </div>
+                    <Button
+                      variant="secondary"
+                      icon={<Volume2 />}
+                      disabled={!soundOn}
+                      onClick={() => {
+                        sound.play('chime');
+                        window.setTimeout(() => sound.play('success'), 420);
+                      }}
+                      className="self-start"
+                    >
+                      {t('onboarding.sound.test')}
+                    </Button>
+                    <p className="text-sm text-fg-3">{t('settings.sound.iosHint')}</p>
+                  </div>
+                </>
+              )}
 
-            {current === 'task' && (
-              <>
-                <h1 id={headingId} className="font-display text-xl leading-tight font-semibold text-fg sm:text-2xl">
-                  {t('onboarding.task.title')}
-                </h1>
-                <p className="mt-2 text-base text-fg-2">{t('onboarding.task.text')}</p>
-                <div className="mt-6">
-                  <QuickAdd
-                    key={example?.n ?? 0}
-                    scope={{ kind: 'section', section: 'today' }}
-                    defaultText={example?.text}
-                    autoFocus
-                    onCreated={(task) => {
-                      setFirstTask(task.title);
-                      sound.play('success');
-                    }}
-                  />
-                </div>
-                <div className="mt-4 flex flex-wrap items-center gap-2">
-                  <span className="text-sm text-fg-3">{t('onboarding.task.examples')}</span>
-                  {examples.slice(0, 3).map((text, i) => (
-                    <button
-                      key={text}
-                      type="button"
-                      onClick={() => setExample({ text, n: i + 1 + (example?.n ?? 0) * 10 })}
-                      className="focus-ring rounded-full border border-line-strong bg-surface-3/70 px-3 py-1 text-sm text-fg-2 transition-colors hover-ok:border-line-bright hover-ok:text-fg"
-                    >
-                      {text}
-                    </button>
-                  ))}
-                </div>
-                <AnimatePresence>
-                  {firstTask && (
-                    <motion.p
-                      initial={{ opacity: 0, y: 6 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      className="mt-5 flex items-center gap-2 rounded-lg border border-success/30 bg-success/10 px-3 py-2.5 text-base text-fg"
-                      role="status"
-                    >
-                      <CircleCheckBig aria-hidden className="size-5 shrink-0 text-success" />
-                      {t('onboarding.task.created', { title: firstTask })}
-                    </motion.p>
+              {current === 'task' && (
+                <>
+                  <h1
+                    id={headingId}
+                    className="font-display text-2xl leading-tight font-medium tracking-[-0.02em] text-fg sm:text-3xl"
+                  >
+                    {t('onboarding.task.title')}
+                  </h1>
+                  <p className="mt-2 text-base text-fg-2">{t('onboarding.task.text')}</p>
+                  <div className="mt-6">
+                    <QuickAdd
+                      key={example?.n ?? 0}
+                      scope={{ kind: 'section', section: 'today' }}
+                      defaultText={example?.text}
+                      autoFocus
+                      onCreated={(task) => {
+                        setFirstTask(task.title);
+                        sound.play('success');
+                      }}
+                    />
+                  </div>
+                  <div className="mt-4 flex flex-wrap items-center gap-2">
+                    <span className="text-sm text-fg-3">{t('onboarding.task.examples')}</span>
+                    {examples.slice(0, 3).map((text, i) => (
+                      <button
+                        key={text}
+                        type="button"
+                        onClick={() => setExample({ text, n: i + 1 + (example?.n ?? 0) * 10 })}
+                        className="rounded-sm border border-line-strong px-2.5 py-1 text-sm text-fg-2 focus-ring transition-colors hover-ok:border-line-bright hover-ok:bg-surface-3 hover-ok:text-fg"
+                      >
+                        {text}
+                      </button>
+                    ))}
+                  </div>
+                  <AnimatePresence>
+                    {firstTask && (
+                      <motion.p
+                        initial={{ opacity: 0, y: 6 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        className="mt-5 flex items-center gap-2 rounded-sm border border-line-strong bg-surface-2 px-3 py-2.5 text-base text-fg"
+                        role="status"
+                      >
+                        <CircleCheckBig aria-hidden className="size-4 shrink-0 text-success" />
+                        {t('onboarding.task.created', { title: firstTask })}
+                      </motion.p>
+                    )}
+                  </AnimatePresence>
+                  {!firstTask && (
+                    <p className="mt-5 text-sm text-fg-3">{t('onboarding.task.skipHint')}</p>
                   )}
-                </AnimatePresence>
-                {!firstTask && <p className="mt-5 text-sm text-fg-3">{t('onboarding.task.skipHint')}</p>}
-              </>
-            )}
-          </motion.div>
-        </AnimatePresence>
-      </section>
+                </>
+              )}
+            </motion.div>
+          </AnimatePresence>
+        </section>
 
-      {/* On phones the actions stay under the thumb while the step scrolls. */}
-      <div className="sticky bottom-0 z-10 -mx-4 mt-5 flex items-center justify-between gap-3 border-t border-line bg-bg px-4 pt-3 pb-[max(1rem,env(safe-area-inset-bottom))] sm:static sm:mx-0 sm:border-0 sm:bg-transparent sm:p-0">
-        <Button variant="ghost" icon={<ArrowLeft />} onClick={() => go(-1)} className={cn(step === 0 && 'invisible')} disabled={finishing}>
-          {t('common.back')}
-        </Button>
-        {step < STEPS.length - 1 ? (
-          <Button variant="primary" size="lg" trailing={<ArrowRight />} onClick={() => go(1)} disabled={localePending}>
-            {t('common.next')}
+        {/* On phones the actions stay under the thumb while the step scrolls. */}
+        <div className="sticky bottom-0 z-10 -mx-5 mt-8 flex items-center justify-between gap-3 border-t border-line bg-surface-1 px-5 pt-3 pb-[max(1rem,env(safe-area-inset-bottom))] sm:-mx-10 sm:px-10 lg:static lg:mx-0 lg:mt-10 lg:border-0 lg:bg-transparent lg:px-0 lg:pb-8">
+          <Button
+            variant="ghost"
+            icon={<ArrowLeft />}
+            onClick={() => go(-1)}
+            className={cn(step === 0 && 'invisible')}
+            disabled={finishing}
+          >
+            {t('common.back')}
           </Button>
-        ) : (
-          <Button variant="primary" size="lg" icon={<Rocket />} loading={finishing} onClick={() => void finish(false)}>
-            {finishing ? t('onboarding.saving') : t('onboarding.finish')}
-          </Button>
-        )}
+          {step < STEPS.length - 1 ? (
+            <Button
+              variant="primary"
+              size="lg"
+              trailing={<ArrowRight />}
+              onClick={() => go(1)}
+              disabled={localePending}
+            >
+              {t('common.next')}
+            </Button>
+          ) : (
+            <Button
+              variant="primary"
+              size="lg"
+              trailing={<ArrowRight />}
+              loading={finishing}
+              onClick={() => void finish(false)}
+            >
+              {finishing ? t('onboarding.saving') : t('onboarding.finish')}
+            </Button>
+          )}
+        </div>
       </div>
       {celebrate && <StarBurst />}
     </div>

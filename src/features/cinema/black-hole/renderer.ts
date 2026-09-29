@@ -123,6 +123,10 @@ export class BlackHoleRenderer {
   private bloom: Target[] = [];
   private vao: WebGLVertexArrayObject;
   private scale = 1;
+  /** Longer geodesic steps trade a little accuracy near the ring for speed (real time on weak GPUs). */
+  step = 1;
+  /** Pixel size (radians) of the poster this frame must match; 0 draws stars one pixel sharp at any size. */
+  starRef = 0;
 
   constructor(private canvas: HTMLCanvasElement) {
     const gl = canvas.getContext('webgl2', { antialias: false, alpha: false, preserveDrawingBuffer: true, powerPreference: 'high-performance' });
@@ -202,6 +206,8 @@ export class BlackHoleRenderer {
     gl.uniform1f(s.u('uDiskOut'), view.diskOuter);
     gl.uniform1f(s.u('uTemp'), view.temperature);
     gl.uniform1i(s.u('uSamples'), samples);
+    gl.uniform1f(s.u('uStep'), this.step);
+    gl.uniform1f(s.u('uStarRef'), this.starRef);
   }
 
   private post(view: BlackHoleView) {
@@ -302,6 +308,12 @@ export class BlackHoleRenderer {
 
   get renderScale() {
     return this.scale;
+  }
+
+  /** The GPU's name as the driver reports it (to spot software rendering). */
+  get gpu() {
+    const info = this.gl.getExtension('WEBGL_debug_renderer_info');
+    return String(this.gl.getParameter(info ? info.UNMASKED_RENDERER_WEBGL : this.gl.RENDERER) ?? '');
   }
 
   dispose() {

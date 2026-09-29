@@ -10,11 +10,16 @@ interface Probe {
   webgl: boolean;
 }
 
+/** A GPU emulated on the CPU: fine for a still, far too slow for a live scene. */
+export function isSoftwareRenderer(renderer: string) {
+  return /swiftshader|llvmpipe|softpipe|software|basic render|microsoft basic/i.test(renderer);
+}
+
 /** Pure scoring, unit-tested: renderer string + hardware hints → quality. */
 export function scoreQuality({ renderer, cores, memory, mobile, webgl }: Probe): ConcreteQuality {
   if (!webgl) return 'off';
   const r = renderer.toLowerCase();
-  if (/swiftshader|llvmpipe|softpipe|software|basic render|microsoft basic/.test(r)) return 'low';
+  if (isSoftwareRenderer(r)) return 'low';
   let score = 0;
   if (/apple m\d|apple gpu/.test(r)) score += 3;
   if (/nvidia|geforce|rtx|quadro|radeon rx|radeon pro|intel.*arc/.test(r)) score += 3;

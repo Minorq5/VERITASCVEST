@@ -45,17 +45,44 @@
     "dragHandle": "Drag down to close"
   },
   "home": {
-    "eyebrow": "A planner from the next orbit",
-    "title": "Every task is a star.",
-    "lead": "Tasks, habits and projects turn into constellations. Share goals with friends, earn experience and watch your galaxy grow.",
-    "start": "Get started",
+    "eyebrow": "A planner for tasks and habits",
+    "title": "What’s due, what’s overdue and how much is left.",
+    "lead": "The closer the deadline, the closer the task to the horizon. Progress is counted in your own units — minutes, pages, glasses of water — and syncs between your phone and computer.",
+    "start": "Create an account",
     "signIn": "Sign in",
-    "pillars": {
-      "offline": "Works without internet",
-      "languages": "Русский · English · Български",
-      "devices": "Phone and desktop"
+    "specs": {
+      "types": {
+        "label": "Task types",
+        "value": "11"
+      },
+      "languages": {
+        "label": "Languages",
+        "value": "RU · EN · BG"
+      },
+      "network": {
+        "label": "Internet",
+        "value": "optional"
+      }
     },
-    "titleAccent": "Build your sky."
+    "preview": {
+      "label": "A piece of the Today screen",
+      "heading": "Today",
+      "count": "1/5",
+      "report": "Send the quarterly report",
+      "reportDue": "Yesterday 6:00 PM",
+      "reportTag": "#work",
+      "run": "Run in the park",
+      "runDue": "Today 7:30 PM",
+      "runTag": "#health",
+      "runProgress": "25 / 45 min",
+      "book": "Read “The Science of Interstellar”",
+      "bookDue": "Today",
+      "bookProgress": "124/300",
+      "water": "Water",
+      "waterProgress": "5/8",
+      "letters": "Reply to emails",
+      "lettersDone": "Done at 1:19 PM"
+    }
   },
   "errors": {
     "notFoundCode": "404",
@@ -325,13 +352,13 @@
     }
   },
   "auth": {
-    "brandLine": "Tasks that glow",
+    "brandLine": "Tasks in plain sight",
     "email": "Email",
     "emailPlaceholder": "you@example.com",
     "password": "Password",
     "login": {
       "title": "Welcome back",
-      "subtitle": "Sign in to continue your flight.",
+      "subtitle": "Your tasks are where you left them.",
       "forgot": "Forgot password?",
       "submit": "Sign in",
       "noAccount": "No account yet?",
@@ -343,7 +370,7 @@
     },
     "register": {
       "title": "Create your account",
-      "subtitle": "One minute and your sky is ready.",
+      "subtitle": "One minute. A confirmation email will follow.",
       "username": "Username",
       "usernameHint": "3–24 characters: Latin letters, digits and _. Friends will find you by it.",
       "passwordHint": "At least 8 characters with letters and digits.",
@@ -373,7 +400,7 @@
     "confirm": {
       "verifying": "Checking the link…",
       "successTitle": "Email confirmed",
-      "successText": "Welcome aboard! Let’s set up your ship.",
+      "successText": "Let’s set Veritas up for you — it takes less than a minute.",
       "emailChangedTitle": "Email changed",
       "emailChangedText": "Sign in with your new address from now on.",
       "expiredTitle": "The link has expired",
@@ -449,8 +476,8 @@
     "stepOf": "Step {current} of {total}",
     "skip": "Skip",
     "welcome": {
-      "title": "Welcome aboard, {name}",
-      "text": "Let’s tune the ship for you — it takes less than a minute.",
+      "title": "{name}, let’s set Veritas up for you",
+      "text": "Four short steps. Everything can be changed later in settings.",
       "language": "Interface language",
       "name": "What should we call you"
     },
@@ -459,19 +486,19 @@
       "text": "We checked your device and suggest “{quality}”. You can change it any time in settings.",
       "recommended": "Recommended",
       "auto": "We pick and adapt it while you work",
-      "ultra": "Every effect, maximum particles and depth",
-      "high": "Beautiful and smooth on most devices",
-      "low": "Light effects — for older phones and saving battery",
-      "off": "No 3D: everything works, just calmer"
+      "ultra": "Full resolution 3D scenes — for powerful computers",
+      "high": "Slightly lower resolution — smooth on most devices",
+      "low": "Half the resolution — for older phones and saving battery",
+      "off": "No 3D: still frames instead of scenes"
     },
     "sound": {
       "title": "Sound",
       "text": "Short soft sounds confirm your actions. Space ambience is optional.",
       "test": "Test sound"
     },
-    "finish": "Start the flight",
+    "finish": "Open my tasks",
     "saving": "Saving…",
-    "metaTitle": "First flight",
+    "metaTitle": "Setup",
     "task": {
       "title": "Your first task",
       "text": "Type it in plain words — we’ll pick up the date, time, tags and priority.",

@@ -1,8 +1,8 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
-import { LogoMark } from '@/components/brand/logo';
-import { SpaceBackdrop } from '@/components/effects/space-backdrop';
+import { LogoLockup } from '@/components/brand/logo';
+import { BlackHoleStill } from '@/features/cinema/black-hole/black-hole-scene';
 import { designPageEnabled } from '@/lib/site';
 
 export const metadata: Metadata = { robots: { index: false, follow: false } };
@@ -16,26 +16,25 @@ export default async function OgCardPage({ params }: PageProps<'/[locale]/og-car
   const { locale } = await params;
   setRequestLocale(locale as 'ru' | 'en' | 'bg');
   const t = await getTranslations('home');
+  const specs = (['types', 'languages', 'network'] as const).map(
+    (key) => `${t(`specs.${key}.label`)}: ${t(`specs.${key}.value`)}`,
+  );
 
   return (
-    <main className="relative flex h-[630px] w-[1200px] items-center gap-16 overflow-hidden px-24">
-      <SpaceBackdrop />
-      <div className="relative shrink-0">
-        <LogoMark size={300} />
-      </div>
-      <div className="relative flex flex-col">
-        <p className="eyebrow text-accent">Veritas Tasks</p>
-        <h1 className="mt-5 font-display text-[3.4rem] leading-[1.08] font-medium tracking-[-0.025em] text-fg">
-          <span className="block">{t('title')}</span>
-          <span className="block text-accent">
-            {t('titleAccent')}
-          </span>
-        </h1>
-        <p className="mt-7 text-xl text-fg-2">
-          {t('pillars.offline')} · {t('pillars.devices')}
+    <main className="relative grid h-[630px] w-[1200px] grid-cols-[1fr_470px] overflow-hidden bg-bg">
+      <div className="flex flex-col justify-between py-16 pr-10 pl-20">
+        <LogoLockup size="md" />
+        <div>
+          <p className="label-mono text-accent">{t('eyebrow')}</p>
+          <h1 className="mt-5 font-display text-[3.25rem] leading-[1.04] font-medium tracking-[-0.03em] text-fg">
+            {t('title')}
+          </h1>
+        </div>
+        <p className="font-mono text-sm tracking-[0.04em] text-fg-3 uppercase">
+          {specs.join('  ·  ')}
         </p>
-        <p className="mt-2 text-lg text-fg-3">{t('pillars.languages')}</p>
       </div>
+      <BlackHoleStill scene="hero" sizes="470px" className="h-full border-l border-line-strong" />
     </main>
   );
 }

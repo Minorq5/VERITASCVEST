@@ -33,6 +33,8 @@ uniform float uDiskIn;
 uniform float uDiskOut;
 uniform float uTemp;         // peak disk temperature, K
 uniform int uSamples;        // 1 or 4 (2×2 supersampling)
+uniform float uStep;         // step length multiplier: 1 for stills, longer steps in real time on weak GPUs
+uniform float uStarRef;      // > 0: the pixel size (radians) of the poster; a coarser frame spreads each star's light instead of blowing it up
 
 const int MAX_STEPS = 700;
 
@@ -99,6 +101,7 @@ vec3 sky(vec3 d, float pix) {
       float dist = length(p - c) / scale;
       float size = pix * 0.75;
       float b = gain * (0.35 + 0.65 * (h - threshold) / (1.0 - threshold));
+      if (uStarRef > 0.0) b *= min(1.0, (uStarRef * uStarRef) / (pix * pix));
       float temp = mix(3200.0, 11000.0, pow(hash13(cell * 1.7 + 3.0), 1.6));
       col += blackbody(temp) * b * exp(-(dist * dist) / (size * size));
     }
@@ -154,7 +157,7 @@ vec3 trace(vec2 frag) {
     float r = length(pos);
     if (r < 1.0) return col; // swallowed: the shadow
     if (r > escape && dot(pos, vel) > 0.0) break;
-    float dt = clamp(mix(0.025, 0.075, smoothstep(2.0, 14.0, r)) * r, 0.02, 12.0);
+    float dt = clamp(mix(0.025, 0.075, smoothstep(2.0, 14.0, r)) * r * uStep, 0.02, 12.0);
     vec3 a1 = accel(pos, h2);
     vec3 midPos = pos + vel * dt * 0.5;
     vec3 midVel = vel + a1 * dt * 0.5;
