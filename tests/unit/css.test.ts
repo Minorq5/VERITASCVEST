@@ -24,4 +24,12 @@ describe('globals.css', () => {
     }
     expect(checked).toBe(sources.length);
   });
+
+  it('emits the colors chosen at run time (priorities, swatches) even when no class names them', () => {
+    const block = /@theme static \{([\s\S]*?)\n\}/.exec(css)?.[1] ?? '';
+    for (const key of ['critical', 'high', 'medium', 'low']) expect(block).toContain(`--color-prio-${key}:`);
+    for (const name of ['cyan', 'sky', 'indigo', 'violet', 'orchid', 'rose', 'coral', 'amber', 'lime', 'mint', 'teal', 'slate']) {
+      expect(block).toContain(`--color-swatch-${name}:`);
+    }
+  });
 });

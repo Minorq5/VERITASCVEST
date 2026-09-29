@@ -82,6 +82,8 @@ function walk(value, locale) {
     // Apply twice so chains like "и в" are both glued.
     return typograf(typograf(value, locale), locale);
   }
+  // Lists (examples, weekday names) must stay lists.
+  if (Array.isArray(value)) return value.map((v) => walk(v, locale));
   if (value && typeof value === 'object') {
     return Object.fromEntries(Object.entries(value).map(([k, v]) => [k, walk(v, locale)]));
   }

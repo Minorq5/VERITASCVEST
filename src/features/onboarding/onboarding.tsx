@@ -1,10 +1,11 @@
 'use client';
 
-import { ArrowLeft, ArrowRight, Rocket, Volume2 } from 'lucide-react';
+import { ArrowLeft, ArrowRight, CircleCheckBig, Rocket, Volume2 } from 'lucide-react';
 import { AnimatePresence, motion } from 'motion/react';
 import { useLocale, useTranslations } from 'next-intl';
 import { useEffect, useId, useState } from 'react';
 import { LogoLockup } from '@/components/brand/logo';
+import { StarBurst } from '@/components/effects/star-burst';
 import { Button } from '@/components/ui/button';
 import { Field } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
@@ -14,6 +15,8 @@ import { Switch } from '@/components/ui/switch';
 import { QualityChoice } from '@/features/account/quality-choice';
 import { useProfile, useSettings, useUpdateProfile, useUpdateSettings } from '@/features/account/queries';
 import { useSetLocale } from '@/features/account/use-set-locale';
+import { QuickAdd } from '@/features/tasks/quick-add/quick-add';
+import { useRawMessage } from '@/features/tasks/shared/use-words';
 import { authErrorKey } from '@/lib/auth/errors';
 import { displayNameSchema } from '@/lib/auth/validation';
 import { useRouter } from '@/i18n/navigation';
@@ -26,11 +29,11 @@ import { sound } from '@/sound/engine';
 import { useDeviceSettings } from '@/stores/device-settings';
 import { toast } from '@/stores/toasts';
 
-const STEPS = ['welcome', 'graphics', 'sound'] as const;
+const STEPS = ['welcome', 'graphics', 'sound', 'task'] as const;
 
 /**
- * First flight: language, graphics and sound in under a minute.
- * Stage 3 adds the fourth step — the first task.
+ * First flight: language, graphics, sound and the first task, in about a
+ * minute. Ends with a small celebration.
  */
 export function Onboarding() {
   const t = useTranslations();
@@ -55,6 +58,10 @@ export function Onboarding() {
   const setVolume = (v: number) => setSoundDraft((d) => ({ ...d, volume: v }));
   const [nameDraft, setNameDraft] = useState<string>();
   const [finishing, setFinishing] = useState(false);
+  const [celebrate, setCelebrate] = useState(false);
+  const [firstTask, setFirstTask] = useState<string | null>(null);
+  const [example, setExample] = useState<{ text: string; n: number } | null>(null);
+  const examples = useRawMessage<string[]>('tasks', 'quickAdd.examples');
   const headingId = useId();
   const graphicsTextId = useId();
 
@@ -81,7 +88,11 @@ export function Onboarding() {
         onboarding_completed_at: new Date().toISOString(),
         ...(skipped ? {} : { sound_enabled: soundOn, sound_volume: volume }),
       });
-      if (!skipped) sound.play('success');
+      if (!skipped) {
+        sound.play('success');
+        setCelebrate(true);
+        await new Promise((resolve) => setTimeout(resolve, 900));
+      }
       router.replace(APP_HOME);
     } catch (error) {
       setFinishing(false);
@@ -247,6 +258,54 @@ export function Onboarding() {
                 </div>
               </>
             )}
+
+            {current === 'task' && (
+              <>
+                <h1 id={headingId} className="font-display text-xl leading-tight font-semibold text-fg sm:text-2xl">
+                  {t('onboarding.task.title')}
+                </h1>
+                <p className="mt-2 text-base text-fg-2">{t('onboarding.task.text')}</p>
+                <div className="mt-6">
+                  <QuickAdd
+                    key={example?.n ?? 0}
+                    scope={{ kind: 'section', section: 'today' }}
+                    defaultText={example?.text}
+                    autoFocus
+                    onCreated={(task) => {
+                      setFirstTask(task.title);
+                      sound.play('success');
+                    }}
+                  />
+                </div>
+                <div className="mt-4 flex flex-wrap items-center gap-2">
+                  <span className="text-sm text-fg-3">{t('onboarding.task.examples')}</span>
+                  {examples.slice(0, 3).map((text, i) => (
+                    <button
+                      key={text}
+                      type="button"
+                      onClick={() => setExample({ text, n: i + 1 + (example?.n ?? 0) * 10 })}
+                      className="focus-ring rounded-full border border-line-strong bg-surface-3/70 px-3 py-1 text-sm text-fg-2 transition-colors hover-ok:border-line-bright hover-ok:text-fg"
+                    >
+                      {text}
+                    </button>
+                  ))}
+                </div>
+                <AnimatePresence>
+                  {firstTask && (
+                    <motion.p
+                      initial={{ opacity: 0, y: 6 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      className="mt-5 flex items-center gap-2 rounded-lg border border-success/30 bg-success/10 px-3 py-2.5 text-base text-fg"
+                      role="status"
+                    >
+                      <CircleCheckBig aria-hidden className="size-5 shrink-0 text-success" />
+                      {t('onboarding.task.created', { title: firstTask })}
+                    </motion.p>
+                  )}
+                </AnimatePresence>
+                {!firstTask && <p className="mt-5 text-sm text-fg-3">{t('onboarding.task.skipHint')}</p>}
+              </>
+            )}
           </motion.div>
         </AnimatePresence>
       </section>
@@ -266,6 +325,7 @@ export function Onboarding() {
           </Button>
         )}
       </div>
+      {celebrate && <StarBurst />}
     </div>
   );
 }

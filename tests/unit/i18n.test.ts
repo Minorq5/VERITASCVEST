@@ -1,22 +1,46 @@
+import { parse, TYPE, type MessageFormatElement } from '@formatjs/icu-messageformat-parser';
 import { describe, expect, it } from 'vitest';
 import bg from '@/messages/bg.json';
 import en from '@/messages/en.json';
 import ru from '@/messages/ru.json';
 
-type Tree = { [key: string]: string | Tree };
+type Tree = { [key: string]: string | string[] | Tree };
 
 function flatten(tree: Tree, prefix = ''): Record<string, string> {
   return Object.entries(tree).reduce<Record<string, string>>((acc, [key, value]) => {
     const path = prefix ? `${prefix}.${key}` : key;
     if (typeof value === 'string') acc[path] = value;
+    else if (Array.isArray(value)) value.forEach((item, i) => (acc[`${path}.${i}`] = item));
     else Object.assign(acc, flatten(value, path));
     return acc;
   }, {});
 }
 
 const locales = { ru: flatten(ru), en: flatten(en), bg: flatten(bg) };
-const placeholders = (text: string) =>
-  [...text.matchAll(/\{(\w+)(?:,\s*(\w+))?/g)].map((m) => m[1]).sort();
+/**
+ * Argument names a message shows (parsing also proves the ICU syntax is valid).
+ * Names used only as `select` switches carry grammar (gender, case) and may be
+ * absent in a language that does not need them.
+ */
+function placeholders(text: string): string[] {
+  const shown = new Set<string>();
+  const walk = (nodes: MessageFormatElement[]) => {
+    for (const node of nodes) {
+      if (node.type === TYPE.select) {
+        for (const option of Object.values(node.options)) walk(option.value);
+      } else if (node.type === TYPE.plural) {
+        shown.add(node.value);
+        for (const option of Object.values(node.options)) walk(option.value);
+      } else if (node.type === TYPE.tag) {
+        walk(node.children);
+      } else if (node.type !== TYPE.literal && node.type !== TYPE.pound) {
+        shown.add(node.value);
+      }
+    }
+  };
+  walk(parse(text));
+  return [...shown].sort();
+}
 
 describe('translations', () => {
   it('every locale has exactly the same keys', () => {
@@ -72,5 +96,18 @@ describe('translations', () => {
         expect(value, `${locale}:${key}`).not.toMatch(/\S —/u);
       }
     }
+  });
+
+  it('lists stay lists in every language (the typography pass must not turn them into objects)', () => {
+    const lists = (tree: unknown, prefix = ''): string[] =>
+      Array.isArray(tree)
+        ? [prefix]
+        : tree && typeof tree === 'object'
+          ? Object.entries(tree).flatMap(([k, v]) => lists(v, prefix ? `${prefix}.${k}` : k))
+          : [];
+    const reference = lists(en).sort();
+    expect(reference.length).toBeGreaterThan(0);
+    expect(lists(ru).sort()).toEqual(reference);
+    expect(lists(bg).sort()).toEqual(reference);
   });
 });

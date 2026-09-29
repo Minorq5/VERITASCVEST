@@ -1,8 +1,20 @@
-/** Where signed-in people land. Stage 3 switches this to the Today screen. */
-export const APP_HOME = '/profile';
+/** Where signed-in people land. */
+export const APP_HOME = '/today';
 
 /** Route prefixes that require a signed-in account (without the locale). */
-export const PROTECTED_PREFIXES = ['/onboarding', '/profile', '/settings'] as const;
+export const PROTECTED_PREFIXES = [
+  '/onboarding',
+  '/profile',
+  '/settings',
+  '/inbox',
+  '/today',
+  '/tomorrow',
+  '/week',
+  '/overdue',
+  '/completed',
+  '/trash',
+  '/projects',
+] as const;
 
 export function isProtectedPath(path: string): boolean {
   return PROTECTED_PREFIXES.some((prefix) => path === prefix || path.startsWith(`${prefix}/`));

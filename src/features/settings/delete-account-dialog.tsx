@@ -9,10 +9,12 @@ import { Field } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
 import { ResponsiveDialog } from '@/components/ui/responsive-dialog';
 import { FormAlert } from '@/features/auth/auth-card';
+import { forgetDevice } from '@/features/shell/sign-out';
 import { useRouter } from '@/i18n/navigation';
 import { authErrorKey, type AuthErrorKey } from '@/lib/auth/errors';
 import { useGuardedSubmit } from '@/lib/hooks/use-guarded-submit';
 import { getSupabase } from '@/lib/supabase/client';
+import { useSession } from '@/stores/session';
 import { toast } from '@/stores/toasts';
 
 export function DeleteAccountDialog({ username }: { username: string }) {
@@ -38,8 +40,10 @@ export function DeleteAccountDialog({ username }: { username: string }) {
         setError(invokeError.name === 'FunctionsFetchError' ? 'network' : authErrorKey(invokeError));
         return;
       }
-      // The account is gone; the local session only needs forgetting.
+      // The account is gone; the local session and the device copy only need forgetting.
+      const userId = useSession.getState().user?.id;
       await supabase.auth.signOut({ scope: 'local' }).catch(() => undefined);
+      await forgetDevice(userId);
       queryClient.clear();
       toast.success(t('settings.account.deleted'));
       router.replace('/');

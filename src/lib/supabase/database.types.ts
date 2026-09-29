@@ -847,6 +847,7 @@ export type Database = {
           project_id: string | null;
           quest_id: string | null;
           recurrence: Json | null;
+          reminders: NonNullable<Json>;
           sort_key: string;
           start_at: string | null;
           start_date: string | null;
@@ -885,6 +886,7 @@ export type Database = {
           project_id?: string | null;
           quest_id?: string | null;
           recurrence?: Json | null;
+          reminders?: NonNullable<Json>;
           sort_key?: string;
           start_at?: string | null;
           start_date?: string | null;
@@ -923,6 +925,7 @@ export type Database = {
           project_id?: string | null;
           quest_id?: string | null;
           recurrence?: Json | null;
+          reminders?: NonNullable<Json>;
           sort_key?: string;
           start_at?: string | null;
           start_date?: string | null;

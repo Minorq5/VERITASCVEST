@@ -411,7 +411,14 @@
     },
     "finish": "Start the flight",
     "saving": "Saving…",
-    "metaTitle": "First flight"
+    "metaTitle": "First flight",
+    "task": {
+      "title": "Your first task",
+      "text": "Type it in plain words — we’ll pick up the date, time, tags and priority.",
+      "examples": "Try:",
+      "created": "“{title}” is in orbit",
+      "skipHint": "You can skip this and add tasks later."
+    }
   },
   "profile": {
     "title": "Profile",
@@ -554,6 +561,782 @@
       "everyoneHint": "Anyone who knows your username, ID or QR code can send a request.",
       "friendsOfFriendsHint": "Only people you share a friend with.",
       "nobodyHint": "No new requests arrive. You can still add people yourself."
+    }
+  },
+  "sync": {
+    "conflict": "This task was changed on another device",
+    "conflictText": "We kept the later edit. The previous value is saved in the task history.",
+    "rejected": "A change was not saved",
+    "rejectedCreate": "The server did not accept the new item, so it was removed from this device.",
+    "rejectedChange": "The server did not accept the edit — the last saved version is back.",
+    "state": {
+      "idle": "Everything is saved",
+      "syncing": "Syncing…",
+      "offline": "Offline — changes are kept on this device",
+      "error": "The server is not answering — we will retry",
+      "auth": "Sign in again to keep syncing",
+      "standby": "Another tab is syncing",
+      "loading": "Loading your tasks…"
+    },
+    "pending": "{count, plural, one {# change waiting to be sent} other {# changes waiting to be sent}}",
+    "savedAt": "Saved at {time}",
+    "retry": "Retry now",
+    "label": "Sync status",
+    "signOutTitle": "Some changes are not sent yet",
+    "signOutText": "{count, plural, one {# change hasn’t reached the server yet and will be lost} other {# changes haven’t reached the server yet and will be lost}} if you sign out now.",
+    "signOutWait": "Wait",
+    "signOutAnyway": "Sign out anyway"
+  },
+  "nav": {
+    "sections": "Lists",
+    "inbox": "Inbox",
+    "today": "Today",
+    "tomorrow": "Tomorrow",
+    "week": "Week",
+    "overdue": "Overdue",
+    "completed": "Completed",
+    "trash": "Trash",
+    "more": "More",
+    "newTask": "New task",
+    "projects": "Projects",
+    "hideSidebar": "Collapse sidebar",
+    "count": "{count, plural, one {# task} other {# tasks}}"
+  },
+  "tasks": {
+    "count": "{count, plural, one {# task} other {# tasks}}",
+    "summary": {
+      "progress": "{done} of {total} done",
+      "allDone": "All done for today",
+      "nothing": "Nothing planned for today",
+      "habits": "Today’s habits",
+      "overdue": "Overdue",
+      "moveAllToday": "All to today"
+    },
+    "empty": {
+      "inbox": {
+        "title": "Inbox is empty",
+        "text": "Tasks without a project land here. Catch a thought before it drifts away."
+      },
+      "today": {
+        "title": "Today is clear",
+        "text": "Add a task or take a break — you’ve earned it."
+      },
+      "tomorrow": {
+        "title": "Nothing for tomorrow yet",
+        "text": "Plan something ahead — tomorrow’s you will thank you."
+      },
+      "week": {
+        "title": "Your week is free",
+        "text": "Tasks due in the next 7 days show up here."
+      },
+      "overdue": {
+        "title": "Nothing overdue",
+        "text": "You’re on course. Keep it up!"
+      },
+      "completed": {
+        "title": "Nothing completed yet",
+        "text": "Tasks you check off gather here by day."
+      },
+      "trash": {
+        "title": "Trash is empty",
+        "text": "Deleted tasks stay here for 30 days."
+      },
+      "filtered": {
+        "title": "Nothing found",
+        "text": "Try different conditions."
+      },
+      "project": {
+        "title": "This project is empty",
+        "text": "Add the first task — it will show up here."
+      },
+      "projectMissing": {
+        "title": "Project not found",
+        "text": "It may have been deleted on another device."
+      }
+    },
+    "row": {
+      "complete": "Complete “{title}”",
+      "reopen": "Reopen “{title}”",
+      "open": "Open “{title}”",
+      "more": "Task actions",
+      "overdue": "Overdue",
+      "repeats": "Repeats",
+      "subtasks": "Subtasks: {done} of {total}",
+      "comments": "Comments: {count}",
+      "attachments": "Attachments: {count}",
+      "estimate": "Estimate: {value}",
+      "running": "Timer running",
+      "select": "Select “{title}”",
+      "drag": "Drag “{title}”",
+      "progress": "Progress: {value}",
+      "completedAt": "Completed at {time}",
+      "recurringDone": "Occurrence completed"
+    },
+    "groups": {
+      "today": "Today",
+      "yesterday": "Yesterday",
+      "tomorrow": "Tomorrow",
+      "noDate": "No date"
+    },
+    "actions": {
+      "open": "Open",
+      "duplicate": "Duplicate",
+      "duplicateSuffix": " (copy)",
+      "today": "Today",
+      "tomorrow": "Tomorrow",
+      "nextWeek": "Next week",
+      "noDate": "Remove date",
+      "date": "Date",
+      "priority": "Priority",
+      "delete": "Delete",
+      "restore": "Restore",
+      "deleteForever": "Delete forever",
+      "emptyTrash": "Empty trash",
+      "saveAsTemplate": "Save as template",
+      "copyLink": "Copy link",
+      "linkCopied": "Link copied",
+      "select": "Select several",
+      "fromTemplate": "From template"
+    },
+    "toast": {
+      "completed": "Completed",
+      "completedNext": "Completed. Next time: {date}",
+      "autoCompleted": "Goal reached — task completed",
+      "reopened": "Task reopened",
+      "deleted": "Task moved to trash",
+      "deletedMany": "{count, plural, one {# task} other {# tasks}} moved to trash",
+      "restored": "Task restored",
+      "restoredMany": "{count, plural, one {# task restored} other {# tasks restored}}",
+      "purged": "Deleted forever",
+      "trashEmptied": "Trash emptied",
+      "duplicated": "Copy created",
+      "created": "Task created",
+      "createdElsewhere": "Task created — you’ll find it in “{section}”",
+      "moved": "Date: {date}",
+      "movedMany": "{count, plural, one {# task moved} other {# tasks moved}}",
+      "completedMany": "{count, plural, one {# task completed} other {# tasks completed}}",
+      "changed": "Changed",
+      "undone": "Undone",
+      "redone": "Redone",
+      "nothingToUndo": "Nothing to undo",
+      "nothingToRedo": "Nothing to redo",
+      "templateSaved": "Template saved",
+      "failed": "That didn’t work. Please try again."
+    },
+    "confirm": {
+      "purgeTitle": "Delete forever?",
+      "purgeText": "“{title}” and everything in it can’t be restored.",
+      "purgeManyText": "{count, plural, one {# task} other {# tasks}} can’t be restored.",
+      "emptyTrashTitle": "Empty the trash?",
+      "emptyTrashText": "{count, plural, one {# task will be} other {# tasks will be}} deleted forever."
+    },
+    "trash": {
+      "daysLeft": "{days, plural, one {Deleted in # day} other {Deleted in # days}}",
+      "lastDay": "Deleted today",
+      "hint": "Tasks in the trash are deleted forever after 30 days.",
+      "deletedAt": "Deleted {date}",
+      "withSubtasks": "{count, plural, one {and # subtask} other {and # subtasks}}"
+    },
+    "quickAdd": {
+      "label": "New task",
+      "placeholder": "New task…",
+      "examples": [
+        "Gym tomorrow at 6pm #sport !high",
+        "Read 300 pages",
+        "Pay the internet bill every 15th",
+        "Call on friday at 11:00 ~30m",
+        "Drink 8 glasses of water"
+      ],
+      "tryExample": "For example: {example}",
+      "add": "Add",
+      "chip": {
+        "date": "Date",
+        "start": "Start",
+        "due": "Deadline",
+        "time": "Time",
+        "repeat": "Repeat",
+        "tag": "Tag",
+        "priority": "Priority",
+        "project": "Project",
+        "assignee": "Assignee",
+        "estimate": "Estimate",
+        "reminder": "Reminder"
+      },
+      "chipOff": "{kind} “{text}” — press to keep it as text",
+      "hintNumeric": "Make it a numeric goal: {target} {unit}?",
+      "hintCounter": "Make it a counter: {target} {unit}?",
+      "hintAccepted": "Type: {type}",
+      "newTag": "New tag",
+      "newProject": "New project",
+      "syntax": "# tag · + project · ! priority · ~ estimate",
+      "type": "Task type",
+      "recognized": "Recognized: {items}",
+      "titleMissing": "Add a title — not just a date and tags"
+    },
+    "types": {
+      "label": "Type",
+      "choose": "Choose a task type",
+      "normal": {
+        "name": "Simple",
+        "text": "Do it and mark it with a star"
+      },
+      "percent": {
+        "name": "Percent",
+        "text": "Progress from 0 to 100 %"
+      },
+      "numeric": {
+        "name": "Numeric goal",
+        "text": "Say, 300 pages or 50 km"
+      },
+      "subtasks": {
+        "name": "By subtasks",
+        "text": "Done when every subtask is done"
+      },
+      "time": {
+        "name": "Time",
+        "text": "A goal in hours, a timer and Pomodoro"
+      },
+      "habit": {
+        "name": "Habit",
+        "text": "Schedule, streak and heatmap"
+      },
+      "counter": {
+        "name": "Counter",
+        "text": "Plus one at a time, a goal or a limit per period"
+      },
+      "stages": {
+        "name": "Stages",
+        "text": "Stages weighted in percent"
+      },
+      "collab": {
+        "name": "Shared goal",
+        "text": "A common goal and everyone’s share"
+      },
+      "abstain": {
+        "name": "Quit",
+        "text": "Days without a slip and your record"
+      },
+      "chain": {
+        "name": "Chain",
+        "text": "Steps unlock one by one"
+      }
+    },
+    "priority": {
+      "label": "Priority",
+      "critical": "Critical",
+      "high": "High",
+      "medium": "Medium",
+      "low": "Low",
+      "none": "No priority"
+    },
+    "status": {
+      "label": "Status",
+      "todo": "To do",
+      "in_progress": "In progress",
+      "paused": "Paused",
+      "done": "Done",
+      "cancelled": "Cancelled"
+    },
+    "detail": {
+      "label": "Task",
+      "close": "Close task",
+      "titlePlaceholder": "Task title",
+      "titleRequired": "The title can’t be empty",
+      "due": "Date",
+      "start": "Start",
+      "repeat": "Repeat",
+      "project": "Project",
+      "tags": "Tags",
+      "estimate": "Estimate",
+      "reminders": "Reminders",
+      "appearance": "Color",
+      "none": "None",
+      "noDate": "No date",
+      "noProject": "No project",
+      "addTag": "Add tag",
+      "tagSearch": "Find or create a tag",
+      "createTag": "Create tag “{name}”",
+      "removeTag": "Remove tag “{name}”",
+      "projectSearch": "Find or create a project",
+      "createProject": "Create project “{name}”",
+      "noEstimate": "No estimate",
+      "estimateCustom": "Custom, min",
+      "reminderBefore": "{value} before",
+      "reminderAtDue": "At the due time",
+      "addReminder": "Add reminder",
+      "removeReminder": "Remove reminder",
+      "remindersNeedDue": "Reminders count from the due date — set one first.",
+      "remindersSoon": "Reminder delivery turns on in one of the next updates.",
+      "description": "Description",
+      "descriptionPlaceholder": "Add details, links or a checklist…",
+      "subtasks": "Subtasks",
+      "addSubtask": "Add subtask",
+      "subtaskPlaceholder": "Subtask title",
+      "tabs": {
+        "comments": "Comments",
+        "history": "History",
+        "sessions": "Sessions"
+      },
+      "created": "Created {date}",
+      "completedAt": "Completed {date}",
+      "inTrash": "This task is in the trash",
+      "notFound": "Task not found",
+      "notFoundText": "It may have been deleted on another device.",
+      "parent": "Subtask of “{title}”",
+      "more": "More actions",
+      "changeType": "Change type",
+      "typeChanged": "Type changed",
+      "colorNone": "No color",
+      "properties": "Properties"
+    },
+    "colors": {
+      "cyan": "Cyan",
+      "sky": "Sky",
+      "indigo": "Indigo",
+      "violet": "Violet",
+      "orchid": "Orchid",
+      "rose": "Rose",
+      "coral": "Coral",
+      "amber": "Amber",
+      "lime": "Lime",
+      "mint": "Mint",
+      "teal": "Teal",
+      "slate": "Slate"
+    },
+    "editor": {
+      "toolbar": "Formatting",
+      "bold": "Bold",
+      "italic": "Italic",
+      "strike": "Strikethrough",
+      "code": "Code",
+      "bullet": "Bulleted list",
+      "ordered": "Numbered list",
+      "checklist": "Checklist"
+    },
+    "duration": {
+      "minutes": "{m} min",
+      "hours": "{h} h",
+      "hoursMinutes": "{h} h {m} min",
+      "days": "{d, plural, one {# day} other {# days}}"
+    },
+    "dates": {
+      "today": "Today",
+      "tomorrow": "Tomorrow",
+      "yesterday": "Yesterday",
+      "dayAfter": "Day after",
+      "nextWeek": "Next week",
+      "weekend": "Weekend",
+      "pick": "Pick a date",
+      "clear": "No date",
+      "time": "Time",
+      "noTime": "No time",
+      "clearTime": "Remove time",
+      "prevMonth": "Previous month",
+      "nextMonth": "Next month",
+      "dateTime": "{date}, {time}",
+      "range": "{from} → {to}"
+    },
+    "recurrence": {
+      "label": "Repeat",
+      "none": "Don’t repeat",
+      "daily": "Every day",
+      "weekdays": "Weekdays",
+      "weekends": "Weekends",
+      "weekly": "Every week",
+      "monthly": "Every month",
+      "yearly": "Every year",
+      "custom": "Custom…",
+      "every": "Every",
+      "unit": {
+        "daily": "{n, plural, one {day} other {days}}",
+        "weekly": "{n, plural, one {week} other {weeks}}",
+        "monthly": "{n, plural, one {month} other {months}}",
+        "yearly": "{n, plural, one {year} other {years}}"
+      },
+      "onDays": "Days of the week",
+      "monthBy": "Repeat by",
+      "byMonthDay": "Day of month",
+      "byNth": "Weekday",
+      "byLastDay": "Last day",
+      "ends": "Ends",
+      "endsNever": "Never",
+      "endsOn": "On a date",
+      "endsAfter": "After",
+      "count": "Times",
+      "fromCompletion": "Count from the completion day",
+      "fromCompletionHint": "Say, “water the plants 3 days after the last watering”.",
+      "apply": "Apply",
+      "preview": "Next dates",
+      "skip": "Skip this time",
+      "skipped": "This time is skipped",
+      "weekdaysAcc": [
+        "Sunday",
+        "Monday",
+        "Tuesday",
+        "Wednesday",
+        "Thursday",
+        "Friday",
+        "Saturday"
+      ],
+      "weekdayGender": [
+        "m",
+        "m",
+        "m",
+        "m",
+        "m",
+        "m",
+        "m"
+      ],
+      "summary": {
+        "daily": "{n, plural, =1 {Every day} one {Every # day} other {Every # days}}",
+        "weekdays": "Weekdays",
+        "weekends": "Weekends",
+        "weekly": "{n, plural, =1 {Every week} one {Every # week} other {Every # weeks}}: {days}",
+        "monthlyDay": "{n, plural, =1 {Every month} one {Every # month} other {Every # months}} on day {day}",
+        "monthlyLast": "{n, plural, =1 {Every month} one {Every # month} other {Every # months}} on the last day",
+        "monthlyNth": "{n, plural, =1 {Every month} one {Every # month} other {Every # months}} {nth}",
+        "yearly": "{n, plural, =1 {Every year} one {Every # year} other {Every # years}} on {date}",
+        "nth": "on the {pos, select, 1 {first} 2 {second} 3 {third} 4 {fourth} other {last}} {weekday}",
+        "afterCompletion": "{n} {unit} after completion",
+        "until": "until {date}",
+        "times": "{n, plural, one {# time} other {# times}}"
+      },
+      "completionUnit": {
+        "daily": "{n, plural, one {day} other {days}}",
+        "weekly": "{n, plural, one {week} other {weeks}}",
+        "monthly": "{n, plural, one {month} other {months}}",
+        "yearly": "{n, plural, one {year} other {years}}"
+      }
+    },
+    "widgets": {
+      "percent": {
+        "label": "Progress",
+        "step": "+{n} %",
+        "slider": "Progress, %"
+      },
+      "numeric": {
+        "current": "Now",
+        "target": "Goal",
+        "unit": "Unit",
+        "unitPlaceholder": "pages",
+        "add": "Add",
+        "amount": "How much to add",
+        "set": "Exact value",
+        "setApply": "Set",
+        "history": "History",
+        "noTarget": "Set a goal to see progress",
+        "of": "{current} of {target}"
+      },
+      "subtasks": {
+        "of": "{done} of {total}",
+        "empty": "Add subtasks — progress counts itself."
+      },
+      "time": {
+        "start": "Start",
+        "stop": "Stop",
+        "goal": "Goal, min",
+        "tracked": "Tracked",
+        "left": "{value} left",
+        "over": "{value} over the goal",
+        "pomodoro": "Pomodoro",
+        "focus": "Focus",
+        "shortBreak": "Break",
+        "longBreak": "Long break",
+        "cycles": "Cycles",
+        "autoStart": "Start the next interval automatically",
+        "sessions": "Session log",
+        "noSessions": "No sessions yet — press “Start”.",
+        "addSession": "Add manually",
+        "sessionMinutes": "Minutes",
+        "focusDone": "Focus done — time for a break",
+        "breakDone": "Break is over — back to it",
+        "cycleOf": "Cycle {n} of {total}",
+        "phase": {
+          "focus": "Focus",
+          "break": "Break",
+          "longBreak": "Long break"
+        },
+        "skipPhase": "Skip interval",
+        "deleteSession": "Delete session"
+      },
+      "habit": {
+        "markDone": "Mark today",
+        "done": "Done today",
+        "undo": "Clear mark",
+        "skip": "Skip the day",
+        "freeze": "Freeze the day",
+        "freezeHint": "Keeps the streak. Once a week.",
+        "freezeUsed": "This week’s freeze is already used",
+        "restDay": "Rest day by schedule",
+        "streak": "Streak",
+        "best": "Record",
+        "days": "{n, plural, one {# day} other {# days}}",
+        "weeks": "{n, plural, one {# week} other {# weeks}}",
+        "schedule": "Schedule",
+        "scheduleDays": "On weekdays",
+        "scheduleTimes": "Times a week",
+        "perWeek": "{n, plural, one {# time} other {# times}} a week",
+        "thisWeek": "This week: {done} of {required}",
+        "year": "Habit year",
+        "cell": "{date}: {status}",
+        "statusNames": {
+          "done": "done",
+          "freeze": "frozen",
+          "skip": "skipped",
+          "fail": "missed",
+          "none": "no mark"
+        }
+      },
+      "counter": {
+        "plus": "Add {step}",
+        "minus": "Remove {step}",
+        "goal": "Goal",
+        "limit": "Limit",
+        "mode": "Mode",
+        "modeGoal": "Goal",
+        "modeLimit": "At most",
+        "period": "Reset",
+        "periods": {
+          "day": "Every day",
+          "week": "Every week",
+          "month": "Every month",
+          "none": "Never"
+        },
+        "per": {
+          "day": "per day",
+          "week": "per week",
+          "month": "per month",
+          "none": "in total"
+        },
+        "step": "Step",
+        "history": "Past periods",
+        "over": "Over the limit by {n}",
+        "left": "{n} more to the goal",
+        "roomLeft": "{n} left",
+        "reached": "Goal reached for this period"
+      },
+      "stages": {
+        "add": "Add stage",
+        "placeholder": "Stage title",
+        "weight": "Weight, %",
+        "balance": "Balance",
+        "sum": "Weights total: {sum} %",
+        "sumHint": "Weights are rescaled to add up to 100 %.",
+        "complete": "Complete stage",
+        "reopen": "Reopen stage",
+        "remove": "Delete stage",
+        "empty": "Add stages — say, “Design”, “Build”, “Launch”."
+      },
+      "collab": {
+        "contribute": "Add contribution",
+        "amount": "Amount",
+        "note": "Note",
+        "notePlaceholder": "Optional",
+        "you": "You",
+        "contributions": "Contributions",
+        "empty": "No contributions yet. Be the first!",
+        "total": "{current} of {target}",
+        "remove": "Delete contribution"
+      },
+      "abstain": {
+        "days": "{n, plural, one {# day} other {# days}} without a slip",
+        "record": "Record",
+        "goal": "Goal, days",
+        "since": "Counting since {date}",
+        "startLabel": "Count from",
+        "relapse": "Slip",
+        "relapseTitle": "Log a slip?",
+        "relapseText": "The count starts over. Your record stays.",
+        "relapseConfirm": "Yes, I slipped",
+        "relapses": "Slips",
+        "noRelapses": "No slips so far"
+      },
+      "chain": {
+        "add": "Add step",
+        "placeholder": "Step title",
+        "next": "Next step",
+        "complete": "Complete step",
+        "locked": "Unlocks after the previous step",
+        "done": "Done",
+        "reopen": "Reopen step",
+        "remove": "Delete step",
+        "empty": "Add steps — they unlock one by one.",
+        "finished": "All steps done"
+      }
+    },
+    "history": {
+      "title": "History",
+      "empty": "No changes yet",
+      "offline": "History is available online",
+      "error": "Couldn’t load the history",
+      "you": "You",
+      "created": "created the task",
+      "updated": "changed {fields}",
+      "completed": "completed",
+      "reopened": "reopened",
+      "deleted": "moved to trash",
+      "restored": "restored",
+      "conflict": "simultaneous edit: {field}",
+      "conflictKept": "Kept: {value}",
+      "conflictLost": "Not applied: {value}",
+      "restoreValue": "Bring this value back",
+      "restoredValue": "Value restored",
+      "empty_value": "empty",
+      "fields": {
+        "title": "title",
+        "description": "description",
+        "description_text": "description",
+        "due_date": "date",
+        "due_time": "time",
+        "start_date": "start",
+        "start_time": "start time",
+        "priority_id": "priority",
+        "status_id": "status",
+        "project_id": "project",
+        "parent_id": "parent task",
+        "type": "type",
+        "recurrence": "repeat",
+        "reminders": "reminders",
+        "estimate_minutes": "estimate",
+        "progress_current": "progress",
+        "progress_target": "goal",
+        "progress_unit": "unit",
+        "type_config": "type settings",
+        "color": "color",
+        "icon": "icon",
+        "sort_key": "order",
+        "deleted_at": "trash",
+        "completed_at": "completion",
+        "timezone": "time zone"
+      }
+    },
+    "attachments": {
+      "title": "Attachments",
+      "add": "Attach a file",
+      "drop": "Drop to attach",
+      "tooLarge": "“{name}” is larger than 10 MB",
+      "quota": "Attachment space is used up (up to 100 MB per account)",
+      "uploading": "Uploading “{name}”…",
+      "failed": "Couldn’t upload “{name}”",
+      "offline": "Files can be attached once you are online",
+      "remove": "Delete attachment “{name}”",
+      "removed": "Attachment deleted",
+      "open": "Open “{name}”",
+      "download": "Download",
+      "previous": "Previous",
+      "next": "Next",
+      "zoomIn": "Zoom in",
+      "zoomOut": "Zoom out",
+      "empty": "Drop files here or press “Attach a file”.",
+      "size": "{size}"
+    },
+    "comments": {
+      "title": "Comments",
+      "placeholder": "Write a comment…",
+      "send": "Send",
+      "empty": "No comments yet",
+      "remove": "Delete comment",
+      "removed": "Comment deleted",
+      "you": "You",
+      "hint": "Enter to send, Shift+Enter for a new line"
+    },
+    "templates": {
+      "title": "Templates",
+      "builtIn": "Built-in",
+      "mine": "My templates",
+      "use": "Create from template",
+      "empty": "No templates of your own yet — save any task as a template.",
+      "name": "Template name",
+      "save": "Save template",
+      "remove": "Delete template “{name}”",
+      "removed": "Template deleted",
+      "created": "Task created from template",
+      "items": {
+        "weeklyReview": {
+          "name": "Weekly review",
+          "title": "Weekly review",
+          "text": "Every Friday: results and plan"
+        },
+        "reading": {
+          "name": "Read a book",
+          "title": "Read a book",
+          "unit": "pages",
+          "text": "Numeric goal: 300 pages"
+        },
+        "water": {
+          "name": "Water",
+          "title": "Drink water",
+          "unit": "glasses",
+          "text": "Counter: 8 glasses a day"
+        },
+        "workout": {
+          "name": "Workouts",
+          "title": "Workouts",
+          "text": "Time: a 3-hour goal"
+        },
+        "morning": {
+          "name": "Morning routine",
+          "title": "Morning routine",
+          "text": "Habit on weekdays"
+        },
+        "launch": {
+          "name": "Project launch",
+          "title": "Project launch",
+          "text": "Stages: idea, design, build, launch",
+          "stages": [
+            "Idea and goals",
+            "Design",
+            "Build",
+            "Launch"
+          ]
+        },
+        "course": {
+          "name": "Course",
+          "title": "Take a course",
+          "text": "Chain: steps in order",
+          "steps": [
+            "Basics",
+            "Practice",
+            "Project",
+            "Exam"
+          ]
+        },
+        "sugar": {
+          "name": "No sugar",
+          "title": "No sugar",
+          "text": "Quit: 30 days without a slip"
+        }
+      }
+    },
+    "bulk": {
+      "selected": "{count, plural, one {# task selected} other {# tasks selected}}",
+      "selectAll": "Select all",
+      "clear": "Clear selection",
+      "complete": "Complete",
+      "date": "Date",
+      "priority": "Priority",
+      "tags": "Tags",
+      "delete": "Delete",
+      "restore": "Restore",
+      "deleteForever": "Delete forever",
+      "label": "Actions for selected tasks",
+      "addTag": "Add tag"
+    },
+    "hotkeys": {
+      "title": "Keyboard shortcuts",
+      "newTask": "New task",
+      "sections": "Lists 1–7",
+      "next": "Next task",
+      "previous": "Previous task",
+      "open": "Open task",
+      "complete": "Complete or reopen",
+      "remove": "Delete",
+      "select": "Select",
+      "undo": "Undo",
+      "redo": "Redo",
+      "close": "Close",
+      "help": "This cheat sheet",
+      "soon": "The full set arrives together with the command palette."
     }
   }
 }

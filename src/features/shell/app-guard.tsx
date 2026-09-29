@@ -12,6 +12,7 @@ import { routing, type AppLocale } from '@/i18n/routing';
 import { sound } from '@/sound/engine';
 import { useDeviceSettings } from '@/stores/device-settings';
 import { useSession } from '@/stores/session';
+import { SyncProvider } from '@/features/sync/sync-provider';
 import { LaunchScreen } from './launch-screen';
 
 /** Whose preferred language was already applied during this page load. */
@@ -86,5 +87,5 @@ export function AppGuard({ children }: { children: ReactNode }) {
 
   if (status !== 'signed-in' || !data) return <LaunchScreen label={t('common.loading')} />;
   if (!data.onboarding_completed_at && pathname !== '/onboarding') return <LaunchScreen label={t('common.loading')} />;
-  return <>{children}</>;
+  return <SyncProvider>{children}</SyncProvider>;
 }

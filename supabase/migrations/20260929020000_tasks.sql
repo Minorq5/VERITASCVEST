@@ -273,6 +273,8 @@ create table public.tasks (
   progress_unit text,
   type_config jsonb not null default '{}'::jsonb,
   recurrence jsonb,
+  -- Reminders before the deadline: [{"before": minutes}]. Sent from stage 10 (push).
+  reminders jsonb not null default '[]'::jsonb,
   completed_at timestamptz,
   completed_by uuid,
   sort_key text collate "C" not null default 'a0',
@@ -299,6 +301,10 @@ create table public.tasks (
   constraint tasks_unit_length check (progress_unit is null or char_length(progress_unit) <= 24),
   constraint tasks_type_config check (jsonb_typeof(type_config) = 'object'),
   constraint tasks_recurrence check (recurrence is null or jsonb_typeof(recurrence) = 'object'),
+  constraint tasks_reminders check (
+    jsonb_typeof(reminders) = 'array' and jsonb_array_length(reminders) <= 10
+    and not jsonb_path_exists(reminders, '$[*] ? (@.type() != "object")')
+  ),
   constraint tasks_not_own_parent check (parent_id is distinct from id)
 );
 create index tasks_owner_tx on public.tasks (owner_id, tx_id);
@@ -990,11 +996,11 @@ grant insert (id, owner_id, name, color, deleted_at, field_ts),
       delete on public.tags to authenticated;
 grant insert (id, owner_id, project_id, parent_id, type, title, description, description_text, status_id, priority_id,
               color, icon, start_date, start_time, due_date, due_time, timezone, estimate_minutes, progress_current,
-              progress_target, progress_unit, type_config, recurrence, completed_at, completed_by, sort_key,
+              progress_target, progress_unit, type_config, recurrence, reminders, completed_at, completed_by, sort_key,
               deleted_at, deleted_by, field_ts),
       update (project_id, parent_id, type, title, description, description_text, status_id, priority_id,
               color, icon, start_date, start_time, due_date, due_time, timezone, estimate_minutes, progress_current,
-              progress_target, progress_unit, type_config, recurrence, completed_at, completed_by, sort_key,
+              progress_target, progress_unit, type_config, recurrence, reminders, completed_at, completed_by, sort_key,
               deleted_at, deleted_by, field_ts),
       delete on public.tasks to authenticated;
 grant insert (id, task_id, tag_id, owner_id, deleted_at, field_ts),
@@ -1053,11 +1059,11 @@ begin
       ins := array['id', 'owner_id', 'project_id', 'parent_id', 'type', 'title', 'description', 'description_text',
                    'status_id', 'priority_id', 'color', 'icon', 'start_date', 'start_time', 'due_date', 'due_time',
                    'timezone', 'estimate_minutes', 'progress_current', 'progress_target', 'progress_unit',
-                   'type_config', 'recurrence', 'completed_at', 'completed_by', 'sort_key', 'deleted_at', 'deleted_by'];
+                   'type_config', 'recurrence', 'reminders', 'completed_at', 'completed_by', 'sort_key', 'deleted_at', 'deleted_by'];
       upd := array['project_id', 'parent_id', 'type', 'title', 'description', 'description_text',
                    'status_id', 'priority_id', 'color', 'icon', 'start_date', 'start_time', 'due_date', 'due_time',
                    'timezone', 'estimate_minutes', 'progress_current', 'progress_target', 'progress_unit',
-                   'type_config', 'recurrence', 'completed_at', 'completed_by', 'sort_key', 'deleted_at', 'deleted_by'];
+                   'type_config', 'recurrence', 'reminders', 'completed_at', 'completed_by', 'sort_key', 'deleted_at', 'deleted_by'];
     when 'task_tags' then
       ins := array['id', 'task_id', 'tag_id', 'owner_id', 'deleted_at'];
       upd := array['deleted_at'];

@@ -130,6 +130,8 @@ export class SyncEngine {
   private chain: Promise<unknown> = Promise.resolve();
   private stopped = true;
   private leader = false;
+  /** Each start() is a new generation; a lock granted to an older one is released at once. */
+  private generation = 0;
   private failures = 0;
   private pushTimer: ReturnType<typeof setTimeout> | null = null;
   private pullTimer: ReturnType<typeof setInterval> | null = null;
@@ -178,6 +180,7 @@ export class SyncEngine {
   async start(): Promise<void> {
     if (!this.stopped) return;
     this.stopped = false;
+    const generation = (this.generation += 1);
     this.status = { ...this.status, bootstrapped: Boolean(await this.db.meta.get('cursor')) };
     await this.refreshPending();
     if (this.opts.manual) {
@@ -187,7 +190,7 @@ export class SyncEngine {
     const locks = typeof navigator !== 'undefined' ? navigator.locks : undefined;
     if (locks && this.opts.lockName) {
       void locks.request(this.opts.lockName, { mode: 'exclusive' }, () => {
-        if (this.stopped) return undefined;
+        if (this.stopped || generation !== this.generation) return undefined;
         this.becomeLeader();
         return new Promise<void>((resolve) => {
           this.releaseLock = resolve;

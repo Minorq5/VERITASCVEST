@@ -68,32 +68,6 @@
   --color-fg-3: #8791ae;
   --color-fg-4: #5c6788; /* disabled only */
 
-  /* Semantic */
-  --color-success: #5fe3a1;
-  --color-warning: #ffb547;
-  --color-danger: #ff6b7d;
-  --color-info: #7fb6ff;
-
-  /* Default priorities */
-  --color-prio-critical: #ff5e73;
-  --color-prio-high: #ffb547;
-  --color-prio-medium: #6fb6ff;
-  --color-prio-low: #8e99b5;
-
-  /* Project / tag swatches */
-  --color-swatch-cyan: #5ce1ee;
-  --color-swatch-sky: #6fb6ff;
-  --color-swatch-indigo: #8c9bff;
-  --color-swatch-violet: #b294ff;
-  --color-swatch-orchid: #f28ad9;
-  --color-swatch-rose: #ff7f9f;
-  --color-swatch-coral: #ff8a6b;
-  --color-swatch-amber: #ffb547;
-  --color-swatch-lime: #c4e86b;
-  --color-swatch-mint: #6bf0b8;
-  --color-swatch-teal: #3fd0c0;
-  --color-swatch-slate: #9aa6c4;
-
   --color-white: #ffffff;
   --color-black: #000000;
   --color-transparent: transparent;
@@ -198,6 +172,36 @@
       opacity: 1;
     }
   }
+}
+
+/* Colors picked at run time (priority keys, tag and project swatches, states):
+   `static` emits them even though no class names them literally. */
+@theme static {
+  /* Semantic */
+  --color-success: #5fe3a1;
+  --color-warning: #ffb547;
+  --color-danger: #ff6b7d;
+  --color-info: #7fb6ff;
+
+  /* Default priorities */
+  --color-prio-critical: #ff5e73;
+  --color-prio-high: #ffb547;
+  --color-prio-medium: #6fb6ff;
+  --color-prio-low: #8e99b5;
+
+  /* Project / tag swatches */
+  --color-swatch-cyan: #5ce1ee;
+  --color-swatch-sky: #6fb6ff;
+  --color-swatch-indigo: #8c9bff;
+  --color-swatch-violet: #b294ff;
+  --color-swatch-orchid: #f28ad9;
+  --color-swatch-rose: #ff7f9f;
+  --color-swatch-coral: #ff8a6b;
+  --color-swatch-amber: #ffb547;
+  --color-swatch-lime: #c4e86b;
+  --color-swatch-mint: #6bf0b8;
+  --color-swatch-teal: #3fd0c0;
+  --color-swatch-slate: #9aa6c4;
 }
 
 /* Tokens that must follow runtime values (fonts from next/font, accent). */
@@ -559,4 +563,98 @@ html[data-motion='reduced'] .dialog-anim[data-state='closed'] {
   to {
     background-position: 1200px 0;
   }
+}
+
+/* Rich text: task descriptions (Tiptap) and read-only previews. */
+.rich-text {
+  font-size: var(--text-base);
+  line-height: 1.6;
+  color: var(--color-fg);
+  overflow-wrap: anywhere;
+  outline: none;
+}
+.rich-text > * + * {
+  margin-top: 0.55em;
+}
+.rich-text h2 {
+  font-family: var(--font-display);
+  font-size: var(--text-lg);
+  font-weight: 600;
+}
+.rich-text h3 {
+  font-size: var(--text-md);
+  font-weight: 600;
+}
+.rich-text strong {
+  font-weight: 650;
+}
+.rich-text a {
+  color: var(--accent);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.rich-text code {
+  border-radius: 5px;
+  background: var(--color-surface-4);
+  padding: 0.1em 0.35em;
+  font-family: var(--font-mono);
+  font-size: 0.9em;
+}
+.rich-text pre {
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-md);
+  background: var(--color-surface-1);
+  padding: 0.75em 1em;
+  overflow-x: auto;
+}
+.rich-text pre code {
+  background: none;
+  padding: 0;
+}
+.rich-text blockquote {
+  border-left: 2px solid var(--color-line-bright);
+  padding-left: 0.9em;
+  color: var(--color-fg-2);
+}
+.rich-text ul:not([data-type='taskList']) {
+  list-style: disc;
+  padding-left: 1.3em;
+}
+.rich-text ol {
+  list-style: decimal;
+  padding-left: 1.4em;
+}
+.rich-text li::marker {
+  color: var(--color-fg-3);
+}
+.rich-text ul[data-type='taskList'] {
+  padding-left: 0.1em;
+}
+.rich-text ul[data-type='taskList'] li {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.6em;
+}
+.rich-text ul[data-type='taskList'] li > label {
+  margin-top: 0.3em;
+  flex-shrink: 0;
+}
+.rich-text ul[data-type='taskList'] li > label input {
+  width: 1rem;
+  height: 1rem;
+  accent-color: var(--accent);
+}
+.rich-text ul[data-type='taskList'] li[data-checked='true'] > div {
+  color: var(--color-fg-3);
+  text-decoration: line-through;
+}
+.rich-text p.is-editor-empty:first-child::before {
+  content: attr(data-placeholder);
+  float: left;
+  height: 0;
+  pointer-events: none;
+  color: var(--color-fg-3);
+}
+.rich-text hr {
+  border-color: var(--color-line-strong);
 }
