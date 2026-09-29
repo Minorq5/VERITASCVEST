@@ -31,6 +31,7 @@ export class VeritasDB extends Dexie {
   projects!: Table<AnyRow, string>;
   tags!: Table<AnyRow, string>;
   templates!: Table<AnyRow, string>;
+  saved_filters!: Table<AnyRow, string>;
   tasks!: Table<AnyRow, string>;
   task_tags!: Table<AnyRow, string>;
   task_milestones!: Table<AnyRow, string>;
@@ -67,6 +68,11 @@ export class VeritasDB extends Dexie {
       tombstones: '[entity+id]',
       meta: 'key',
     });
+    // Stage 4: smart lists. A device that pulled while it did not know this
+    // table has skipped its rows, so it downloads everything once more.
+    this.version(2)
+      .stores({ saved_filters: 'id' })
+      .upgrade((tx) => tx.table('meta').delete('cursor'));
   }
 
   table_(entity: Entity): Table<AnyRow, string> {

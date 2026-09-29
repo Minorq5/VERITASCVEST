@@ -522,6 +522,71 @@ export type Database = {
           },
         ];
       };
+      saved_filters: {
+        Row: {
+          color: string;
+          created_at: string;
+          deleted_at: string | null;
+          field_ts: NonNullable<Json>;
+          icon: string | null;
+          id: string;
+          name: string;
+          owner_id: string;
+          pinned: boolean;
+          query: NonNullable<Json>;
+          sort: string;
+          sort_key: string;
+          tx_id: unknown;
+          updated_at: string;
+          version: number;
+          view: string;
+        };
+        Insert: {
+          color?: string;
+          created_at?: string;
+          deleted_at?: string | null;
+          field_ts?: NonNullable<Json>;
+          icon?: string | null;
+          id: string;
+          name: string;
+          owner_id: string;
+          pinned?: boolean;
+          query?: NonNullable<Json>;
+          sort?: string;
+          sort_key?: string;
+          tx_id?: unknown;
+          updated_at?: string;
+          version?: number;
+          view?: string;
+        };
+        Update: {
+          color?: string;
+          created_at?: string;
+          deleted_at?: string | null;
+          field_ts?: NonNullable<Json>;
+          icon?: string | null;
+          id?: string;
+          name?: string;
+          owner_id?: string;
+          pinned?: boolean;
+          query?: NonNullable<Json>;
+          sort?: string;
+          sort_key?: string;
+          tx_id?: unknown;
+          updated_at?: string;
+          version?: number;
+          view?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'saved_filters_owner_id_fkey';
+            columns: ['owner_id'];
+            isOneToOne: false;
+            referencedRelation: 'profiles';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
       statuses: {
         Row: {
           category: string;

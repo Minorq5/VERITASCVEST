@@ -9,6 +9,7 @@ export const entities = [
   'projects',
   'tags',
   'templates',
+  'saved_filters',
   'tasks',
   'task_tags',
   'task_milestones',
@@ -45,6 +46,7 @@ export type StatusRow = LocalRow<'statuses'>;
 export type PriorityRow = LocalRow<'priorities'>;
 export type TagRow = LocalRow<'tags'>;
 export type TemplateRow = LocalRow<'templates'>;
+export type SavedFilterRow = LocalRow<'saved_filters'>;
 export type TaskRow = LocalRow<'tasks'>;
 export type TaskTagRow = LocalRow<'task_tags'>;
 export type MilestoneRow = LocalRow<'task_milestones'>;

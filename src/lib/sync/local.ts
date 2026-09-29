@@ -20,6 +20,7 @@ function entityTables(db: VeritasDB) {
     db.projects,
     db.tags,
     db.templates,
+    db.saved_filters,
     db.tasks,
     db.task_tags,
     db.task_milestones,
