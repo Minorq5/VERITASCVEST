@@ -43,6 +43,7 @@ function ico(images: { size: number; data: Buffer }[]) {
 
 async function icons() {
   const app = await readFile(`${BRAND}/veritas-app-icon.svg`);
+  const favicon = await readFile(`${BRAND}/veritas-favicon.svg`);
   const maskable = await readFile(`${BRAND}/veritas-maskable.svg`);
   // iOS masks the icon itself: give it a full-bleed square.
   const square = Buffer.from(
@@ -52,12 +53,13 @@ async function icons() {
       .replace(/<rect x="0.5"[^>]+\/>/, ''),
   );
 
-  await copyFile(`${BRAND}/veritas-app-icon.svg`, 'src/app/icon.svg');
+  // Browser tabs get the compact drawing: it stays legible at 16 px.
+  await copyFile(`${BRAND}/veritas-favicon.svg`, 'src/app/icon.svg');
   await writeFile('src/app/apple-icon.png', await png(square, 180));
   await writeFile(
     'src/app/favicon.ico',
     ico(
-      await Promise.all([16, 32, 48].map(async (size) => ({ size, data: await png(app, size) }))),
+      await Promise.all([16, 32, 48].map(async (size) => ({ size, data: await png(favicon, size) }))),
     ),
   );
   for (const size of [192, 512]) {

@@ -5,54 +5,35 @@ import { useId } from 'react';
 import { useLessMotion } from '@/lib/hooks/use-less-motion';
 import { ease } from '@/lib/motion/tokens';
 import { cn } from '@/lib/utils/cn';
-import { ECLIPSE, HORIZON, LENS, MARK_VIEWBOX, type MarkVariant } from './logo-geometry';
-
-/** The mark the product uses until the owner picks one of the three on /design. */
-export const DEFAULT_MARK: MarkVariant = 'lens';
+import { COMPACT_MAX, HORIZON, HORIZON_COMPACT, MARK_VIEWBOX } from './logo-geometry';
 
 interface LogoMarkProps {
   size?: number;
-  variant?: MarkVariant;
-  /** Large renders add hairlines (the dark point, the disk); small ones stay bare. */
-  detail?: 'full' | 'compact';
-  /** The lines of light draw in toward the dark point, as at the end of the intro. */
+  /** The lines of light draw in around the shadow, as at the end of the intro. */
   animated?: boolean;
   className?: string;
   /** Accessible name; omit when the mark sits next to visible text. */
   title?: string;
 }
 
-/** Thicker strokes as the mark gets smaller, so it keeps its weight at 16px. */
+/** Thinner strokes as the mark grows, so large renders stay delicate. */
 function strokeFor(size: number) {
   if (size >= 96) return 3.6;
   if (size >= 48) return 4.5;
-  if (size >= 24) return 5.5;
-  return 6.5;
+  return 5.5;
 }
 
-export function LogoMark({
-  size = 32,
-  variant = DEFAULT_MARK,
-  detail = size >= 72 ? 'full' : 'compact',
-  animated = false,
-  className,
-  title,
-}: LogoMarkProps) {
+/** The Veritas mark «Горизонт»: a black hole drawn in three lines of light. */
+export function LogoMark({ size = 32, animated = false, className, title }: LogoMarkProps) {
   const id = useId().replace(/:/g, '');
   const reduce = useLessMotion();
   const play = animated && !reduce;
-  const sw = strokeFor(size);
-  const full = detail === 'full';
+  const compact = size <= COMPACT_MAX;
 
   const draw = (delay: number, opacity = 1) => ({
     initial: play ? { pathLength: 0, opacity: 0 } : false,
     animate: { pathLength: 1, opacity },
     transition: { duration: 0.9, ease: ease.cinematic, delay },
-  });
-  const appear = (delay: number, opacity = 1) => ({
-    initial: play ? { opacity: 0 } : false,
-    animate: { opacity },
-    transition: { duration: 0.6, ease: ease.out, delay },
   });
 
   return (
@@ -66,70 +47,71 @@ export function LogoMark({
       aria-label={title}
       fill="none"
     >
-      {variant === 'lens' && (
-        <>
-          {full && (
-            <motion.circle
-              cx={LENS.point.cx}
-              cy={LENS.point.cy}
-              r={LENS.point.r - sw / 2 - 1.2}
-              stroke="var(--color-line-bright)"
-              strokeWidth={0.6}
-              {...appear(0.9)}
-            />
-          )}
-          <motion.path d={LENS.left} stroke="var(--accent)" strokeWidth={sw} {...draw(0.1)} />
-          <motion.path d={LENS.right} stroke="var(--accent)" strokeWidth={sw} {...draw(0.18)} />
-        </>
-      )}
-
-      {variant === 'horizon' && (
+      {compact ? (
         <>
           <defs>
             <mask id={`${id}-k`}>
               <rect width="64" height="64" fill="white" />
-              <path d="M2 36.2L62 29.8" stroke="black" strokeWidth={sw * 2.2} />
+              <path d={HORIZON_COMPACT.cut} stroke="black" strokeWidth={HORIZON_COMPACT.cutStroke} />
             </mask>
           </defs>
           <g mask={`url(#${id}-k)`}>
-            <motion.path d={HORIZON.over} stroke="var(--accent)" strokeWidth={sw * 0.6} {...draw(0.25, 0.7)} />
-            <motion.path d={HORIZON.under} stroke="var(--accent)" strokeWidth={sw * 0.4} {...draw(0.35, 0.45)} />
-            <motion.circle
-              cx={HORIZON.ring.cx}
-              cy={HORIZON.ring.cy}
-              r={HORIZON.ring.r}
+            <path d={HORIZON_COMPACT.over} stroke="var(--accent)" strokeOpacity={0.85} strokeWidth={HORIZON_COMPACT.overStroke} />
+            <circle
+              cx={HORIZON_COMPACT.ring.cx}
+              cy={HORIZON_COMPACT.ring.cy}
+              r={HORIZON_COMPACT.ring.r}
               stroke="var(--accent-hi)"
-              strokeWidth={sw * 0.5}
-              {...draw(0.1)}
+              strokeWidth={HORIZON_COMPACT.ring.stroke}
             />
           </g>
-          <motion.path d={HORIZON.diskNear} stroke="var(--accent-hi)" strokeWidth={sw * 0.8} {...draw(0.45)} />
-          <motion.path d={HORIZON.diskFar} stroke="var(--accent)" strokeWidth={sw * 0.8} {...draw(0.5, 0.7)} />
+          <path d={HORIZON_COMPACT.diskNear} stroke="var(--accent-hi)" strokeWidth={HORIZON_COMPACT.diskStroke} />
+          <path d={HORIZON_COMPACT.diskFar} stroke="var(--accent)" strokeWidth={HORIZON_COMPACT.diskStroke} />
         </>
-      )}
-
-      {variant === 'eclipse' && (
-        <>
-          {full && (
-            <motion.circle
-              cx={ECLIPSE.disk.cx}
-              cy={ECLIPSE.disk.cy}
-              r={ECLIPSE.disk.r - sw / 2 - 1.5}
-              stroke="var(--color-line-bright)"
-              strokeWidth={0.6}
-              {...appear(0.2)}
-            />
-          )}
-          <motion.path d={ECLIPSE.stroke} stroke="var(--accent)" strokeWidth={sw} {...draw(0.1)} />
-        </>
+      ) : (
+        <FullMark id={id} sw={strokeFor(size)} draw={draw} />
       )}
     </svg>
   );
 }
 
+function FullMark({
+  id,
+  sw,
+  draw,
+}: {
+  id: string;
+  sw: number;
+  draw: (delay: number, opacity?: number) => object;
+}) {
+  return (
+    <>
+      <defs>
+        <mask id={`${id}-k`}>
+          <rect width="64" height="64" fill="white" />
+          <path d={HORIZON.cut} stroke="black" strokeWidth={sw * 2.2} />
+        </mask>
+      </defs>
+      <g mask={`url(#${id}-k)`}>
+        <motion.path d={HORIZON.over} stroke="var(--accent)" strokeWidth={sw * 0.6} {...draw(0.25, 0.7)} />
+        <motion.path d={HORIZON.under} stroke="var(--accent)" strokeWidth={sw * 0.4} {...draw(0.35, 0.45)} />
+        <motion.circle
+          cx={HORIZON.ring.cx}
+          cy={HORIZON.ring.cy}
+          r={HORIZON.ring.r}
+          stroke="var(--accent-hi)"
+          strokeWidth={sw * 0.5}
+          {...draw(0.1)}
+        />
+      </g>
+      <motion.path d={HORIZON.diskNear} stroke="var(--accent-hi)" strokeWidth={sw * 0.8} {...draw(0.45)} />
+      <motion.path d={HORIZON.diskFar} stroke="var(--accent)" strokeWidth={sw * 0.8} {...draw(0.5, 0.7)} />
+    </>
+  );
+}
+
 interface LogoLockupProps {
   size?: 'sm' | 'md' | 'lg';
-  variant?: MarkVariant;
   animated?: boolean;
   className?: string;
 }
@@ -141,11 +123,11 @@ const lockupSizes = {
 } as const;
 
 /** Mark + wordmark: VERITAS in strict capitals, TASKS as a mono label. */
-export function LogoLockup({ size = 'md', variant, animated = false, className }: LogoLockupProps) {
+export function LogoLockup({ size = 'md', animated = false, className }: LogoLockupProps) {
   const s = lockupSizes[size];
   return (
     <span className={cn('inline-flex items-center', s.gap, className)}>
-      <LogoMark size={s.mark} variant={variant} animated={animated} detail="compact" />
+      <LogoMark size={s.mark} animated={animated} />
       <span className="inline-flex items-baseline gap-2 leading-none">
         <span className={cn('font-display font-medium tracking-[0.2em] text-fg', s.word)}>VERITAS</span>
         <span className="font-mono text-[0.625rem] font-medium tracking-[0.2em] text-fg-3">TASKS</span>

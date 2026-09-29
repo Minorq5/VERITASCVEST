@@ -148,8 +148,8 @@
       "label": "Today 18:00"
     },
     "fontCompare": {
-      "lead": "Headings: a strict grotesque with full Cyrillic, including the Bulgarian forms (д, л, ж and ѝ change shape in Bulgarian text). Body text is Onest; numbers and labels are monospaced.",
-      "recommended": "Recommended",
+      "lead": "Approved: Geologica for headings (full Cyrillic with the Bulgarian forms: д, л, ж and ѝ change shape in Bulgarian text), Onest for text, JetBrains Mono for numbers and labels. Next to them, the options they were compared with.",
+      "recommended": "Approved",
       "alternative": "Option",
       "headingPair": "Headings",
       "textPair": "Body text",
@@ -255,14 +255,14 @@
     },
     "eyebrow": "Veritas Tasks · V2",
     "brand": {
-      "lead": "Three directions on “truth and a black hole”. Every mark is lines of light, no fills, no gradients; small sizes are checked down to 16 px.",
-      "recommended": "Recommended",
-      "lens": "Lens",
+      "lead": "Approved mark: «Horizon», a black hole in three lines of light. No fills, no gradients; up to 28 px it switches to a simplified drawing so it stays recognisable.",
       "horizon": "Horizon",
-      "eclipse": "Eclipse",
-      "lensText": "Two lines of light bend around a dark point, the way mass bends light. The short left and long right arms read as a check mark: done.",
+      "approved": "Approved",
       "horizonText": "The shadow, the photon ring and the disk in three lines. The far side of the disk is lensed over the shadow; the left side is brighter (Doppler).",
-      "eclipseText": "A dark disk and a thin crescent of light on its edge. The crescent runs into the long stroke of a check: truth shows at the edge."
+      "sizes": "Sizes",
+      "compact": "16–28 px: fewer lines, heavier strokes, so the mark still reads in a browser tab and in menus.",
+      "icon": "App icon",
+      "lockup": "Mark and wordmark"
     },
     "grid": {
       "lead": "A 4 px step with an 8 px rhythm. Radii from 0 to 8 px; circles only for things that are round: the horizon checkbox, avatars, status dots.",

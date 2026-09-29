@@ -24,7 +24,6 @@ import { motion } from 'motion/react';
 import { useTranslations } from 'next-intl';
 import { useState } from 'react';
 import { LogoLockup, LogoMark } from '@/components/brand/logo';
-import { markVariants } from '@/components/brand/logo-geometry';
 import { Button } from '@/components/ui/button';
 import { ColorSwatches } from '@/components/ui/color-swatches';
 import { Switch } from '@/components/ui/switch';
@@ -41,34 +40,44 @@ export function BrandSection() {
   const t = useTranslations('design');
   return (
     <Section id="brand" title={t('sections.brand')} lead={t('brand.lead')}>
-      <div className="grid gap-px overflow-hidden rounded-xl border border-line bg-line lg:grid-cols-3">
-        {markVariants.map((variant, i) => (
-          <div key={variant} className="flex flex-col gap-6 bg-surface-1 p-6">
-            <div className="flex items-baseline justify-between gap-3">
-              <p className="label-mono text-fg-2">
-                {String(i + 1).padStart(2, '0')} · {t(`brand.${variant}`)}
-              </p>
-              {i === 0 && <span className="label-mono text-accent">{t('brand.recommended')}</span>}
-            </div>
-            <div className="flex h-52 items-center justify-center">
-              <LogoMark size={176} variant={variant} animated />
-            </div>
-            <p className="min-h-15 text-sm text-fg-2">{t(`brand.${variant}Text`)}</p>
-            <div className="flex items-end gap-5 border-t border-line pt-5">
-              {[48, 32, 24, 16].map((size) => (
+      <div className="grid gap-px overflow-hidden rounded-xl border border-line bg-line lg:grid-cols-[1.2fr_1fr]">
+        <div className="flex flex-col gap-6 bg-surface-1 p-6">
+          <div className="flex items-baseline justify-between gap-3">
+            <p className="label-mono text-fg-2">{t('brand.horizon')}</p>
+            <span className="label-mono text-accent">{t('brand.approved')}</span>
+          </div>
+          <div className="flex h-64 items-center justify-center">
+            <LogoMark size={208} animated />
+          </div>
+          <p className="max-w-lg text-sm text-fg-2">{t('brand.horizonText')}</p>
+        </div>
+        <div className="flex flex-col bg-surface-1">
+          <div className="flex flex-col gap-4 p-6">
+            <p className="label-mono">{t('brand.sizes')}</p>
+            <div className="flex items-end gap-6">
+              {[64, 48, 32, 24, 16].map((size) => (
                 <Specimen key={size} label={`${size}`} className="items-center">
-                  <LogoMark size={size} variant={variant} />
+                  <LogoMark size={size} />
                 </Specimen>
               ))}
-              <span className="ml-auto flex size-14 items-center justify-center rounded-lg border border-line-strong bg-bg">
-                <LogoMark size={36} variant={variant} />
-              </span>
             </div>
-            <div className="border-t border-line pt-5">
-              <LogoLockup size="md" variant={variant} />
+            <p className="text-sm text-fg-3">{t('brand.compact')}</p>
+          </div>
+          <div className="flex flex-col gap-4 border-t border-line p-6">
+            <p className="label-mono">{t('brand.icon')}</p>
+            <div className="flex items-end gap-4">
+              {/* eslint-disable-next-line @next/next/no-img-element -- the generated icon file itself */}
+              <img src="/icons/icon-192.png" alt="" width={72} height={72} className="rounded-xl" />
+              {/* eslint-disable-next-line @next/next/no-img-element -- the generated icon file itself */}
+              <img src="/icons/maskable-192.png" alt="" width={72} height={72} className="rounded-full" />
             </div>
           </div>
-        ))}
+          <div className="flex flex-col gap-4 border-t border-line p-6">
+            <p className="label-mono">{t('brand.lockup')}</p>
+            <LogoLockup size="lg" />
+            <LogoLockup size="sm" />
+          </div>
+        </div>
       </div>
     </Section>
   );

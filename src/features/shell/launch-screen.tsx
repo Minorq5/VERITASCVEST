@@ -7,7 +7,7 @@ export function LaunchScreen({ label }: { label: string }) {
     <div role="status" aria-label={label} className="fixed inset-0 z-[var(--z-overlay)] flex items-center justify-center">
       <SpaceBackdrop />
       <div className="motion-ok:animate-[twinkle_2.4s_var(--ease-in-out)_infinite]">
-        <LogoMark size={88} detail="full" />
+        <LogoMark size={88} />
       </div>
     </div>
   );

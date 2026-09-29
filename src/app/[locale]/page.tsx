@@ -31,7 +31,7 @@ export default async function HomePage({ params }: PageProps<'/[locale]'>) {
         id="main"
         className="mx-auto flex min-h-[calc(100dvh-5rem)] w-full max-w-7xl flex-col items-center justify-center px-4 pt-10 pb-16 text-center sm:px-8"
       >
-        <LogoMark size={112} animated detail="full" className="mb-8 sm:mb-10" />
+        <LogoMark size={112} animated className="mb-8 sm:mb-10" />
         <p className="mb-5 eyebrow text-accent">{t('eyebrow')}</p>
         <h1 className="font-display text-[clamp(1.75rem,4.4vw,4.25rem)] leading-[1.1] font-semibold tracking-[-0.025em] text-fg">
           <span className="block">{t('title')}</span>

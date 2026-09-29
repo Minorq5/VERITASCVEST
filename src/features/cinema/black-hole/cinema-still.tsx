@@ -45,7 +45,7 @@ export function CinemaStill({ shot, samples }: { shot: IntroShot; samples: numbe
       <div ref={host} className="absolute inset-0" />
       {shot === 'logo' && (
         <div className="absolute inset-0 flex flex-col items-center justify-center">
-          <LogoMark size={112} detail="full" className="translate-y-2" />
+          <LogoMark size={112} className="translate-y-2" />
           <LogoLockup size="md" className="mt-6 [&>svg]:hidden" />
         </div>
       )}

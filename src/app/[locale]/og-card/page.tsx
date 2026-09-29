@@ -21,7 +21,7 @@ export default async function OgCardPage({ params }: PageProps<'/[locale]/og-car
     <main className="relative flex h-[630px] w-[1200px] items-center gap-16 overflow-hidden px-24">
       <SpaceBackdrop />
       <div className="relative shrink-0">
-        <LogoMark size={300} detail="full" />
+        <LogoMark size={300} />
       </div>
       <div className="relative flex flex-col">
         <p className="eyebrow text-accent">Veritas Tasks</p>

@@ -36,7 +36,7 @@
 ### Этап 1 — фундамент и дизайн-система
 - Next.js 16.3 (App Router, Turbopack), React 19.2, TypeScript strict (+ `noUncheckedIndexedAccess`), ESLint (строгие правила доступности), Prettier.
 - Дизайн-токены в `src/styles/globals.css` (Tailwind v4): стандартная палитра Tailwind удалена, существуют только наши токены. 6 акцентных тем, переключаются без перезагрузки и без «мигания».
-- Шрифты: Unbounded + Onest + JetBrains Mono (утверждены; в V2 заголовки — Geologica, см. `DESIGN_V2.md`), сравнение с альтернативами на `/design`. Болгарская «ѝ» достроена в Onest и JetBrains Mono (`scripts/fonts`, `src/assets/fonts`).
+- Шрифты: Onest + JetBrains Mono; заголовки в V2 — Geologica (утверждена 29.09.2026, раньше был Unbounded), сравнение с альтернативами на `/design`. Болгарская «ѝ» достроена в Onest и JetBrains Mono (`scripts/fonts`, `src/assets/fonts`).
 - Переводы next-intl: ru / en / bg, язык в адресе (`/ru/...`), автоопределение по браузеру, cookie `VT_LOCALE`. Тест полноты переводов.
 - Базовые компоненты со всеми состояниями (`src/components/ui`), эффекты (курсор, магнит, свет под курсором, звёздное небо, зерно), токены движения и пружины.
 - Логотип (знак, знак + надпись в кривых, моно, для светлого фона), фавиконы, иконки PWA (обычные и maskable), `apple-icon`, картинки превью ссылок на 3 языках, `manifest.webmanifest`.
