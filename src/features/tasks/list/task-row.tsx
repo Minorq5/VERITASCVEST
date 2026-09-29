@@ -86,7 +86,8 @@ function Meta({ icon, children, className, label }: { icon?: ReactNode; children
   );
 }
 
-function ProgressBadge({ model, prefs }: { model: RowModel; prefs: PlannerPrefs }) {
+/** The progress reading at the end of a row (also on board cards). */
+export function ProgressBadge({ model, prefs }: { model: RowModel; prefs: PlannerPrefs }) {
   const t = useTranslations('tasks');
   const p = model.progress;
   if (!p) return null;
@@ -135,7 +136,8 @@ function ProgressBadge({ model, prefs }: { model: RowModel; prefs: PlannerPrefs 
   );
 }
 
-function Leading({ model, prefs, actions, lingering, today }: Pick<TaskRowProps, 'model' | 'prefs' | 'actions' | 'lingering' | 'today'>) {
+/** What stands before a task's title: the complete check, or a habit / counter control. */
+export function TaskCheck({ model, prefs, actions, lingering, today }: Pick<TaskRowProps, 'model' | 'prefs' | 'actions' | 'lingering' | 'today'>) {
   const t = useTranslations('tasks');
   const { task } = model;
   const color = priorityVar(model.priorityKey);
@@ -321,7 +323,7 @@ function TaskRowView(props: TaskRowProps) {
         />
       )}
       <span className="flex h-5 items-center">
-        <Leading model={model} prefs={prefs} actions={props.actions} lingering={lingering} today={today} />
+        <TaskCheck model={model} prefs={prefs} actions={props.actions} lingering={lingering} today={today} />
       </span>
 
       <button

@@ -1,11 +1,12 @@
 'use client';
 
-import { Ellipsis, LogOut, Orbit, Settings2 } from 'lucide-react';
+import { Ellipsis, Hash, LogOut, Orbit, Plus, Settings2 } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useState, type ReactNode } from 'react';
 import { AstronautIcon } from '@/components/brand/icons';
 import { Sheet } from '@/components/ui/sheet';
 import { Planet } from '@/features/cinema/planet/planet';
+import { SmartListMark } from '@/features/filters/smart-list-mark';
 import { projectForest } from '@/features/projects/stats';
 import { useCatalog } from '@/features/tasks/data/hooks';
 import { Link, usePathname } from '@/i18n/navigation';
@@ -28,6 +29,8 @@ export function MoreSheet({ counts }: { counts: Record<Section, number> | null }
   const inside =
     rest.some((i) => isActive(pathname, i.href)) ||
     pathname.startsWith('/projects') ||
+    pathname.startsWith('/lists') ||
+    pathname.startsWith('/tags') ||
     pathname.startsWith('/settings') ||
     pathname.startsWith('/profile');
   const close = () => setOpen(false);
@@ -103,6 +106,28 @@ export function MoreSheet({ counts }: { counts: Record<Section, number> | null }
                 ...node.children.flatMap(flat),
               ];
             })}
+
+          <h2 className="label-mono mt-4 px-3 pb-1">{t('nav.lists')}</h2>
+          {catalog?.savedFilters.map((list) => {
+            const href = `/lists/${list.id}`;
+            return (
+              <Link key={list.id} href={href} onClick={close} aria-current={isActive(pathname, href) ? 'page' : undefined} className={rowClass}>
+                <SmartListMark color={list.color} />
+                <span className="flex-1 truncate">{list.name}</span>
+              </Link>
+            );
+          })}
+          <Link href="/lists/new" onClick={close} aria-current={pathname === '/lists/new' ? 'page' : undefined} className={rowClass}>
+            <Plus aria-hidden className="size-4 text-fg-3" />
+            <span className="flex-1 text-fg-2">{t('lists.new')}</span>
+          </Link>
+
+          <h2 className="label-mono mt-4 px-3 pb-1">{t('nav.tags')}</h2>
+          <Link href="/tags" onClick={close} aria-current={isActive(pathname, '/tags') ? 'page' : undefined} className={rowClass}>
+            <Hash aria-hidden className="size-4 text-fg-3" />
+            <span className="flex-1">{t('tags.all')}</span>
+            {catalog && catalog.tags.length > 0 && <span className="font-mono text-sm text-fg-3 tabular">{catalog.tags.length}</span>}
+          </Link>
 
           <div className="my-3 h-px bg-line" />
           <Link href="/profile" onClick={close} aria-current={isActive(pathname, '/profile') ? 'page' : undefined} className={rowClass}>

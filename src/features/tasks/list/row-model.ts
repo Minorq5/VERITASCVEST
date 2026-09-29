@@ -17,6 +17,8 @@ export interface RowContext {
   weekStart: number;
   /** On a project's page its own name is left out of the rows. */
   hideProjectId?: string;
+  /** On a tag's page — the tag itself. */
+  hideTagId?: string;
 }
 
 export interface RowModel {
@@ -82,7 +84,7 @@ export function buildRow(task: TaskRow, rc: RowContext): RowModel {
         );
   const tags = (rc.index.tags.get(task.id) ?? [])
     .map((id) => rc.catalog.tagById.get(id))
-    .filter((tag): tag is TagRow => Boolean(tag && !tag.deleted_at))
+    .filter((tag): tag is TagRow => Boolean(tag && !tag.deleted_at && tag.id !== rc.hideTagId))
     .sort((a, b) => a.name.localeCompare(b.name));
   const project = task.project_id ? (rc.catalog.projectById.get(task.project_id) ?? null) : null;
   const parent = task.parent_id ? rc.tasksById.get(task.parent_id) : undefined;

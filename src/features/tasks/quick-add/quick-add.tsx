@@ -8,6 +8,7 @@ import { priorityVar, swatchFor, swatchVar } from '@/lib/color/swatches';
 import { parseQuickAdd, type QuickAddResult, type Token } from '@/lib/domain/quick-add/parse';
 import type { QuickLocale } from '@/lib/domain/quick-add/lexicon';
 import type { TaskRow } from '@/lib/db/types';
+import { matchesQuery, projectTrees } from '@/lib/domain/filters';
 import { inSection } from '@/lib/domain/sections';
 import { ongoingTypes, type TaskType } from '@/lib/domain/task-types';
 import { addDays, timeIn } from '@/lib/time/dates';
@@ -22,6 +23,7 @@ import { useDescribeRecurrence, useRawMessage } from '../shared/use-words';
 import { TypeMenu } from '../shared/type-menu';
 import { typeMeta } from '../shared/type-meta';
 import { useTaskRoute } from '../shared/use-task-route';
+import { smartDefaults } from './scope-defaults';
 import type { ListScope } from './store';
 
 const kindColor = (token: Token, catalog: ReturnType<typeof useCatalog>): string => {
@@ -166,15 +168,28 @@ export function QuickAdd({ scope, autoFocus, onCreated, defaultText, className }
     setBusy(true);
     try {
       const section = scope?.kind === 'section' ? scope.section : null;
+      // A task written in a tag's list gets the tag; in a smart list — what the list asks for.
+      const smart = scope?.kind === 'smart' && catalog ? smartDefaults(scope.query, catalog, today) : null;
+      const scopeTag = scope?.kind === 'tag' ? catalog?.tagById.get(scope.tagId) : undefined;
+      const tags = [...result.tags];
+      for (const name of [...(scopeTag && !scopeTag.deleted_at ? [scopeTag.name] : []), ...(smart?.tagNames ?? [])]) {
+        if (!tags.some((n) => n.toLocaleLowerCase() === name.toLocaleLowerCase())) tags.push(name);
+      }
       // Habits, counters and "quit" goals measure periods: they have no deadline of their own.
       const ongoing = (ongoingTypes as readonly string[]).includes(effectiveType);
-      const fallbackDue = ongoing ? null : section === 'today' || section === 'week' ? today : section === 'tomorrow' ? addDays(today, 1) : null;
+      const fallbackDue = ongoing
+        ? null
+        : section === 'today' || section === 'week'
+          ? today
+          : section === 'tomorrow'
+            ? addDays(today, 1)
+            : (smart?.due ?? null);
       const dueDate = result.dueDate ?? (result.recurrence ? result.recurrence.anchor : fallbackDue);
       const projectId = result.project
         ? await ensureProject(actions.ctx, result.project)
         : scope?.kind === 'project'
           ? scope.projectId
-          : null;
+          : (smart?.projectId ?? null);
       const task = await actions.create({
         title,
         type: effectiveType,
@@ -183,8 +198,8 @@ export function QuickAdd({ scope, autoFocus, onCreated, defaultText, className }
         start_date: result.startDate,
         start_time: result.startDate ? result.startTime : null,
         recurrence: result.recurrence,
-        priority: result.priority,
-        tags: result.tags,
+        priority: result.priority ?? smart?.priority ?? null,
+        tags,
         project_id: projectId,
         estimate_minutes: result.estimateMinutes,
         reminders: result.reminders,
@@ -195,12 +210,14 @@ export function QuickAdd({ scope, autoFocus, onCreated, defaultText, className }
       reset();
       onCreated?.(task);
       // Say where the task went when it is not in the list on screen.
-      const visible =
-        scope?.kind === 'project'
-          ? task.project_id === scope.projectId
-          : section
-            ? inSection(task, section, { today, now })
-            : false;
+      let visible = false;
+      if (scope?.kind === 'project') visible = task.project_id === scope.projectId;
+      else if (scope?.kind === 'tag') visible = true;
+      else if (scope?.kind === 'smart' && catalog) {
+        const links = await actions.ctx.repo.db.task_tags.where('task_id').equals(task.id).toArray();
+        const own = new Set(links.filter((l) => !l.deleted_at).map((l) => String(l.tag_id)));
+        visible = matchesQuery(task, scope.query, { today, now, tagsOf: () => own, projectTree: projectTrees(catalog.allProjects) });
+      } else if (section) visible = inSection(task, section, { today, now });
       if (!visible) {
         const where = task.due_date
           ? task.due_date === today

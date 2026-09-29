@@ -1,13 +1,20 @@
 'use client';
 
-import { ListChecks, Trash2 } from 'lucide-react';
+import { ListChecks, ListFilter, Trash2, X } from 'lucide-react';
 import { motion } from 'motion/react';
 import { useTranslations } from 'next-intl';
 import { useEffect, useMemo, useState, type ReactNode } from 'react';
 import { Button } from '@/components/ui/button';
 import { EmptyState } from '@/components/ui/empty-state';
 import { Skeleton } from '@/components/ui/skeleton';
+import { FilterBar } from '@/features/filters/filter-bar';
+import { filterPartsFor, queryForScope } from '@/features/filters/scope-query';
+import { SmartListDialog } from '@/features/filters/smart-list-dialog';
+import { SortMenu } from '@/features/filters/sort-menu';
+import { useListSort } from '@/features/filters/use-list-sort';
+import { useListFilters } from '@/stores/list-views';
 import { useSyncStatus } from '@/stores/sync-status';
+import { activeParts, matchesQuery } from '@/lib/domain/filters';
 import { trashDaysLeft } from '@/lib/domain/sections';
 import { isTyping, overlayOpen, useKeydown } from '@/lib/hooks/use-hotkeys';
 import { addDays } from '@/lib/time/dates';
@@ -17,10 +24,10 @@ import { useLingering } from '../data/lingering';
 import { useTaskActions } from '../data/use-task-actions';
 import { dayHeader, formatClock, formatLongDate, formatShortDate } from '../format';
 import { QuickAdd } from '../quick-add/quick-add';
-import { useQuickAdd, type ListScope } from '../quick-add/store';
+import { scopeKey, useQuickAdd, type ListScope } from '../quick-add/store';
 import { useSelection } from '../shared/selection';
 import { useTaskRoute } from '../shared/use-task-route';
-import { buildGroups } from './build-groups';
+import { buildGroups, queryContext } from './build-groups';
 import { BulkBar } from './bulk-bar';
 import { ConfirmPurge } from './confirm-purge';
 import { indexChildren, type RowContext, type RowModel } from './row-model';
@@ -29,10 +36,6 @@ import { TemplatesButton } from '../templates/templates-dialog';
 import { TodaySummary } from './today-summary';
 
 type Scope = NonNullable<ListScope>;
-
-function scopeKey(scope: Scope) {
-  return scope.kind === 'project' ? `project:${scope.projectId}` : scope.section;
-}
 
 function ListSkeleton() {
   return (
@@ -63,6 +66,7 @@ export interface ListChrome {
 
 export function TaskListView({ scope, title, chrome }: { scope: Scope; title: string; chrome?: ListChrome }) {
   const t = useTranslations('tasks');
+  const tf = useTranslations('filters');
   const tasks = useTasks();
   const catalog = useCatalog();
   const index = useTaskIndex();
@@ -77,14 +81,23 @@ export function TaskListView({ scope, title, chrome }: { scope: Scope; title: st
   const [purge, setPurge] = useState<string[] | null>(null);
   const syncStatus = useSyncStatus((s) => s.status);
   const key = scopeKey(scope);
+  // A smart list being edited changes its query, not its key.
+  const signature = scope.kind === 'smart' ? `${key}:${JSON.stringify(scope.query)}` : key;
   const section = scope.kind === 'section' ? scope.section : null;
+  const sort = useListSort(scope);
+  const filterParts = filterPartsFor(scope);
+  const filter = useListFilters((s) => s.queries[key]);
+  const filterOpen = useListFilters((s) => s.open[key] ?? false);
+  const filterCount = filterParts && filter ? activeParts(filter) : 0;
+  const filtering = filterCount > 0;
+  const [savingList, setSavingList] = useState(false);
 
   // New tasks from the "+" button and N land in the list on screen.
   useEffect(() => {
     useQuickAdd.getState().setScope(scope);
     return () => useQuickAdd.getState().setScope(null);
-    // eslint-disable-next-line react-hooks/exhaustive-deps -- the key identifies the scope
-  }, [key]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- the signature identifies the scope
+  }, [signature]);
   useEffect(() => () => useSelection.getState().clear(), [key]);
 
   const rc: RowContext | null = useMemo(() => {
@@ -99,16 +112,28 @@ export function TaskListView({ scope, title, chrome }: { scope: Scope; title: st
       timeZone: prefs.timeZone,
       weekStart: prefs.weekStart,
       hideProjectId: scope.kind === 'project' ? scope.projectId : undefined,
+      hideTagId: scope.kind === 'tag' ? scope.tagId : undefined,
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps -- scope is identified by its key
   }, [tasks, catalog, index, today, now, prefs.timeZone, prefs.weekStart, key]);
 
-  // Sections leave out tasks of archived projects; a project's own page shows them.
   const listTasks = useMemo(() => {
-    if (!tasks || !catalog || scope.kind !== 'section' || catalog.hiddenProjectIds.size === 0) return tasks;
-    return tasks.filter((t) => !t.project_id || !catalog.hiddenProjectIds.has(t.project_id));
-  }, [tasks, catalog, scope.kind]);
+    if (!tasks || !catalog || !rc) return tasks;
+    let list = tasks;
+    // Tasks of archived projects stay out of every list except the project's own page.
+    if (scope.kind !== 'project' && catalog.hiddenProjectIds.size) {
+      list = list.filter((t) => !t.project_id || !catalog.hiddenProjectIds.has(t.project_id));
+    }
+    // The filter narrows the list; whether done tasks show is the list's own business.
+    if (filtering && filter) {
+      const qctx = queryContext(rc);
+      const query = { ...filter, state: 'all' as const };
+      list = list.filter((t) => matchesQuery(t, query, qctx));
+    }
+    return list;
+  }, [tasks, catalog, rc, scope.kind, filtering, filter]);
 
+  const sortMode = sort?.mode ?? 'due';
   const groups = useMemo(() => {
     if (!rc || !listTasks || !completions) return null;
     return buildGroups({
@@ -117,11 +142,13 @@ export function TaskListView({ scope, title, chrome }: { scope: Scope; title: st
       completions,
       lingering,
       rc,
+      sort: sortMode,
+      locale: prefs.locale,
       dayTitle: (date) => dayHeader(date, today, prefs.locale, t),
       overdueTitle: t('summary.overdue'),
     });
-    // eslint-disable-next-line react-hooks/exhaustive-deps -- scope is identified by its key
-  }, [rc, listTasks, completions, lingering, key, today, prefs.locale, t]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- scope is identified by its signature
+  }, [rc, listTasks, completions, lingering, signature, sortMode, today, prefs.locale, t]);
 
   const orderedIds = useMemo(() => groups?.flatMap((g) => g.rows.map((r) => r.task.id)) ?? [], [groups]);
   const rowsById = useMemo(() => new Map(groups?.flatMap((g) => g.rows.map((r) => [r.task.id, r] as const)) ?? []), [groups]);
@@ -173,6 +200,11 @@ export function TaskListView({ scope, title, chrome }: { scope: Scope; title: st
         else void actions.trash(selected.size ? [...selected] : [focusedId]);
         break;
       }
+      case 'f':
+        if (!filterParts) return;
+        event.preventDefault();
+        useListFilters.getState().setOpen(key, !filterOpen);
+        break;
       case 'Escape':
         if (selected.size || selecting) {
           useSelection.getState().clear();
@@ -182,7 +214,12 @@ export function TaskListView({ scope, title, chrome }: { scope: Scope; title: st
     }
   });
 
-  const showQuickAdd = scope.kind === 'project' || (section !== null && ['inbox', 'today', 'tomorrow', 'week'].includes(section));
+  const showQuickAdd =
+    scope.kind === 'project' ||
+    scope.kind === 'tag' ||
+    (scope.kind === 'smart' && (scope.query.state ?? 'open') !== 'done') ||
+    (section !== null && ['inbox', 'today', 'tomorrow', 'week'].includes(section));
+  const emptyKey = scope.kind === 'section' ? scope.section : scope.kind;
   const loading = !groups;
   const firstSync = !syncStatus?.bootstrapped && (tasks?.length ?? 0) === 0;
   const empty = groups !== null && groups.every((g) => g.rows.length === 0);
@@ -229,7 +266,21 @@ export function TaskListView({ scope, title, chrome }: { scope: Scope; title: st
         </div>
         <div className="flex items-center gap-1">
           {chrome?.actions}
-          {showQuickAdd && <TemplatesButton scope={scope} />}
+          {filterParts && (
+            <Button
+              size="sm"
+              variant={filterOpen || filtering ? 'secondary' : 'ghost'}
+              icon={<ListFilter />}
+              aria-pressed={filterOpen}
+              aria-label={filtering ? tf('buttonActive', { count: filterCount }) : tf('button')}
+              onClick={() => useListFilters.getState().setOpen(key, !filterOpen)}
+            >
+              <span className="max-sm:sr-only">{tf('button')}</span>
+              {filtering && <span className="font-mono text-xs text-accent tabular">{filterCount}</span>}
+            </Button>
+          )}
+          {sort && <SortMenu sort={sort} />}
+          {showQuickAdd && (scope.kind === 'section' || scope.kind === 'project') && <TemplatesButton scope={scope} />}
           {section === 'trash' && trashIds.length > 0 && (
             <Button size="sm" variant="danger" icon={<Trash2 />} onClick={() => setPurge(trashIds)}>
               {t('actions.emptyTrash')}
@@ -254,6 +305,34 @@ export function TaskListView({ scope, title, chrome }: { scope: Scope; title: st
 
       {chrome?.below}
 
+      {filterParts && (filterOpen || filtering) && (
+        <FilterBar
+          query={filter ?? {}}
+          parts={filterParts}
+          onChange={(query) => useListFilters.getState().setQuery(key, query)}
+          trailing={
+            filtering && (
+              <>
+                <Button size="sm" variant="ghost" icon={<X />} onClick={() => useListFilters.getState().clear(key)}>
+                  {tf('reset')}
+                </Button>
+                <Button size="sm" variant="link" className="ml-1 text-sm" onClick={() => setSavingList(true)}>
+                  {tf('saveAsList')}
+                </Button>
+              </>
+            )
+          }
+        />
+      )}
+      {savingList && filter && (
+        <SmartListDialog
+          query={queryForScope(scope, filter)}
+          sort={sortMode === 'manual' ? 'due' : sortMode}
+          onClose={() => setSavingList(false)}
+          onCreated={() => useListFilters.getState().clear(key)}
+        />
+      )}
+
       {section === 'today' && rc && tasks && completions && (
         <TodaySummary tasks={listTasks ?? tasks} completions={completions} rc={rc} actions={actions} prefs={prefs} />
       )}
@@ -262,11 +341,18 @@ export function TaskListView({ scope, title, chrome }: { scope: Scope; title: st
 
       {loading || (firstSync && empty) ? (
         <ListSkeleton />
-      ) : empty ? (
+      ) : empty && filtering ? (
         <EmptyState
-          title={t(`empty.${scope.kind === 'project' ? 'project' : (section ?? 'inbox')}.title`)}
-          description={t(`empty.${scope.kind === 'project' ? 'project' : (section ?? 'inbox')}.text`)}
+          title={t('empty.filtered.title')}
+          description={t('empty.filtered.text')}
+          action={
+            <Button variant="secondary" icon={<X />} onClick={() => useListFilters.getState().clear(key)}>
+              {tf('resetFilter')}
+            </Button>
+          }
         />
+      ) : empty ? (
+        <EmptyState title={t(`empty.${emptyKey}.title`)} description={t(`empty.${emptyKey}.text`)} />
       ) : (
         groups.map((group) =>
           group.rows.length === 0 ? null : (

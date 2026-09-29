@@ -142,6 +142,13 @@ describe('comparatorFor', () => {
     expect(order('progress')).toEqual(['b', 'a', 'c']);
   });
 
+  it('newest first even when the server gave a batch one time: ids are time-ordered', () => {
+    const at = '2026-09-05T10:00:00Z';
+    const older = task({ id: '01990000-0000-7000-8000-000000000001', created_at: at, sort_key: 'a0' });
+    const newer = task({ id: '01990000-0001-7000-8000-000000000001', created_at: at, sort_key: 'a1' });
+    expect([older, newer].sort(comparatorFor('created', sortCtx)).map((t) => t.id)).toEqual([newer.id, older.id]);
+  });
+
   it('titles compare naturally: 2 before 10', () => {
     const x = task({ id: 'x', title: 'Глава 10' });
     const y = task({ id: 'y', title: 'Глава 2' });

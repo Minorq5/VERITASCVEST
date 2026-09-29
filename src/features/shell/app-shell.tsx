@@ -4,7 +4,7 @@ import { motion } from 'motion/react';
 import { Plus } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useSearchParams } from 'next/navigation';
-import { Suspense, useMemo, useState, type ReactNode } from 'react';
+import { Suspense, useEffect, useMemo, useState, type ReactNode } from 'react';
 import { LogoLockup } from '@/components/brand/logo';
 import { SpaceBackdrop } from '@/components/effects/space-backdrop';
 import { Avatar } from '@/components/ui/avatar';
@@ -12,21 +12,24 @@ import { IconButton } from '@/components/ui/icon-button';
 import { Kbd } from '@/components/ui/kbd';
 import { useProfile } from '@/features/account/queries';
 import { Planet } from '@/features/cinema/planet/planet';
+import { SmartListMark } from '@/features/filters/smart-list-mark';
 import { ProjectDialog } from '@/features/projects/project-dialog';
 import { projectForest, type ProjectNode } from '@/features/projects/stats';
 import { SyncBadge, SyncIndicator } from '@/features/sync/sync-indicator';
+import { TagMark, useTagCounts } from '@/features/tags/tag-mark';
 import { useCatalog, useTasks } from '@/features/tasks/data/hooks';
 import { useTrashSweep } from '@/features/tasks/data/use-trash-sweep';
 import { TaskPanel } from '@/features/tasks/detail/task-panel';
 import { QuickAddDialog } from '@/features/tasks/quick-add/quick-add-dialog';
 import { useQuickAdd } from '@/features/tasks/quick-add/store';
-import { Link, usePathname } from '@/i18n/navigation';
+import { Link, usePathname, useRouter } from '@/i18n/navigation';
 import { APP_HOME } from '@/lib/config/routes';
 import type { ProjectRow } from '@/lib/db/types';
 import type { Section } from '@/lib/domain/sections';
 import { spring } from '@/lib/motion/tokens';
 import { avatarUrl } from '@/lib/supabase/client';
 import { cn } from '@/lib/utils/cn';
+import { useListViews } from '@/stores/list-views';
 import { ShellHotkeys } from './hotkeys';
 import { MoreSheet } from './more-sheet';
 import { isActive, phoneTabs, phoneTabsAfter, sectionItems } from './nav';
@@ -131,6 +134,81 @@ function SidebarProjects({ counts }: { counts: Map<string, number> }) {
   );
 }
 
+/** Saved filters. With none yet, one quiet link to build the first. */
+function SidebarLists() {
+  const t = useTranslations();
+  const pathname = usePathname();
+  const router = useRouter();
+  const catalog = useCatalog();
+  const lists = catalog?.savedFilters ?? [];
+  return (
+    <div className="mt-6">
+      <div className="flex h-7 items-center justify-between pr-1 pl-3">
+        <h2 className="label-mono">{t('nav.lists')}</h2>
+        <IconButton size="sm" label={t('lists.new')} icon={<Plus />} onClick={() => router.push('/lists/new')} />
+      </div>
+      <ul className="mt-1 flex flex-col gap-0.5">
+        {lists.map((list) => {
+          const href = `/lists/${list.id}`;
+          return (
+            <li key={list.id}>
+              <SidebarLink href={href} active={isActive(pathname, href)} icon={<SmartListMark color={list.color} />}>
+                {list.name}
+              </SidebarLink>
+            </li>
+          );
+        })}
+        {lists.length === 0 && catalog && (
+          <li>
+            <SidebarLink href="/lists/new" active={pathname === '/lists/new'} icon={<Plus aria-hidden className="size-4 shrink-0 text-fg-3" />}>
+              <span className="text-fg-3">{t('lists.new')}</span>
+            </SidebarLink>
+          </li>
+        )}
+      </ul>
+    </div>
+  );
+}
+
+/** Tags with their open tasks; the heading opens the tags page. */
+function SidebarTags() {
+  const t = useTranslations();
+  const pathname = usePathname();
+  const catalog = useCatalog();
+  const counts = useTagCounts();
+  if (!catalog || catalog.tags.length === 0) return null;
+  return (
+    <div className="mt-6">
+      <div className="flex h-7 items-center pr-1 pl-3">
+        <Link
+          href="/tags"
+          aria-current={pathname === '/tags' ? 'page' : undefined}
+          className={cn('label-mono focus-ring rounded-xs transition-colors hover-ok:text-fg', pathname === '/tags' && 'text-fg')}
+        >
+          {t('nav.tags')}
+        </Link>
+      </div>
+      <ul className="mt-1 flex flex-col gap-0.5">
+        {catalog.tags.map((tag) => {
+          const href = `/tags/${tag.id}`;
+          return (
+            <li key={tag.id}>
+              <SidebarLink
+                href={href}
+                active={isActive(pathname, href)}
+                icon={<TagMark color={tag.color} />}
+                trailing={<NavCount value={counts?.get(tag.id)?.open ?? 0} kind="muted" />}
+              >
+                {tag.name}
+              </SidebarLink>
+            </li>
+          );
+        })}
+      </ul>
+    </div>
+  );
+}
+
 function Sidebar() {
   const t = useTranslations();
   const pathname = usePathname();
@@ -188,7 +266,9 @@ function Sidebar() {
           })}
         </ul>
 
+        <SidebarLists />
         <SidebarProjects counts={projectCounts} />
+        <SidebarTags />
       </nav>
       <div className="border-t border-line px-3 pt-3">
         <SyncIndicator />
@@ -292,6 +372,10 @@ export function AppShell({ children }: { children: ReactNode }) {
   const t = useTranslations('shell');
   const profile = useProfile().data;
   useTrashSweep();
+  // List orders kept on this device, read after the first render (the server does not know them).
+  useEffect(() => {
+    void useListViews.persist.rehydrate();
+  }, []);
 
   return (
     <div className="[--panel-w:28rem] 2xl:[--panel-w:32rem]">

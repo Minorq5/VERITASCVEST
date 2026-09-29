@@ -152,6 +152,57 @@ for (const kind of only) {
     await shot(page, dir, 'project-dialog');
     await page.keyboard.press('Escape');
   }
+  // Tags, smart lists, the filter bar and the sort menu (stage 4.3)
+  for (const [name, url] of [
+    ['tags', '/ru/tags'],
+    ['smart-new', '/ru/lists/new'],
+  ]) {
+    if (screens && !screens.has(name)) continue;
+    await page.goto(`${BASE}${url}`);
+    await settle(page);
+    await shot(page, dir, name);
+  }
+  if (!screens || screens.has('tag')) {
+    await page.goto(`${BASE}/ru/tags`);
+    await settle(page, 1500);
+    await page.getByRole('link', { name: 'работа', exact: true }).click();
+    await page.waitForURL(/\/ru\/tags\//);
+    await settle(page);
+    await shot(page, dir, 'tag');
+  }
+  if (!screens || screens.has('smart-list')) {
+    await page.goto(`${BASE}/ru/today`);
+    await settle(page, 1500);
+    if (kind === 'phone') {
+      await page.getByRole('button', { name: 'Ещё', exact: true }).click();
+      await settle(page, 800);
+      await page.getByRole('dialog').getByRole('link', { name: 'Работа на неделю' }).click();
+    } else await page.getByRole('link', { name: 'Работа на неделю' }).click();
+    await page.waitForURL(/\/ru\/lists\//);
+    await settle(page);
+    await shot(page, dir, 'smart-list');
+  }
+  if (!screens || screens.has('filter-bar')) {
+    await page.goto(`${BASE}/ru/today`);
+    await settle(page, 1500);
+    await page.getByRole('button', { name: 'Фильтр', exact: true }).click();
+    await page.getByRole('button', { name: 'Приоритет', exact: true }).click();
+    await page.getByRole('menuitemcheckbox', { name: 'Высокий' }).click();
+    await page.getByRole('menuitemcheckbox', { name: 'Средний' }).click();
+    await settle(page, 800);
+    await shot(page, dir, 'filter-menu');
+    await page.keyboard.press('Escape');
+    await settle(page, 800);
+    await shot(page, dir, 'filter-bar');
+  }
+  if (!screens || screens.has('sort-menu')) {
+    await page.goto(`${BASE}/ru/inbox`);
+    await settle(page, 1500);
+    await page.getByRole('button', { name: /^Сортировка/ }).click();
+    await settle(page, 800);
+    await shot(page, dir, 'sort-menu');
+    await page.keyboard.press('Escape');
+  }
   if (kind === 'phone' && (!screens || screens.has('more'))) {
     await page.goto(`${BASE}/ru/today`);
     await settle(page, 1500);

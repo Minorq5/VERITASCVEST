@@ -14,6 +14,7 @@ import type {
   PriorityRow,
   ProgressEventRow,
   ProjectRow,
+  SavedFilterRow,
   StatusRow,
   TagRow,
   TaskRow,
@@ -104,6 +105,9 @@ export interface Catalog {
   allProjects: ProjectRow[];
   /** Archived projects and everything inside them: their tasks stay out of the sections. */
   hiddenProjectIds: ReadonlySet<string>;
+  /** Smart lists, in their sidebar order. */
+  savedFilters: SavedFilterRow[];
+  savedFilterById: Map<string, SavedFilterRow>;
 }
 
 /** Archived projects and all their subprojects. */
@@ -132,12 +136,13 @@ const alive = <T extends { deleted_at: string | null }>(rows: readonly T[]) => r
 export function useCatalog(): Catalog | undefined {
   const { db } = useSync();
   const data = useLiveQuery(async () => {
-    const [statuses, priorities, projects, tags, templates] = await Promise.all([
+    const [statuses, priorities, projects, tags, templates, savedFilters] = await Promise.all([
       db.statuses.toArray(),
       db.priorities.toArray(),
       db.projects.toArray(),
       db.tags.toArray(),
       db.templates.toArray(),
+      db.saved_filters.toArray(),
     ]);
     return {
       statuses: statuses as StatusRow[],
@@ -145,6 +150,7 @@ export function useCatalog(): Catalog | undefined {
       projects: projects as ProjectRow[],
       tags: tags as TagRow[],
       templates: templates as TemplateRow[],
+      savedFilters: savedFilters as SavedFilterRow[],
     };
   }, [db]);
 
@@ -172,6 +178,10 @@ export function useCatalog(): Catalog | undefined {
       archivedProjects: allProjects.filter((p) => p.archived_at).sort((a, b) => (a.archived_at! < b.archived_at! ? 1 : -1)),
       allProjects,
       hiddenProjectIds: hidden,
+      savedFilters: alive(data.savedFilters).sort((a, b) =>
+        a.sort_key < b.sort_key ? -1 : a.sort_key > b.sort_key ? 1 : a.name.localeCompare(b.name),
+      ),
+      savedFilterById: byId(data.savedFilters),
     };
   }, [data]);
 }

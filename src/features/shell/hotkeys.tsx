@@ -64,6 +64,7 @@ export function ShellHotkeys() {
     [['Enter'], t('open')],
     [['Space'], t('complete')],
     [['X'], t('select')],
+    [['F'], t('filter')],
     [['Del'], t('remove')],
     [[mod, 'Z'], t('undo')],
     [[mod, 'Shift', 'Z'], t('redo')],

@@ -155,6 +155,14 @@ async function seedTasks(owner, email, password) {
   };
   for (const row of Object.values(rows)) out.push(['tasks', row]);
 
+  // Two smart lists: what burns, and work for the week.
+  out.push(
+    ...toRows('saved_filters', [
+      { id: randomUUID(), owner_id: owner, name: 'Горит', color: 'rust', query: { priorities: [prio.critical, prio.high] }, sort: 'due', sort_key: 'a0' },
+      { id: randomUUID(), owner_id: owner, name: 'Работа на неделю', color: 'blue', query: { tags: [tagId.работа], due: ['overdue', 'week'] }, sort: 'priority', sort_key: 'a1' },
+    ]),
+  );
+
   out.push(
     ...toRows('task_tags', [
       { id: randomUUID(), task_id: rows.report.id, tag_id: tagId.работа, owner_id: owner },

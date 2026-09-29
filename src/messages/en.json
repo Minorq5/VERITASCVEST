@@ -699,7 +699,9 @@
     "newTask": "New task",
     "projects": "Projects",
     "hideSidebar": "Collapse sidebar",
-    "count": "{count, plural, one {# task} other {# tasks}}"
+    "count": "{count, plural, one {# task} other {# tasks}}",
+    "tags": "Tags",
+    "lists": "Smart lists"
   },
   "tasks": {
     "count": "{count, plural, one {# task} other {# tasks}}",
@@ -753,6 +755,22 @@
       },
       "projectMissing": {
         "title": "Project not found",
+        "text": "It may have been deleted on another device."
+      },
+      "tag": {
+        "title": "No tasks with this tag",
+        "text": "Write a task here — it gets the tag by itself."
+      },
+      "smart": {
+        "title": "Nothing matches yet",
+        "text": "The list updates itself: matching tasks appear here as soon as there are any."
+      },
+      "tagMissing": {
+        "title": "Tag not found",
+        "text": "It may have been deleted on another device."
+      },
+      "listMissing": {
+        "title": "Smart list not found",
         "text": "It may have been deleted on another device."
       }
     },
@@ -1432,6 +1450,7 @@
       "complete": "Complete or reopen",
       "remove": "Delete",
       "select": "Select",
+      "filter": "Filter the list",
       "undo": "Undo",
       "redo": "Redo",
       "close": "Close",
@@ -1498,6 +1517,130 @@
       "title": "Delete the project «{name}»?",
       "text": "{count, plural, =0 {It has no tasks.} one {# task will move to the inbox.} other {# tasks will move to the inbox.}} Its subprojects are deleted with it.",
       "confirm": "Delete project"
+    }
+  },
+  "filters": {
+    "label": "Filter",
+    "button": "Filter",
+    "buttonActive": "Filter: {count, plural, one {# condition} other {# conditions}}",
+    "parts": {
+      "state": "Show",
+      "due": "Due",
+      "priorities": "Priority",
+      "statuses": "Status",
+      "types": "Type",
+      "projects": "Project",
+      "tags": "Tag"
+    },
+    "state": {
+      "open": "Open",
+      "done": "Done",
+      "all": "All"
+    },
+    "due": {
+      "overdue": "Overdue",
+      "today": "Today",
+      "tomorrow": "Tomorrow",
+      "week": "Next 7 days",
+      "month": "Next 30 days",
+      "later": "Later",
+      "none": "No date"
+    },
+    "noProject": "No project",
+    "tagMode": {
+      "label": "Tags needed",
+      "any": "Any of the chosen",
+      "all": "All of the chosen"
+    },
+    "andMore": "{first} and {count} more",
+    "clearPart": "Clear",
+    "nothingToPick": "Nothing to pick yet",
+    "reset": "Reset",
+    "saveAsList": "Save as a smart list",
+    "resetFilter": "Reset filter"
+  },
+  "sort": {
+    "label": "Sort",
+    "modes": {
+      "manual": "Manual",
+      "due": "By due date",
+      "priority": "By priority",
+      "created": "Newest first",
+      "title": "Alphabetical",
+      "progress": "By progress"
+    }
+  },
+  "tags": {
+    "title": "Tags",
+    "count": "{count, plural, one {# tag} other {# tags}}",
+    "new": "New tag",
+    "all": "All tags",
+    "open": "{count, plural, =0 {no open tasks} one {# task} other {# tasks}}",
+    "empty": {
+      "title": "No tags yet",
+      "text": "A tag is a label across projects: #work, #home, #calls. Create one here or right in the smart line: “Call mum #family”."
+    },
+    "form": {
+      "createTitle": "New tag",
+      "editTitle": "Tag",
+      "name": "Name",
+      "namePlaceholder": "for example, calls",
+      "nameHint": "One word: spaces become hyphens",
+      "nameRequired": "Give the tag a name",
+      "nameTaken": "The tag “{name}” already exists",
+      "color": "Colour",
+      "create": "Create tag",
+      "save": "Save"
+    },
+    "actions": {
+      "more": "Tag actions",
+      "edit": "Name and colour",
+      "delete": "Delete tag"
+    },
+    "toast": {
+      "created": "Tag created",
+      "saved": "Tag saved",
+      "deleted": "Tag deleted"
+    },
+    "confirmDelete": {
+      "title": "Delete the tag “{name}”?",
+      "text": "{count, plural, =0 {No task has it.} one {It comes off # task.} other {It comes off # tasks.}} The tasks themselves stay.",
+      "confirm": "Delete tag"
+    }
+  },
+  "lists": {
+    "title": "Smart lists",
+    "eyebrow": "Smart list",
+    "new": "New smart list",
+    "newHint": "Pick the conditions — the tasks that match show up below right away. Save the list and it appears in the sidebar and keeps itself up to date.",
+    "noConditions": "No conditions yet — the list shows every open task.",
+    "save": "Save list",
+    "saveChanges": "Save conditions",
+    "discard": "Undo changes",
+    "form": {
+      "createTitle": "Save smart list",
+      "editTitle": "Smart list",
+      "name": "Name",
+      "namePlaceholder": "for example, Urgent at work",
+      "nameRequired": "Give the list a name",
+      "color": "Colour",
+      "create": "Save",
+      "save": "Save"
+    },
+    "actions": {
+      "more": "List actions",
+      "edit": "Name and colour",
+      "delete": "Delete list"
+    },
+    "toast": {
+      "created": "Smart list saved",
+      "saved": "List saved",
+      "deleted": "Smart list deleted"
+    },
+    "confirmDelete": {
+      "title": "Delete the smart list “{name}”?",
+      "text": "Only the list goes — the tasks stay where they are.",
+      "confirm": "Delete list"
     }
   }
 }

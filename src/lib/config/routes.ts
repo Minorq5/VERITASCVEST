@@ -14,6 +14,8 @@ export const PROTECTED_PREFIXES = [
   '/completed',
   '/trash',
   '/projects',
+  '/tags',
+  '/lists',
 ] as const;
 
 export function isProtectedPath(path: string): boolean {

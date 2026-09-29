@@ -31,8 +31,10 @@ export function comparatorFor(mode: SortMode, ctx: SortContext): (a: SortTask, b
     case 'priority':
       return (a, b) => ctx.rankOf(a.priority_id) - ctx.rankOf(b.priority_id) || deadline(a, b);
     case 'created':
-      // Newest first: what was just written down is on top.
-      return (a, b) => (a.created_at < b.created_at ? 1 : a.created_at > b.created_at ? -1 : 0) || compareManual(a, b);
+      // Newest first: what was just written down is on top. Tasks sent in one
+      // batch share the server's time; their ids (UUID v7) keep the order they were made in.
+      return (a, b) =>
+        (a.created_at < b.created_at ? 1 : a.created_at > b.created_at ? -1 : 0) || (a.id < b.id ? 1 : a.id > b.id ? -1 : 0);
     case 'title':
       return (a, b) => collator.compare(a.title, b.title) || compareManual(a, b);
     case 'progress': {
