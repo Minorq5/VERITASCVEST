@@ -11,7 +11,7 @@ import { authErrorKey, type AuthErrorKey } from '@/lib/auth/errors';
 import { confirmUrl } from '@/lib/auth/redirect';
 import { emailSchema } from '@/lib/auth/validation';
 import { useGuardedSubmit } from '@/lib/hooks/use-guarded-submit';
-import { getSupabase } from '@/lib/supabase/client';
+import { emailLinkClient } from '@/lib/supabase/email-links';
 import { AuthCard, FormAlert } from './auth-card';
 
 export function ForgotForm() {
@@ -45,8 +45,8 @@ export function ForgotForm() {
     setFieldError(undefined);
     void submit.run(async () => {
       setError(null);
-      const { error: resetError } = await getSupabase().auth.resetPasswordForEmail(value, {
-        redirectTo: confirmUrl(locale),
+      const { error: resetError } = await emailLinkClient().auth.resetPasswordForEmail(value, {
+        redirectTo: confirmUrl(locale, 'recovery'),
       });
       if (resetError) {
         setError(authErrorKey(resetError));

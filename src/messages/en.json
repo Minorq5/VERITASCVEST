@@ -404,13 +404,18 @@
       "emailChangedTitle": "Email changed",
       "emailChangedText": "Sign in with your new address from now on.",
       "expiredTitle": "The link has expired",
-      "expiredText": "Links in emails work for one hour. Sign in and we will offer to send a new one.",
+      "expiredText": "Email links work once and for an hour. If you have already confirmed your email, just sign in; if not, we will offer a new letter after you sign in.",
       "invalidTitle": "The link did not work",
-      "invalidText": "It may have been opened already. Try signing in or request a new email.",
+      "invalidText": "It may have been opened already. If your email is confirmed, just sign in; if not, we will offer a new letter after you sign in.",
       "continue": "Continue",
       "toLogin": "Go to sign in",
       "emailPartialTitle": "One more address to confirm",
-      "emailPartialText": "The first confirmation is in. Open the email we sent to your other address and press the button there to finish the change."
+      "emailPartialText": "The first confirmation is in. Open the email we sent to your other address and press the button there to finish the change.",
+      "elsewhereText": "Now sign in — here or on the device you signed up on.",
+      "signIn": "Sign in",
+      "recoveryElsewhereTitle": "Open the link where you asked for it",
+      "recoveryElsewhereText": "This password link only works in the browser where it was requested. Or ask for a new one right here.",
+      "newLink": "Get a new link"
     },
     "forgot": {
       "title": "Reset your password",

@@ -50,7 +50,7 @@ export function ChangeEmailDialog({ currentEmail }: { currentEmail: string }) {
       setError(null);
       const { error: updateError } = await getSupabase().auth.updateUser(
         { email: parsed.data },
-        { emailRedirectTo: confirmUrl(locale) },
+        { emailRedirectTo: confirmUrl(locale, 'email_change') },
       );
       if (updateError) {
         setError(authErrorKey(updateError));

@@ -14,6 +14,7 @@ import { confirmUrl, rememberPendingEmail } from '@/lib/auth/redirect';
 import { emailSchema, normalizeUsername, passwordSchema, usernameSchema } from '@/lib/auth/validation';
 import { useGuardedSubmit } from '@/lib/hooks/use-guarded-submit';
 import { getSupabase } from '@/lib/supabase/client';
+import { emailLinkClient } from '@/lib/supabase/email-links';
 import { useSession } from '@/stores/session';
 import { AuthCard, FormAlert } from './auth-card';
 import { useUsernameAvailability } from './use-username-availability';
@@ -51,11 +52,12 @@ export function RegisterForm() {
     void submit.run(async () => {
       setError(null);
       const cleanUsername = normalizeUsername(username);
-      const { data, error: signUpError } = await getSupabase().auth.signUp({
+      // The confirmation link must work on any device (see emailLinkClient).
+      const { data, error: signUpError } = await emailLinkClient().auth.signUp({
         email: email.trim(),
         password,
         options: {
-          emailRedirectTo: confirmUrl(locale),
+          emailRedirectTo: confirmUrl(locale, 'signup'),
           data: {
             username: cleanUsername,
             display_name: cleanUsername,
@@ -76,6 +78,8 @@ export function RegisterForm() {
         return;
       }
       if (data.session) {
+        // No confirmation needed on this server: the session belongs in the app's own client.
+        await getSupabase().auth.setSession(data.session);
         router.replace('/onboarding');
         return;
       }

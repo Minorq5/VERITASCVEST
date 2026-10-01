@@ -15,6 +15,7 @@ import { emailSchema } from '@/lib/auth/validation';
 import { safeNext } from '@/lib/config/routes';
 import { useGuardedSubmit } from '@/lib/hooks/use-guarded-submit';
 import { getSupabase } from '@/lib/supabase/client';
+import { emailLinkClient } from '@/lib/supabase/email-links';
 import { useSession } from '@/stores/session';
 import { toast } from '@/stores/toasts';
 import { AuthCard, FormAlert } from './auth-card';
@@ -66,10 +67,10 @@ export function LoginForm() {
 
   const onResend = () =>
     resend.run(async () => {
-      const { error: resendError } = await getSupabase().auth.resend({
+      const { error: resendError } = await emailLinkClient().auth.resend({
         type: 'signup',
         email: email.trim(),
-        options: { emailRedirectTo: confirmUrl(locale) },
+        options: { emailRedirectTo: confirmUrl(locale, 'signup') },
       });
       if (resendError) {
         toast.error(t(`errors.${authErrorKey(resendError)}`));

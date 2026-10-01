@@ -8,7 +8,7 @@ import { Link } from '@/i18n/navigation';
 import { authErrorKey } from '@/lib/auth/errors';
 import { confirmUrl, readPendingEmail } from '@/lib/auth/redirect';
 import { useGuardedSubmit } from '@/lib/hooks/use-guarded-submit';
-import { getSupabase } from '@/lib/supabase/client';
+import { emailLinkClient } from '@/lib/supabase/email-links';
 import { toast } from '@/stores/toasts';
 import { AuthCard } from './auth-card';
 
@@ -34,10 +34,10 @@ export function CheckEmail() {
   const onResend = () =>
     resend.run(async () => {
       if (!email) return;
-      const { error } = await getSupabase().auth.resend({
+      const { error } = await emailLinkClient().auth.resend({
         type: 'signup',
         email,
-        options: { emailRedirectTo: confirmUrl(locale) },
+        options: { emailRedirectTo: confirmUrl(locale, 'signup') },
       });
       if (error) {
         toast.error(t(`errors.${authErrorKey(error)}`));
